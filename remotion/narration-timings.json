@@ -1,0 +1,49 @@
+{
+  "total": 215.36,
+  "scenes": {
+    "s01_hook": {
+      "start": 0,
+      "duration": 18.789
+    },
+    "s02_agitate": {
+      "start": 18.789,
+      "duration": 27.193
+    },
+    "s03_reframe": {
+      "start": 45.983,
+      "duration": 11.83
+    },
+    "s04_intro": {
+      "start": 57.813,
+      "duration": 7.247
+    },
+    "s05_step1": {
+      "start": 65.06,
+      "duration": 15.815
+    },
+    "s06_step2": {
+      "start": 80.875,
+      "duration": 14.943
+    },
+    "s07_step3": {
+      "start": 95.818,
+      "duration": 14.02
+    },
+    "s08_proof_numbers": {
+      "start": 109.838,
+      "duration": 23.821
+    },
+    "s09_testimonials": {
+      "start": 133.659,
+      "duration": 28.145
+    },
+    "s10_offer": {
+      "start": 161.804,
+      "duration": 21.569
+    },
+    "s11_cta": {
+      "start": 183.373,
+      "duration": 31.987
+    }
+  }
+}
