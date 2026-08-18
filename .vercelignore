@@ -1,0 +1,21 @@
+# Only the Next.js app + public/ need to ship. Everything below is source
+# material or duplicates of assets already copied into public/.
+out
+html
+Creatives Ads
+ad-scripts
+docs
+proposals
+contracts
+client-sites
+social
+EduCare-Leads-Business-Model.pdf
+Educare Leads.png
+*.pdf
+.next
+
+# Render-only assets — used by Remotion locally, never served by the site.
+# The site only needs public/vsl/educare-crm-vsl.mp4 + crm-vsl-poster.jpg.
+public/vsl/*.png
+public/vsl/music-bed.mp3
+public/vo

@@ -6,12 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "video": "remotion studio",
+    "video:render": "remotion render EducareIntro out/educare-intro.mp4",
+    "video:still": "remotion still EducareIntro out/educare-intro.png --frame=90",
+    "vsl:render": "remotion render EducareVSL out/educare-vsl.mp4",
+    "vo:generate": "bash scripts/generate-vo.sh",
+    "vo:measure": "bash scripts/generate-vo.sh measure",
+    "crm:studio": "remotion studio",
+    "crm:render": "remotion render CrmVSL out/educare-crm-vsl.mp4",
+    "crm:still": "remotion still CrmVSL out/crm-frame.png",
+    "crm:measure": "bash scripts/measure-crm-vo.sh",
+    "crm:render:music": "remotion render CrmVSL out/educare-crm-vsl.mp4 --props={\"hasAudio\":true,\"hasMusic\":true}"
   },
   "dependencies": {
+    "@remotion/cli": "^4.0.472",
+    "@remotion/google-fonts": "^4.0.472",
+    "@remotion/media-utils": "^4.0.512",
+    "@remotion/player": "^4.0.472",
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "remotion": "^4.0.472",
+    "resend": "^6.12.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

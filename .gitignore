@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local scratch / working files (render frames, audio backups)
+/tmp/
+
+# Duplicate of public/educare-vsl-1.25x.mp4 — public/ is the served copy
+html/educare-vsl-1.25x.mp4
+
+# Rendered video output (final encodes live in public/vsl/)
+/out/
