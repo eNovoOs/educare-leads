@@ -2,25 +2,56 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0b2447;
+
+  /* Educare Leads brand palette — sampled from logo + ad creatives */
+  --ink: #0b2447;       /* deep navy — hero, dark sections, headings */
+  --ink-soft: #14315c;
+  --ink-deep: #071a37;  /* near-black navy for gradients */
+  --brand: #1d5fd8;     /* primary blue — trust, gradient glow */
+  --brand-dark: #1547a8;
+  --cta: #11a0d8;       /* signature bright cyan — buttons */
+  --cta-dark: #0b82b4;
+  --teal: #1c8b9c;      /* logo teal — secondary accent */
+  --accent: #f5c518;    /* gold — money / loss highlights */
+  --muted: #5b6b80;
+  --line: #e4e9f0;
+  --surface: #f4f7fb;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-deep: var(--ink-deep);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-cta: var(--cta);
+  --color-cta-dark: var(--cta-dark);
+  --color-teal: var(--teal);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-archivo-black);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display headlines — bold condensed look from the ad creatives */
+.font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.01em;
 }
