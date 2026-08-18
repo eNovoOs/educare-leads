@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1534633631359400');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1534633631359400&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
+<title>Educare Leads — The 90-Day Enrollment Pitch</title>
+<meta name="description" content="A scroll-through pitch: the done-for-you enrollment system we install to fill childcare & education programs to capacity in 90 days." />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="theme-color" content="#0b2447" />
+<link rel="canonical" href="https://www.educareleads.com/deck" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Educare Leads" />
+<meta property="og:title" content="The 90-Day Enrollment Pitch — Educare Leads" />
+<meta property="og:description" content="How we fill childcare &amp; education programs to capacity in 90 days with a done-for-you enrollment system — ads, AI booking &amp; CRM." />
+<meta property="og:url" content="https://www.educareleads.com/deck" />
+<meta property="og:image" content="https://www.educareleads.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The 90-Day Enrollment Pitch — Educare Leads" />
+<meta name="twitter:description" content="The done-for-you enrollment system for daycares, schools &amp; camps — a full calendar in 90 days." />
+<meta name="twitter:image" content="https://www.educareleads.com/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0b2447;--ink-soft:#14315c;--ink-deep:#071a37;
+    --brand:#1d5fd8;--cta:#11a0d8;--cta-dark:#0b82b4;
+    --teal:#1c8b9c;--accent:#f5c518;--muted:#5b6b80;--line:#e4e9f0;--surface:#f4f7fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased;color:var(--ink)}
+  a{text-decoration:none;color:inherit}
+  img{display:block;max-width:100%}
+  .display{font-family:"Archivo Black",Inter,sans-serif;letter-spacing:-.01em;text-transform:uppercase;line-height:1.04}
+
+  /* scroll-snap deck */
+  .deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+  .slide{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:80px 24px;position:relative;overflow:hidden}
+  .inner{max-width:920px;width:100%;margin:0 auto;position:relative;z-index:2}
+  .glow{position:absolute;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:1}
+
+  /* themes */
+  .navy{background:linear-gradient(135deg,var(--ink-deep),var(--ink) 60%,var(--ink-soft));color:#fff}
+  .light{background:#fff;color:var(--ink)}
+  .surface{background:var(--surface);color:var(--ink)}
+  .cyan{background:linear-gradient(135deg,var(--brand),var(--cta-dark));color:#fff}
+
+  .kick{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.8}
+  .navy .kick,.cyan .kick{color:var(--cta)}
+  .cyan .kick{color:#fff;opacity:.85}
+  .light .kick,.surface .kick{color:var(--brand)}
+  .slide h2{font-size:clamp(30px,6vw,62px);margin-top:14px}
+  .navy h2 .accent,.surface h2 .accent,.light h2 .accent{color:var(--cta)}
+  .cyan h2 .accent{color:var(--accent)}
+  .lead{margin-top:22px;font-size:clamp(17px,2.4vw,22px);max-width:680px}
+  .navy .lead,.cyan .lead{color:rgba(255,255,255,.82)}
+  .light .lead,.surface .lead{color:var(--ink-soft)}
+
+  .step-num{font-size:14px;font-weight:700;letter-spacing:.2em;opacity:.5;text-transform:uppercase}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:700;border:0;cursor:pointer;transition:.15s}
+  .btn svg{width:20px;height:20px}
+  .btn-cta{background:var(--cta);color:#fff;box-shadow:0 16px 34px -10px rgba(17,160,216,.7);padding:18px 40px;font-size:19px}
+  .btn-cta:hover{background:var(--cta-dark)}
+  .btn-white{background:#fff;color:var(--ink);padding:18px 40px;font-size:19px}
+
+  /* two-col */
+  .cols{display:grid;gap:24px;margin-top:36px}
+  @media(min-width:760px){.cols{grid-template-columns:1fr 1fr}}
+  .col{border-radius:20px;padding:30px}
+  .col.bad{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+  .col.good{background:var(--cta);color:#fff;box-shadow:0 20px 40px -16px rgba(17,160,216,.6)}
+  .col h3{font-family:"Archivo Black";text-transform:uppercase;font-size:22px}
+  .col ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:12px}
+  .col li{display:flex;gap:10px;align-items:flex-start;font-size:16px}
+  .col li svg{width:20px;height:20px;flex:0 0 auto;margin-top:1px}
+
+  /* big number */
+  .bignum{font-family:"Archivo Black";font-size:clamp(64px,16vw,160px);line-height:.9;color:var(--accent)}
+
+  /* steps row */
+  .steps{display:grid;gap:18px;margin-top:36px}
+  @media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+  .stp{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);border-radius:18px;padding:24px;text-align:left}
+  .stp .n{font-family:"Archivo Black";font-size:34px;color:var(--cta)}
+  .stp h4{margin-top:8px;font-size:18px;color:#fff}
+  .stp p{margin-top:8px;font-size:14px;color:rgba(255,255,255,.7)}
+
+  /* review */
+  .rev{background:#fff;color:var(--ink);border-radius:20px;padding:34px;max-width:620px;margin:32px auto 0;box-shadow:0 30px 60px -24px rgba(0,0,0,.5)}
+  .stars{display:flex;gap:3px;color:var(--accent);justify-content:center}
+  .stars svg{width:22px;height:22px}
+  .rev .metric{font-family:"Archivo Black";text-transform:uppercase;font-size:22px;color:var(--cta);text-align:center;margin-top:14px}
+  .rev .q{margin-top:14px;font-size:18px;color:var(--ink-soft);text-align:center}
+  .rev .who{margin-top:18px;text-align:center;font-size:14px;color:var(--muted)}
+  .rev .who b{color:var(--ink)}
+
+  .stamp{display:inline-block;background:var(--accent);color:var(--ink);padding:7px 18px;border-radius:999px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:18px}
+
+  .scrollhint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;animation:bob 1.8s infinite;z-index:3}
+  .navy .scrollhint,.cyan .scrollhint{color:#fff}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
+
+  .logo-top{height:46px;width:auto;margin:0 auto 8px}
+
+  /* dot nav */
+  .dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:12px}
+  .dots a{width:11px;height:11px;border-radius:50%;background:rgba(120,140,170,.4);transition:.2s;display:block}
+  .dots a:hover{background:var(--cta);transform:scale(1.3)}
+  @media(max-width:640px){.dots{display:none}}
+
+  .pills{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .pill{border-radius:999px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);padding:8px 16px;font-size:13px;font-weight:600;color:rgba(255,255,255,.82)}
+</style>
+</head>
+<body>
+
+<nav class="dots">
+  <a href="#s1" title="Start"></a>
+  <a href="#s2" title="Two kinds"></a>
+  <a href="#s3" title="The cost"></a>
+  <a href="#s4" title="The system"></a>
+  <a href="#s5" title="The difference"></a>
+  <a href="#s6" title="Proof"></a>
+  <a href="#s7" title="The System"></a>
+  <a href="#s8" title="Book"></a>
+</nav>
+
+<div class="deck">
+
+  <!-- 1 — TITLE -->
+  <section class="slide navy" id="s1">
+    <div class="glow" style="top:-100px;left:50%;transform:translateX(-50%);width:560px;height:380px;background:rgba(29,95,216,.4)"></div>
+    <div class="inner" style="text-align:center">
+      <img class="logo-top" src="educare-leads-logo-white.png" alt="Educare Leads Marketing" />
+      <span class="stamp" style="margin-top:18px">For childcare &amp; education owners · $25k/mo+</span>
+      <h2 class="display">We fill your program to <span class="accent">capacity</span> in 90 days</h2>
+      <p class="lead" style="margin-left:auto;margin-right:auto">We install a done-for-you enrollment system — ads, AI booking &amp; CRM — that fills your calendar with qualified families within 90 days of working with us.</p>
+      <div class="pills">
+        <span class="pill">Daycares &amp; childcare</span>
+        <span class="pill">Private schools</span>
+        <span class="pill">Summer camps</span>
+      </div>
+    </div>
+    <div class="scrollhint">Scroll ↓</div>
+  </section>
+
+  <!-- 2 — TWO KINDS -->
+  <section class="slide light" id="s2">
+    <div class="inner" style="text-align:center">
+      <p class="kick">The fork in the road</p>
+      <h2 class="display">There are 2 kinds of owners</h2>
+      <div class="cols">
+        <div class="col bad" style="background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)">
+          <h3 style="color:var(--muted)">Chasing parents all day</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#ef4444"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> Praying the phone rings</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#ef4444"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> Leads go cold before anyone calls back</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#ef4444"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> Empty rooms quietly bleeding revenue</li>
+          </ul>
+        </div>
+        <div class="col good">
+          <h3>Building a waitlist</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#fff"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Calendar full of qualified families</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#fff"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Every inquiry answered in seconds</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#fff"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Rooms full — and a list waiting</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — THE COST -->
+  <section class="slide navy" id="s3">
+    <div class="glow" style="bottom:-120px;right:-80px;width:420px;height:420px;background:rgba(245,197,24,.18)"></div>
+    <div class="inner" style="text-align:center">
+      <p class="kick">The cost of staying half-full</p>
+      <h2 class="display" style="margin-bottom:10px">Every empty spot costs you</h2>
+      <div class="bignum">$72,000</div>
+      <p class="lead" style="margin-left:auto;margin-right:auto">a year — quietly. Four open spots at ~$1,500/month each is <b style="color:#fff">$6,000 every month</b> walking out the door. Word-of-mouth can&rsquo;t fill it fast enough.</p>
+    </div>
+    <div class="scrollhint">Scroll ↓</div>
+  </section>
+
+  <!-- 4 — THE SYSTEM -->
+  <section class="slide navy" id="s4" style="background:linear-gradient(135deg,var(--ink),var(--ink-deep))">
+    <div class="inner" style="text-align:center">
+      <p class="kick">The mechanism</p>
+      <h2 class="display">The Educare Enrollment System</h2>
+      <div class="steps">
+        <div class="stp"><div class="n">01</div><h4>We build the ads</h4><p>Hyper-local Meta &amp; Google campaigns targeted to families near you.</p></div>
+        <div class="stp"><div class="n">02</div><h4>AI books the family</h4><p>Replies in 7 seconds, qualifies, and books straight onto your calendar.</p></div>
+        <div class="stp"><div class="n">03</div><h4>You enroll &amp; we scale</h4><p>Tracked in your CRM. We double down on what converts and grow your waitlist.</p></div>
+      </div>
+    </div>
+    <div class="scrollhint">Scroll ↓</div>
+  </section>
+
+  <!-- 5 — THE DIFFERENCE -->
+  <section class="slide surface" id="s5">
+    <div class="inner" style="text-align:center">
+      <p class="kick">Why we&rsquo;re different</p>
+      <h2 class="display">Not all enrollment ads are the same</h2>
+      <div class="cols">
+        <div class="col bad" style="background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)">
+          <h3 style="color:var(--muted)">Typical agency</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#ef4444"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> Just sends you raw leads</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#ef4444"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> You chase the follow-up</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#ef4444"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> Nothing is installed for you</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#ef4444"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> Works with anyone</li>
+          </ul>
+        </div>
+        <div class="col good">
+          <h3>Educare Leads</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#fff"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Books families on your calendar</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#fff"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> AI does the follow-up in seconds</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#fff"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> A full system, installed &amp; run for you</li>
+            <li><svg viewBox="0 0 24 24" fill="none" style="color:#fff"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Childcare &amp; education only</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — PROOF -->
+  <section class="slide navy" id="s6">
+    <div class="glow" style="top:-80px;left:-60px;width:380px;height:380px;background:rgba(17,160,216,.25)"></div>
+    <div class="inner" style="text-align:center">
+      <p class="kick">Proof</p>
+      <h2 class="display">What owners say after 90 days</h2>
+      <div class="rev">
+        <div class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg></div>
+        <p class="metric">42 enrollments in 50 days</p>
+        <p class="q">&ldquo;We went from praying for a phone call to turning families away. They filled our infant room and built a waitlist in under two months.&rdquo;</p>
+        <p class="who"><b>Maria T.</b> · Owner, 2-center daycare · Texas</p>
+      </div>
+    </div>
+    <div class="scrollhint">Scroll ↓</div>
+  </section>
+
+  <!-- 7 — THE SYSTEM WE INSTALL -->
+  <section class="slide cyan" id="s7">
+    <div class="inner" style="text-align:center">
+      <span class="stamp">Done-for-you</span>
+      <h2 class="display">The system we <span class="accent">install</span> for you</h2>
+      <div class="steps" style="margin-top:34px">
+        <div class="stp" style="background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)"><div class="n" style="color:#fff">Ads</div><h4>The Traffic Engine</h4><p style="color:rgba(255,255,255,.85)">Hyper-local Meta &amp; Google campaigns targeted to families near you.</p></div>
+        <div class="stp" style="background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)"><div class="n" style="color:#fff">AI</div><h4>The AI Front Desk</h4><p style="color:rgba(255,255,255,.85)">Replies in 7 seconds, qualifies, and books families onto your calendar.</p></div>
+        <div class="stp" style="background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)"><div class="n" style="color:#fff">CRM</div><h4>The Enrollment CRM</h4><p style="color:rgba(255,255,255,.85)">Every lead tracked from first click to enrolled family.</p></div>
+      </div>
+      <p class="lead" style="margin:28px auto 0">We install it, run it, and optimize it as your waitlist grows. You just enroll the families.</p>
+    </div>
+  </section>
+
+  <!-- 8 — CTA -->
+  <section class="slide navy" id="s8" style="background:linear-gradient(135deg,var(--ink-deep),var(--ink-soft))">
+    <div class="glow" style="bottom:-120px;right:0;width:420px;height:420px;background:rgba(17,160,216,.28)"></div>
+    <div class="inner" style="text-align:center">
+      <img class="logo-top" src="educare-leads-logo-white.png" alt="Educare Leads Marketing" />
+      <h2 class="display" style="margin-top:14px">Let&rsquo;s fill every spot</h2>
+      <p class="lead" style="margin-left:auto;margin-right:auto">Book a free 20-minute call. We&rsquo;ll map out exactly how many families your market can produce — and what it takes to fill your program in 90 days.</p>
+      <div style="margin-top:32px"><a class="btn btn-cta" href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Book Your Free Call
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <p style="margin-top:14px;font-size:13px;color:rgba(255,255,255,.5)">Limited onboarding spots each month · $25k/month+ programs only</p>
+    </div>
+  </section>
+
+</div>
+<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<script>
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-cal]');
+    if (!t) return;
+    if (window.Calendly) { e.preventDefault(); window.Calendly.initPopupWidget({ url: 'https://calendly.com/educareleads/30min' }); }
+  });
+  // Meta Pixel — fire Schedule when a Calendly booking completes
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.event === 'calendly.event_scheduled' && window.fbq) { window.fbq('track', 'Schedule'); }
+  });
+</script>
+</body>
+</html>

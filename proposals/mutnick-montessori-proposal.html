@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Partnership Proposal — Mutnick Montessori</title>
+<style>
+  @page { size: Letter; margin: 14mm 16mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #0b2447;
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+
+  table.page { width: 100%; border-collapse: collapse; }
+  table.page > thead { display: table-header-group; }
+  table.page > tfoot { display: table-footer-group; }
+  table.page > thead td, table.page > tfoot td, table.page > tbody td { padding: 0; border: none; }
+
+  .band-head {
+    background: linear-gradient(110deg, #071a37 0%, #0b2447 45%, #1547a8 100%);
+    margin: 0 -16mm 9mm; padding: 5mm 16mm; display: flex; align-items: center;
+  }
+  .band-head img { height: 9mm; width: auto; }
+  .band-head .tagline {
+    margin-left: auto; color: #9cc2ff; font-size: 8pt; letter-spacing: 1.6px; text-transform: uppercase;
+  }
+  .band-foot {
+    margin: 8mm -16mm 0; padding: 3mm 16mm 0; border-top: 2px solid #11a0d8;
+    display: flex; align-items: center; color: #5b6b80; font-size: 8pt;
+  }
+  .band-foot .right { margin-left: auto; }
+  .band-foot strong { color: #0b2447; }
+
+  h1 { font-size: 22pt; letter-spacing: 0.3px; margin: 0 0 2px; color: #0b2447; }
+  .h1-rule { height: 3px; width: 64px; background: #11a0d8; margin: 0 0 14px; border-radius: 2px; }
+
+  .meta-card {
+    border: 1px solid #e4e9f0; border-left: 4px solid #1d5fd8; border-radius: 6px;
+    background: #fbfcfe; padding: 12px 16px; margin: 0 0 18px; font-size: 10.5pt;
+  }
+  .meta-card .row { margin: 2px 0; }
+  .meta-card .k { color: #5b6b80; display: inline-block; min-width: 95px; }
+  .meta-card .v { font-weight: 600; color: #0b2447; }
+
+  h2 {
+    font-size: 13pt; color: #0b2447; margin: 22px 0 8px; padding: 6px 0 6px 12px;
+    border-left: 4px solid #11a0d8; background: #f4f7fb; page-break-after: avoid;
+  }
+
+  p { margin: 8px 0; }
+  ul { margin: 8px 0; padding-left: 20px; }
+  li { margin: 5px 0; }
+  strong { color: #071a37; }
+
+  .callout {
+    margin: 14px 0; padding: 16px 18px; border-radius: 10px;
+    background: linear-gradient(110deg, #0b2447 0%, #1547a8 100%); color: #fff;
+    page-break-inside: avoid;
+  }
+  .callout .big { font-size: 15pt; font-weight: 800; margin: 0 0 4px; }
+  .callout .big .free { color: #f5c518; }
+  .callout p { color: rgba(255,255,255,0.85); margin: 4px 0 0; font-size: 10.5pt; }
+
+  ul.check { list-style: none; padding: 0; margin: 10px 0; }
+  ul.check li { position: relative; padding-left: 26px; margin: 6px 0; }
+  ul.check li::before {
+    content: "✓"; position: absolute; left: 0; top: 0;
+    color: #11a0d8; font-weight: 800;
+  }
+
+  table.data { width: 100%; border-collapse: collapse; margin: 10px 0 12px; }
+  table.data th, table.data td { text-align: left; padding: 9px 14px; border-bottom: 1px solid #e4e9f0; }
+  table.data thead th { background: #0b2447; color: #fff; font-weight: 600; border-bottom: none; }
+  table.data tr.highlight td { background: #eef4fc; font-weight: 700; color: #1547a8; }
+
+  .note {
+    margin: 10px 0; padding: 11px 14px; border-radius: 8px;
+    background: #fff8e1; border: 1px solid #f3e0a6; font-size: 10pt; color: #6b5a14;
+  }
+
+  .tiers { display: flex; gap: 12px; margin: 12px 0; }
+  .tier {
+    flex: 1; border: 1px solid #e4e9f0; border-top: 3px solid #1d5fd8; border-radius: 8px;
+    padding: 14px; text-align: center; background: #fbfcfe;
+  }
+  .tier .name { font-size: 9pt; text-transform: uppercase; letter-spacing: 1px; color: #5b6b80; }
+  .tier .num { font-size: 22pt; font-weight: 800; color: #0b2447; margin: 4px 0 0; }
+  .tier .unit { font-size: 9pt; color: #5b6b80; }
+
+  ol.steps { margin: 8px 0; padding-left: 20px; }
+  ol.steps li { margin: 6px 0; }
+
+  .sig-block { display: flex; gap: 40px; margin-top: 16px; page-break-inside: avoid; }
+  .sig { flex: 1; border: 1px solid #e4e9f0; border-radius: 6px; padding: 14px 16px 18px; }
+  .sig .who { font-weight: 700; color: #0b2447; }
+  .sig .sub { font-size: 9pt; color: #5b6b80; }
+  .sig .line { border-bottom: 1px solid #0b2447; height: 26px; margin: 16px 0 4px; }
+  .sig .cap { font-size: 8.5pt; color: #5b6b80; }
+</style>
+</head>
+<body>
+<table class="page">
+<thead><tr><td>
+  <div class="band-head">
+    <img src="__LOGO__" alt="EduCare Leads">
+    <span class="tagline">Partnership Proposal</span>
+  </div>
+</td></tr></thead>
+<tfoot><tr><td>
+  <div class="band-foot">
+    <span><strong>EduCare Leads</strong> — 9503-3692 Quebec Inc.</span>
+    <span class="right">+1 (438) 885-2056 &nbsp;·&nbsp; Confidential</span>
+  </div>
+</td></tr></tfoot>
+<tbody><tr><td>
+
+<h1>Partnership Proposal</h1>
+<div class="h1-rule"></div>
+
+<div class="meta-card">
+  <div class="row"><span class="k">Prepared for</span> <span class="v">Steve Mutnick — Montessori (Private / Independent School)</span></div>
+  <div class="row"><span class="k">Contact</span> <span class="v">sjminv@aol.com &nbsp;·&nbsp; (408) 836-3698</span></div>
+  <div class="row"><span class="k">Prepared by</span> <span class="v">EduCare Leads · 9503-3692 Quebec Inc.</span></div>
+  <div class="row"><span class="k">Date</span> <span class="v">June 18, 2026</span></div>
+</div>
+
+<h2>1. The Opportunity</h2>
+<p>Every empty seat in your Montessori program is recurring tuition that never arrives. Most schools rely on word-of-mouth, the occasional Google search, and open houses that fill slowly — leaving classrooms below capacity and growth on the table.</p>
+<p>EduCare Leads installs a complete, done-for-you enrollment system that puts qualified local families in front of your program and books them onto tours — so your admissions calendar stays full.</p>
+
+<h2>2. What We Install — The EduCare Ecosystem</h2>
+<ul>
+  <li><strong>Website / landing page</strong> — a conversion-focused page built to turn local parents into booked tours.</li>
+  <li><strong>Ad creatives &amp; campaigns</strong> — hyper-local Meta ads, written and designed for your Montessori program and the families nearby.</li>
+  <li><strong>Automations &amp; AI follow-up</strong> — every inquiry is texted, qualified, and booked in seconds, so no lead goes cold.</li>
+  <li><strong>Channels &amp; tracking</strong> — all leads captured and tracked in your CRM, from first click to enrolled family.</li>
+</ul>
+
+<h2>3. The Offer — 90-Day Risk-Free Partnership</h2>
+<p>We're so confident in the system that we'll prove it first.</p>
+<div class="callout">
+  <div class="big">EduCare Leads works <span class="free">FREE for the first 3 months.</span></div>
+  <p>You pay us nothing for our service, strategy, build, or management during that time. You only cover your CRM and your ad spend.</p>
+</div>
+
+<p><strong>What EduCare provides at no cost (first 90 days):</strong></p>
+<ul class="check">
+  <li>Website / landing page build</li>
+  <li>Ad creative design and copywriting</li>
+  <li>Campaign setup, launch, and ongoing management</li>
+  <li>AI lead follow-up and booking automations</li>
+  <li>Weekly strategy meetings</li>
+</ul>
+
+<p><strong>What you invest:</strong></p>
+<table class="data">
+  <thead><tr><th>Item</th><th>Cost</th><th>Paid to</th></tr></thead>
+  <tbody>
+    <tr><td>CRM subscription</td><td>$97 / month</td><td>CRM provider</td></tr>
+    <tr><td>Ad spend</td><td>Recommended minimum $500 / month</td><td>Meta (directly)</td></tr>
+    <tr class="highlight"><td>EduCare Leads service</td><td>$0 for 90 days</td><td>—</td></tr>
+  </tbody>
+</table>
+<div class="note">Ad spend is paid by you directly to Meta and stays in your control. The higher the ad budget, the more tours we can generate — $500/month is the recommended starting minimum.</div>
+
+<h2>4. Weekly Meetings &amp; Defining Success Together</h2>
+<p>Every week we meet to review performance, optimize campaigns, and stay aligned. At the start, <strong>we define together what a successful campaign looks like for your school</strong> — measured in booked tours per month:</p>
+<div class="tiers">
+  <div class="tier"><div class="name">Starter</div><div class="num">3</div><div class="unit">tours / month</div></div>
+  <div class="tier"><div class="name">Growth</div><div class="num">5</div><div class="unit">tours / month</div></div>
+  <div class="tier"><div class="name">Scale</div><div class="num">10+</div><div class="unit">tours / month</div></div>
+</div>
+<p>We agree on your target up front, then build the campaign to hit it.</p>
+
+<h2>5. How It Works</h2>
+<ol class="steps">
+  <li><strong>Kickoff &amp; onboarding</strong> — we collect everything we need (brand, offer, assets, accounts).</li>
+  <li><strong>Build</strong> — website, creatives, and automations go live.</li>
+  <li><strong>Launch</strong> — campaigns go live; AI follow-up books tours.</li>
+  <li><strong>Weekly optimization</strong> — we meet, review, and improve every week.</li>
+  <li><strong>90-day review</strong> — we sit down together to review results and decide how to move forward.</li>
+</ol>
+
+<h2>6. After 90 Days</h2>
+<p>At the end of the partnership, we review the results against the success target we set together. If the system delivered, we discuss continuing on a paid basis to keep scaling your enrollment. <strong>No long-term commitment is required to start.</strong></p>
+
+<h2>7. Next Steps</h2>
+<p>To get started, simply confirm below. We'll send onboarding and have your system live shortly after.</p>
+<div class="sig-block">
+  <div class="sig">
+    <div class="who">Accepted by (Client)</div>
+    <div class="sub">Montessori — Private / Independent School</div>
+    <div class="line"></div><div class="cap">Signature</div>
+    <div class="line"></div><div class="cap">Name: Steve Mutnick</div>
+    <div class="line"></div><div class="cap">Date</div>
+  </div>
+  <div class="sig">
+    <div class="who">EduCare Leads</div>
+    <div class="sub">9503-3692 Quebec Inc.</div>
+    <div class="line"></div><div class="cap">Signature</div>
+    <div class="line"></div><div class="cap">Name</div>
+    <div class="line"></div><div class="cap">Date</div>
+  </div>
+</div>
+
+</td></tr></tbody>
+</table>
+</body>
+</html>

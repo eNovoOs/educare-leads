@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Educare Leads — We Fill Childcare &amp; Education Programs in 90 Days</title>
+<meta name="description" content="We install a done-for-you enrollment system for daycares, schools & camps — ads, AI booking & CRM — that fills your calendar with qualified families within 90 days." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0b2447; --ink-soft:#14315c; --ink-deep:#071a37;
+    --brand:#1d5fd8; --brand-dark:#1547a8;
+    --cta:#11a0d8; --cta-dark:#0b82b4;
+    --teal:#1c8b9c; --accent:#f5c518;
+    --muted:#5b6b80; --line:#e4e9f0; --surface:#f4f7fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  img{display:block;max-width:100%}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  .display{font-family:"Archivo Black",Inter,sans-serif;letter-spacing:-.01em;text-transform:uppercase;line-height:1.04}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:700;cursor:pointer;transition:.15s;border:0}
+  .btn svg{width:18px;height:18px}
+  .btn-cta{background:var(--cta);color:#fff;box-shadow:0 10px 25px -8px rgba(17,160,216,.6)}
+  .btn-cta:hover{background:var(--cta-dark)}
+  .btn-lg{padding:16px 32px;font-size:18px}
+  .btn-md{padding:12px 24px;font-size:15px}
+  .btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.8)}
+  .btn-outline:hover{background:#fff;color:var(--ink)}
+  .btn-ghost{padding:16px 32px;font-size:16px;border:2px solid rgba(255,255,255,.25);color:#fff;font-weight:700;border-radius:999px}
+  .btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+  /* header */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav .logo{height:44px;width:auto}
+  .nav-links{display:none;gap:32px;font-size:14px;font-weight:600;color:var(--ink-soft)}
+  .nav-links a:hover{color:var(--brand)}
+  .nav-right{display:flex;align-items:center;gap:16px}
+  .nav-phone{display:none;font-weight:700;font-size:14px}
+  @media(min-width:768px){.nav-links{display:flex}.nav-phone{display:block}}
+
+  /* sections */
+  section{padding:0}
+  .pad{padding:80px 0}
+  .navy{background:linear-gradient(135deg,var(--ink-deep),var(--ink) 55%,var(--ink-soft));color:#fff;position:relative;overflow:hidden}
+  .glow{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+  .badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:rgba(255,255,255,.1);padding:6px 16px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--cta)}
+
+  /* hero */
+  .hero-grid{display:grid;gap:48px;padding:80px 0;align-items:start}
+  @media(min-width:1000px){.hero-grid{grid-template-columns:1.1fr .9fr;padding:104px 0}}
+  .hero h1{font-size:clamp(34px,6vw,59px);margin-top:24px;color:#fff}
+  .hero h1 .accent{color:var(--cta)}
+  .hero p.sub{margin-top:24px;max-width:560px;font-size:18px;color:rgba(255,255,255,.8)}
+  .hero p.sub b{color:#fff}
+  .cta-row{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+  @media(min-width:560px){.cta-row{flex-direction:row}}
+  .micro{margin-top:20px;display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(255,255,255,.6)}
+  .micro svg{width:18px;height:18px;color:var(--cta)}
+  .pills{margin-top:32px;display:flex;flex-wrap:wrap;gap:8px}
+  .pill{border-radius:999px;background:rgba(255,255,255,.05);padding:6px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+
+  /* proof card */
+  .proof{position:relative}
+  .proof .stamp{position:absolute;right:-12px;top:-12px;z-index:2;transform:rotate(6deg);background:var(--accent);color:var(--ink);padding:6px 16px;border-radius:999px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;box-shadow:0 8px 20px -6px rgba(0,0,0,.4)}
+  .card{background:#fff;color:var(--ink);border-radius:24px;padding:24px;box-shadow:0 30px 60px -20px rgba(0,0,0,.5)}
+  .card .big{font-family:"Archivo Black";font-size:48px;color:var(--cta)}
+  .row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px;margin-top:12px;font-size:14px}
+  .row .v{font-weight:700;font-size:18px}
+  .quote-chip{margin-top:20px;background:var(--surface);border-radius:12px;padding:12px 16px;font-size:14px;font-weight:500;color:var(--ink-soft)}
+
+  /* stat bar */
+  .statbar{border-top:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.2);position:relative}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);padding:8px 0}
+  @media(min-width:560px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{text-align:center;padding:20px 12px}
+  .stat .num{font-family:"Archivo Black";font-size:30px;color:var(--accent)}
+  .stat .lbl{margin-top:4px;font-size:12px;color:rgba(255,255,255,.7)}
+
+  /* generic headings */
+  h2.sec{font-size:clamp(28px,4vw,40px);color:var(--ink);text-align:center}
+  .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand)}
+  .center{text-align:center}
+
+  /* two col grids */
+  .two{display:grid;gap:24px}
+  @media(min-width:768px){.two{grid-template-columns:1fr 1fr}}
+  .panel{border-radius:24px;padding:32px}
+  .panel.light{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+  .panel.dark{background:linear-gradient(135deg,var(--ink),var(--ink-soft));color:#fff;box-shadow:0 20px 40px -16px rgba(0,0,0,.4)}
+  .panel.us{box-shadow:0 20px 40px -16px rgba(0,0,0,.4),0 0 0 2px var(--cta)}
+  .panel h3{font-family:"Archivo Black";text-transform:uppercase;font-size:24px}
+  ul.list{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  ul.list li{display:flex;align-items:flex-start;gap:12px}
+  .ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;margin-top:2px}
+  .ic svg{width:16px;height:16px}
+  .ic.bad{background:#fee2e2;color:#ef4444}
+  .ic.good-d{background:rgba(17,160,216,.2);color:var(--cta)}
+  .ic.good-l{background:rgba(17,160,216,.1);color:var(--cta)}
+
+  /* receipt */
+  .receipt-grid{display:grid;gap:48px;align-items:center}
+  @media(min-width:1000px){.receipt-grid{grid-template-columns:1fr 1fr}}
+  .receipt{max-width:360px;margin:0 auto;width:100%;background:#fff;border-radius:16px;padding:28px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;box-shadow:0 30px 60px -20px rgba(0,0,0,.5)}
+  .receipt .ttl{text-align:center;font-weight:700;letter-spacing:.18em;font-size:14px}
+  .receipt .sub{text-align:center;letter-spacing:.18em;font-size:11px;color:var(--muted);margin-top:4px}
+  .dash{border-top:1px dashed var(--line);margin:16px 0}
+  .receipt .li{display:flex;justify-content:space-between;font-size:14px;margin:8px 0}
+  .receipt .li span:first-child{color:var(--ink-soft)}
+  .receipt .li span:last-child{font-weight:600}
+  .receipt .total{display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:#dc2626}
+
+  /* steps */
+  .three{display:grid;gap:24px;margin-top:56px}
+  @media(min-width:768px){.three{grid-template-columns:repeat(3,1fr)}}
+  .step{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:28px}
+  .step .n{font-family:"Archivo Black";font-size:36px;color:rgba(17,160,216,.25)}
+  .step h3{font-size:20px;margin-top:12px;color:var(--ink)}
+  .step p{margin-top:12px;color:var(--muted)}
+
+  /* sms */
+  .phone{max-width:360px;margin:0 auto;width:100%;background:#fff;border-radius:24px;padding:20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.3),inset 0 0 0 1px var(--line)}
+  .phone .ph-ttl{text-align:center;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:12px;color:var(--ink)}
+  .bubbles{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+  .bub{max-width:80%;padding:10px 16px;font-size:14px;border-radius:16px}
+  .bub.them{margin-right:auto;background:var(--surface);color:var(--ink-soft);border-bottom-left-radius:6px;box-shadow:inset 0 0 0 1px var(--line)}
+  .bub.ai{margin-left:auto;background:var(--cta);color:#fff;font-weight:500;border-bottom-right-radius:6px}
+
+  /* guarantee */
+  .gbox{position:relative;overflow:hidden;border-radius:24px;background:linear-gradient(135deg,var(--brand),var(--cta-dark));color:#fff;padding:56px 40px;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.5)}
+  .gbox .stamp{position:absolute;right:20px;top:20px;transform:rotate(6deg);background:var(--accent);color:var(--ink);padding:6px 16px;border-radius:999px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;box-shadow:0 8px 20px -6px rgba(0,0,0,.4)}
+  .gbox h2{font-size:clamp(26px,4vw,42px);margin:16px auto 0;max-width:640px}
+  .gbox h2 .accent{color:var(--accent)}
+  .gbox p{margin:20px auto 0;max-width:640px;color:rgba(255,255,255,.92)}
+  .gbox .def{font-size:14px;color:rgba(255,255,255,.7);max-width:560px}
+
+  /* reviews */
+  .reviews{display:grid;gap:24px;margin-top:48px}
+  @media(min-width:560px){.reviews{grid-template-columns:1fr 1fr}}
+  .review{background:#fff;border-radius:16px;padding:28px;box-shadow:0 1px 0 var(--line),inset 0 0 0 1px var(--line);display:flex;flex-direction:column}
+  .review .top{display:flex;align-items:center;justify-content:space-between}
+  .gicon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+  .stars{display:flex;gap:2px;color:var(--accent)}
+  .stars svg{width:18px;height:18px}
+  .review .metric{font-family:"Archivo Black";text-transform:uppercase;font-size:20px;color:var(--cta);margin-top:16px}
+  .review .q{margin-top:12px;color:var(--ink-soft);flex:1}
+  .review .who{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
+  .review .who b{color:var(--ink)}
+  .review .who span{display:block;font-size:14px;color:var(--muted)}
+
+  /* faq */
+  .faq{max-width:760px;margin:0 auto}
+  details{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:20px;margin-top:12px}
+  summary{display:flex;align-items:center;justify-content:space-between;gap:16px;font-weight:700;color:var(--ink);cursor:pointer;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  .plus{width:24px;height:24px;border-radius:50%;background:#fff;color:var(--cta);display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);transition:.2s}
+  details[open] .plus{transform:rotate(45deg)}
+  details p{margin-top:12px;color:var(--muted)}
+
+  /* footer */
+  footer{margin-top:auto;background:var(--ink);color:rgba(255,255,255,.7)}
+  .foot{display:flex;flex-direction:column;gap:32px;padding:56px 0}
+  @media(min-width:768px){.foot{flex-direction:row;justify-content:space-between;align-items:flex-start}}
+  .foot .logo{height:40px;width:auto}
+  .foot .blurb{max-width:360px;margin-top:16px;font-size:14px;line-height:1.6}
+  .foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;font-size:14px}
+  .foot-cols b{color:#fff}
+  .foot-cols ul{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .foot-cols a:hover{color:#fff}
+  .legal{border-top:1px solid rgba(255,255,255,.1);padding:24px 0;font-size:12px;color:rgba(255,255,255,.5);display:flex;flex-direction:column;gap:8px}
+  @media(min-width:560px){.legal{flex-direction:row;justify-content:space-between;align-items:center}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#top"><img class="logo" src="educare-leads-logo.png" alt="Educare Leads Marketing" /></a>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#system">The System</a>
+      <a href="#results">Results</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <a class="nav-phone" href="tel:+14387994574">+1 (438) 799-4574</a>
+      <a class="btn btn-cta btn-md" href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Book a Call</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="top" class="navy">
+  <div class="glow" style="right:-160px;top:-160px;width:448px;height:448px;background:rgba(29,95,216,.3)"></div>
+  <div class="glow" style="bottom:-190px;left:-160px;width:448px;height:448px;background:rgba(17,160,216,.2)"></div>
+  <div class="wrap hero-grid hero">
+    <div>
+      <span class="badge"><span class="dot"></span> For childcare &amp; education owners above $25k/month</span>
+      <h1 class="display">We book qualified families onto your calendar — <span class="accent">until every spot is full</span></h1>
+      <p class="sub">We install a complete <b>done-for-you enrollment system</b> — ads, AI booking &amp; CRM — that fills your calendar with qualified families within 90 days of working with us.</p>
+      <div class="cta-row">
+        <a class="btn btn-cta btn-lg" href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Book Your Free Call
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn-ghost" href="#results">See real results</a>
+      </div>
+      <p class="micro"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> No long contracts · Done-for-you, installed &amp; managed for you</p>
+      <div class="pills">
+        <span class="pill">Daycares &amp; childcare centers</span>
+        <span class="pill">Private &amp; independent schools</span>
+        <span class="pill">Summer &amp; enrichment camps</span>
+      </div>
+    </div>
+    <div class="proof">
+      <span class="stamp">Done-for-you</span>
+      <div class="card">
+        <p style="font-size:14px;font-weight:600;color:var(--muted)">Live campaign snapshot</p>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px">
+          <div>
+            <p class="big">$14.10</p>
+            <p style="font-size:14px;font-weight:500;color:var(--muted);margin-top:4px">cost per booked family</p>
+          </div>
+          <span style="background:rgba(17,160,216,.1);color:var(--cta-dark);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700">▲ on pace</span>
+        </div>
+        <div class="row"><span style="color:var(--muted)">Families booked this month</span><span class="v">61</span></div>
+        <div class="row"><span style="color:var(--muted)">Show-up rate</span><span class="v">82%</span></div>
+        <div class="row"><span style="color:var(--muted)">New enrollments</span><span class="v">23</span></div>
+        <p class="quote-chip">&ldquo;It took minutes to start seeing results.&rdquo;</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT BAR -->
+  <div class="statbar">
+    <div class="wrap stats">
+      <div class="stat"><p class="num">$14.10</p><p class="lbl">Avg. cost per booked family</p></div>
+      <div class="stat"><p class="num">90 days</p><p class="lbl">To a full calendar — done-for-you</p></div>
+      <div class="stat"><p class="num">37+</p><p class="lbl">Programs filled across the U.S.</p></div>
+      <div class="stat"><p class="num">4.2x</p><p class="lbl">Average return on ad spend</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TWO KINDS -->
+<section class="pad">
+  <div class="wrap">
+    <h2 class="sec display">There are 2 kinds of program owners</h2>
+    <div class="two" style="margin-top:48px">
+      <div class="panel light">
+        <h3 style="color:var(--muted)">Chasing parents all day</h3>
+        <ul class="list">
+          <li><span class="ic bad"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>Praying the phone rings</li>
+          <li><span class="ic bad"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>Leads go cold before anyone calls back</li>
+          <li><span class="ic bad"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>Empty rooms quietly bleeding revenue</li>
+        </ul>
+      </div>
+      <div class="panel dark">
+        <h3 style="color:var(--cta)">Building a waitlist</h3>
+        <ul class="list">
+          <li><span class="ic good-d"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Calendar full of qualified families</li>
+          <li><span class="ic good-d"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Every inquiry answered in seconds</li>
+          <li><span class="ic good-d"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Rooms full — and a list of families waiting</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COST RECEIPT -->
+<section class="navy pad">
+  <div class="wrap receipt-grid">
+    <div>
+      <p class="kicker" style="color:var(--cta)">The cost of half-full</p>
+      <h2 class="display" style="color:#fff;font-size:clamp(28px,4vw,40px);margin-top:12px">Every empty spot is costing you <span style="color:var(--accent)">$1,000–$2,000</span> a month</h2>
+      <p style="margin-top:20px;font-size:18px;color:rgba(255,255,255,.75)">That&rsquo;s <b style="color:var(--accent)">$72,000 a year</b>, quietly — every year you stay half-full. Word-of-mouth and &ldquo;Google luck&rdquo; can&rsquo;t fill it fast enough.</p>
+      <a class="btn btn-cta btn-lg" style="margin-top:32px" href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Stop Paying for Empty Rooms
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="receipt">
+      <p class="ttl">★ ENROLLMENT CENTER ★</p>
+      <p class="sub">MONTHLY LOSS</p>
+      <div class="dash"></div>
+      <div class="li"><span>Open spot #1</span><span>$1,500</span></div>
+      <div class="li"><span>Open spot #2</span><span>$1,500</span></div>
+      <div class="li"><span>Open spot #3</span><span>$1,500</span></div>
+      <div class="li"><span>Open spot #4</span><span>$1,500</span></div>
+      <div class="li"><span>'Google luck'</span><span>$0</span></div>
+      <div class="li"><span>Word of mouth</span><span>$0</span></div>
+      <div class="dash"></div>
+      <div class="total"><span>TOTAL / MO</span><span>$6,000</span></div>
+      <div class="total" style="margin-top:4px"><span>TOTAL / YR</span><span>$72,000</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM -->
+<section id="how" class="pad" style="scroll-margin-top:80px">
+  <div class="wrap">
+    <div class="center">
+      <p class="kicker">How it works</p>
+      <h2 class="sec display" style="margin-top:8px">Up and running in 3 steps</h2>
+    </div>
+    <div class="three">
+      <div class="step"><span class="n">01</span><h3>We Install the Educare Enrollment System</h3><p>We launch hyper-local Meta &amp; Google ad campaigns built specifically for childcare and education programs — written, designed, and targeted to families within driving distance of your location.</p></div>
+      <div class="step"><span class="n">02</span><h3>AI Converts Every Lead For You</h3><p>Our AI instantly texts, qualifies, and books every interested family — onto a call, a tour, a visit, or a registration — no chasing leads, no missed messages, no busywork for your staff.</p></div>
+      <div class="step"><span class="n">03</span><h3>You Enroll &amp; We Scale</h3><p>Families show up ready to enroll. We track every lead in your CRM, double down on what converts, and scale spend as your waitlist grows.</p></div>
+    </div>
+    <div class="center" style="margin-top:48px"><a class="btn btn-cta btn-lg" href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Get My Custom Enrollment Plan
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  </div>
+</section>
+
+<!-- AI 7 SEC -->
+<section class="pad" style="background:var(--surface)">
+  <div class="wrap receipt-grid">
+    <div>
+      <p class="kicker">Built-in AI follow-up</p>
+      <h2 class="display" style="color:var(--ink);font-size:clamp(28px,4vw,40px);margin-top:12px">Our AI replies in <span style="color:var(--cta)">7 seconds</span></h2>
+      <p style="margin-top:20px;font-size:18px;color:var(--muted)">The moment a family inquires, our AI texts them, answers questions, qualifies them, and books the visit — straight onto your calendar.</p>
+      <ul class="list" style="margin-top:24px">
+        <li><span class="ic good-l"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>No front desk tied up on the phone</li>
+        <li><span class="ic good-l"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>No leads going cold overnight</li>
+        <li><span class="ic good-l"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Just booked tours, visits &amp; registrations</li>
+      </ul>
+    </div>
+    <div class="phone">
+      <p class="ph-ttl">Messages</p>
+      <div class="bubbles">
+        <div class="bub them">Hi, do you have spots for a 3yr old?</div>
+        <div class="bub ai">We do! 🎉 We have a few openings. Would Sat 10am or Mon 4pm work for a quick tour?</div>
+        <div class="bub them">Saturday works!</div>
+        <div class="bub ai">Booked ✅ Sat 10am. We'll send a reminder. See you then!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="pad">
+  <div class="wrap" style="max-width:960px">
+    <h2 class="sec display">Not all &ldquo;enrollment ads&rdquo; are the same</h2>
+    <div class="two" style="margin-top:48px">
+      <div class="panel light">
+        <p class="kicker" style="color:var(--muted)">Typical agency</p>
+        <ul class="list">
+          <li><span class="ic bad"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>Just sends you raw leads</li>
+          <li><span class="ic bad"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>You chase the follow-up</li>
+          <li><span class="ic bad"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>Nothing is installed for you</li>
+          <li><span class="ic bad"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>Works with anyone</li>
+        </ul>
+      </div>
+      <div class="panel dark us">
+        <p class="kicker" style="color:var(--cta)">Educare Leads</p>
+        <ul class="list">
+          <li><span class="ic good-d"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Books families on your calendar</li>
+          <li><span class="ic good-d"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>AI does the follow-up in seconds</li>
+          <li><span class="ic good-d"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>A full system, installed &amp; run for you</li>
+          <li><span class="ic good-d"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Childcare &amp; education only</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM WE INSTALL -->
+<section id="system" class="navy pad" style="scroll-margin-top:80px">
+  <div class="wrap">
+    <div class="center">
+      <p class="kicker" style="color:var(--cta)">What you get</p>
+      <h2 class="sec display" style="color:#fff;margin-top:8px">The done-for-you system we install</h2>
+      <p style="margin:16px auto 0;max-width:620px;color:rgba(255,255,255,.75)">We don&rsquo;t hand you raw leads and walk away. We install the entire Educare Enrollment System — then run it and optimize it for you.</p>
+    </div>
+    <div class="two" style="margin-top:48px">
+      <div style="background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);border-radius:20px;padding:30px">
+        <div style="display:flex;align-items:center;gap:16px"><span class="display" style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--cta);color:#fff;font-size:18px">1</span><h3 style="font-size:20px;color:#fff">The Traffic Engine</h3></div>
+        <p style="margin-top:16px;color:rgba(255,255,255,.75)">Hyper-local Meta &amp; Google ad campaigns — written, designed, and targeted to families within driving distance of your program.</p>
+      </div>
+      <div style="background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);border-radius:20px;padding:30px">
+        <div style="display:flex;align-items:center;gap:16px"><span class="display" style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--cta);color:#fff;font-size:18px">2</span><h3 style="font-size:20px;color:#fff">The AI Front Desk</h3></div>
+        <p style="margin-top:16px;color:rgba(255,255,255,.75)">Replies to every inquiry in 7 seconds, answers questions, qualifies, and books the visit straight onto your calendar.</p>
+      </div>
+      <div style="background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);border-radius:20px;padding:30px">
+        <div style="display:flex;align-items:center;gap:16px"><span class="display" style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--cta);color:#fff;font-size:18px">3</span><h3 style="font-size:20px;color:#fff">The Enrollment CRM</h3></div>
+        <p style="margin-top:16px;color:rgba(255,255,255,.75)">Every lead tracked from first click to enrolled family, with automated reminders that slash no-shows.</p>
+      </div>
+      <div style="background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);border-radius:20px;padding:30px">
+        <div style="display:flex;align-items:center;gap:16px"><span class="display" style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--cta);color:#fff;font-size:18px">4</span><h3 style="font-size:20px;color:#fff">The Growth Loop</h3></div>
+        <p style="margin-top:16px;color:rgba(255,255,255,.75)">We track what converts, double down on it, and scale your spend as your waitlist grows.</p>
+      </div>
+    </div>
+    <p class="display" style="text-align:center;color:var(--cta);text-transform:uppercase;font-size:20px;margin-top:40px">We install it, run it, and optimize it. You just enroll the families.</p>
+    <div class="center" style="margin-top:26px"><a class="btn btn-cta btn-lg" href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Book Your Free Call
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" class="pad" style="scroll-margin-top:80px;background:var(--surface)">
+  <div class="wrap">
+    <div class="center">
+      <p class="kicker">Real Results</p>
+      <h2 class="sec display" style="margin-top:8px">What owners say after 90 days</h2>
+    </div>
+    <div class="reviews">
+      <!-- review -->
+      <div class="review">
+        <div class="top">
+          <span class="gicon"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7C21.8 18.9 23 15.9 23 12.3z"/><path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.6-2-6.5-4.8H1.7v3C3.6 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.5 14.6a7.2 7.2 0 0 1 0-4.6v-3H1.7a12 12 0 0 0 0 10.6l3.8-3z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.2 15.1 0 12 0 7.5 0 3.6 2.7 1.7 6.6l3.8 3C6.4 6.8 9 4.8 12 4.8z"/></svg></span>
+          <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg></span>
+        </div>
+        <p class="metric">42 enrollments in 50 days</p>
+        <p class="q">&ldquo;We went from praying for a phone call to turning families away. EduCare Leads filled our infant room and built a waitlist in under two months.&rdquo;</p>
+        <div class="who"><b>Maria T.</b><span>Owner, 2-center daycare group · Texas</span></div>
+      </div>
+      <div class="review">
+        <div class="top">
+          <span class="gicon"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7C21.8 18.9 23 15.9 23 12.3z"/><path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.6-2-6.5-4.8H1.7v3C3.6 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.5 14.6a7.2 7.2 0 0 1 0-4.6v-3H1.7a12 12 0 0 0 0 10.6l3.8-3z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.2 15.1 0 12 0 7.5 0 3.6 2.7 1.7 6.6l3.8 3C6.4 6.8 9 4.8 12 4.8z"/></svg></span>
+          <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg></span>
+        </div>
+        <p class="metric">61 applications in 45 days</p>
+        <p class="q">&ldquo;Our open-house calendar was packed for the first time in years. The AI follow-up booked families before our admissions team could even pick up the phone.&rdquo;</p>
+        <div class="who"><b>James P.</b><span>Admissions Director, private school · Florida</span></div>
+      </div>
+      <div class="review">
+        <div class="top">
+          <span class="gicon"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7C21.8 18.9 23 15.9 23 12.3z"/><path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.6-2-6.5-4.8H1.7v3C3.6 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.5 14.6a7.2 7.2 0 0 1 0-4.6v-3H1.7a12 12 0 0 0 0 10.6l3.8-3z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.2 15.1 0 12 0 7.5 0 3.6 2.7 1.7 6.6l3.8 3C6.4 6.8 9 4.8 12 4.8z"/></svg></span>
+          <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg></span>
+        </div>
+        <p class="metric">Summer sessions sold out in 3 weeks</p>
+        <p class="q">&ldquo;We filled every session and started a waitlist a full month earlier than last year. Registrations came in while we slept.&rdquo;</p>
+        <div class="who"><b>Aisha R.</b><span>Director, day camp · Georgia</span></div>
+      </div>
+      <div class="review">
+        <div class="top">
+          <span class="gicon"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7C21.8 18.9 23 15.9 23 12.3z"/><path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.6-2-6.5-4.8H1.7v3C3.6 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.5 14.6a7.2 7.2 0 0 1 0-4.6v-3H1.7a12 12 0 0 0 0 10.6l3.8-3z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.2 15.1 0 12 0 7.5 0 3.6 2.7 1.7 6.6l3.8 3C6.4 6.8 9 4.8 12 4.8z"/></svg></span>
+          <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 21.4l1.4-6.8L2.2 9.9l6.9-.8L12 2z"/></svg></span>
+        </div>
+        <p class="metric">55 booked visits in the first 30 days</p>
+        <p class="q">&ldquo;Hit capacity at my newest location faster than any of my other three. I&rsquo;m now using them to open location number five.&rdquo;</p>
+        <div class="who"><b>Dwayne K.</b><span>Multi-site owner · Ohio</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="pad" style="scroll-margin-top:80px">
+  <div class="wrap faq">
+    <h2 class="sec display">Questions, answered</h2>
+    <div style="margin-top:40px">
+      <details>
+        <summary>How fast will I see results?<span class="plus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+        <p>Most programs see qualified families booked within the first 7 days of launch, with your calendar filling up over your first 90 days as the system ramps.</p>
+      </details>
+      <details>
+        <summary>What does it cost?<span class="plus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+        <p>We work with programs doing at least $25k/month in revenue. Pricing depends on your market and number of locations — we&rsquo;ll walk through exact numbers on your strategy call. Most owners are profitable on ad spend within the first month.</p>
+      </details>
+      <details>
+        <summary>Do I need to run the ads or tech myself?<span class="plus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+        <p>No. This is fully done-for-you. We build the campaigns, write the copy, set up the AI follow-up system, and plug it into your CRM. You just enroll the families we send you.</p>
+      </details>
+      <details>
+        <summary>What exactly do you install?<span class="plus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+        <p>A complete done-for-you enrollment system: hyper-local ad campaigns, an AI assistant that replies to families in seconds and books them onto your calendar, and a CRM that tracks every lead to enrollment. We install it, run it, and optimize it — most programs have a full calendar within 90 days.</p>
+      </details>
+      <details>
+        <summary>Will this work for my type of program?<span class="plus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+        <p>We specialize in daycares, childcare centers, preschools, private schools, and camps — single locations and multi-site groups. If you have open spots and a market of families nearby, the system works.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="apply" class="navy" style="scroll-margin-top:80px">
+  <div class="glow" style="bottom:-160px;right:0;width:384px;height:384px;background:rgba(17,160,216,.2)"></div>
+  <div class="wrap" style="max-width:840px;padding:80px 20px;text-align:center;position:relative">
+    <h2 class="display" style="color:#fff;font-size:clamp(28px,5vw,48px)">This is what demand looks like</h2>
+    <p style="margin:20px auto 0;max-width:560px;font-size:18px;color:rgba(255,255,255,.75)">If your rooms aren&rsquo;t full this enrollment season, you&rsquo;ll feel it all year. Book a free 20-minute call and we&rsquo;ll map out exactly how many families your market can produce — and what it takes to fill every spot in 90 days.</p>
+    <div style="margin-top:32px;display:flex;justify-content:center"><a class="btn btn-cta btn-lg" href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Book Your Free Call
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+    <p style="margin-top:16px;font-size:14px;color:rgba(255,255,255,.5)">Limited onboarding spots each month · $25k/month+ programs only</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot">
+    <div>
+      <img class="logo" src="educare-leads-logo-white.png" alt="Educare Leads Marketing" />
+      <p class="blurb">The done-for-you enrollment system for childcare and education programs — daycares, private schools, and camps. We book the families — you fill the rooms.</p>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <b>Company</b>
+        <ul>
+          <li><a href="#system">How it works</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="https://calendly.com/educareleads/30min" data-cal target="_blank" rel="noopener">Book a call</a></li>
+        </ul>
+      </div>
+      <div>
+        <b>Contact</b>
+        <ul>
+          <li><a href="tel:+14387994574">+1 (438) 799-4574</a></li>
+          <li><a href="mailto:info@educareleads.com">info@educareleads.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <p>© 2026 EduCare Leads. All rights reserved.</p>
+    <p>This site is not part of, or endorsed by, Meta or Google. Results vary by market and effort.</p>
+  </div>
+</footer>
+
+<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<script>
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-cal]');
+    if (!t) return;
+    if (window.Calendly) { e.preventDefault(); window.Calendly.initPopupWidget({ url: 'https://calendly.com/educareleads/30min' }); }
+  });
+</script>
+</body>
+</html>

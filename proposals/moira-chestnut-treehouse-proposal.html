@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Enrollment Growth Proposal - Chestnut Treehouse</title>
+<style>
+  @page { size: Letter; margin: 14mm 16mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #0b2447; font-size: 10.2pt; line-height: 1.43; }
+  table.page { width: 100%; border-collapse: collapse; }
+  table.page > thead { display: table-header-group; }
+  table.page > tfoot { display: table-footer-group; }
+  table.page > thead td, table.page > tfoot td, table.page > tbody td { padding: 0; border: none; }
+  .band-head { background: linear-gradient(110deg, #071a37 0%, #0b2447 48%, #126e82 100%); margin: 0 -16mm 8mm; padding: 4mm 20mm; display: flex; align-items: center; gap: 12mm; }
+  .brand-logo { height: 16mm; width: auto; display: block; flex: none; }
+  .tagline { margin-left: auto; color: #b8efe4; font-size: 8pt; letter-spacing: 1.3px; text-transform: uppercase; white-space: nowrap; }
+  .band-foot { margin: 8mm -16mm 0; padding: 3mm 20mm 0; border-top: 2px solid #11a0d8; display: flex; align-items: center; color: #5b6b80; font-size: 8pt; gap: 8mm; }
+  .band-foot .right { margin-left: auto; }
+  .band-foot strong { color: #0b2447; }
+  h1 { font-size: 21pt; letter-spacing: 0.2px; margin: 0 0 2px; color: #0b2447; }
+  .h1-rule { height: 3px; width: 68px; background: #11a0d8; margin: 0 0 13px; border-radius: 2px; }
+  .meta-card { border: 1px solid #e4e9f0; border-left: 4px solid #126e82; border-radius: 6px; background: #fbfcfe; padding: 11px 15px; margin: 0 0 14px; font-size: 9.6pt; }
+  .meta-card .row { margin: 2px 0; }
+  .meta-card .k { color: #5b6b80; display: inline-block; min-width: 100px; }
+  .meta-card .v { font-weight: 700; color: #0b2447; }
+  h2 { font-size: 12.2pt; color: #0b2447; margin: 17px 0 7px; padding: 6px 0 6px 12px; border-left: 4px solid #11a0d8; background: #f4f7fb; page-break-after: avoid; }
+  h3 { font-size: 11.2pt; color: #0b2447; margin: 12px 0 5px; page-break-after: avoid; }
+  p { margin: 6px 0; }
+  ul, ol { margin: 7px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  strong { color: #071a37; }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 12px; page-break-inside: avoid; }
+  .metric { border: 1px solid #dce7ef; border-radius: 6px; padding: 9px 10px; background: #fbfcfe; min-height: 72px; }
+  .metric .num { color: #126e82; font-size: 14pt; font-weight: 800; margin-bottom: 1px; white-space: nowrap; }
+  .metric .label { color: #5b6b80; font-size: 7.8pt; line-height: 1.25; }
+  .callout { margin: 11px 0; padding: 13px 15px; border-radius: 8px; background: #0b2447; color: #fff; page-break-inside: avoid; }
+  .callout .big { font-size: 13pt; font-weight: 800; margin: 0 0 4px; }
+  .callout .hl { color: #5fe0c4; }
+  .callout p { color: rgba(255,255,255,0.86); margin: 4px 0 0; font-size: 9.7pt; }
+  ul.check { list-style: none; padding: 0; margin: 8px 0; }
+  ul.check li { position: relative; padding-left: 24px; margin: 5px 0; }
+  ul.check li::before { content: "✓"; position: absolute; left: 0; top: 0; color: #126e82; font-weight: 800; }
+  table.data { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 8px 0 11px; page-break-inside: avoid; }
+  table.data th, table.data td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e4e9f0; vertical-align: top; }
+  table.data thead th { background: #0b2447; color: #fff; font-weight: 700; border-bottom: none; }
+  table.data th:nth-child(1), table.data td:nth-child(1) { width: 34%; }
+  table.data th:nth-child(2), table.data td:nth-child(2) { width: 16%; }
+  table.data th:nth-child(3), table.data td:nth-child(3) { width: 16%; }
+  table.data th:nth-child(4), table.data td:nth-child(4) { width: 17%; }
+  table.data th:nth-child(5), table.data td:nth-child(5) { width: 17%; }
+  table.offer th:nth-child(1), table.offer td:nth-child(1) { width: 56%; }
+  table.offer th:nth-child(2), table.offer td:nth-child(2) { width: 22%; }
+  table.offer th:nth-child(3), table.offer td:nth-child(3) { width: 22%; }
+  table.data td.amt { text-align: left; white-space: nowrap; font-weight: 800; color: #126e82; }
+  .note { margin: 8px 0; padding: 10px 12px; border-radius: 7px; background: #fff8e1; border: 1px solid #f3e0a6; font-size: 9.1pt; color: #6b5a14; }
+  .target-panel { margin: 9px 0 10px; padding: 11px 13px; border-radius: 7px; background: #edf7f5; border: 1px solid #c7e6df; color: #0b2447; page-break-inside: avoid; }
+  .target-panel strong { color: #126e82; }
+  .new-page { page-break-before: always; }
+  .sig-block { display: flex; gap: 32px; margin-top: 14px; page-break-inside: avoid; }
+  .sig { flex: 1; border: 1px solid #e4e9f0; border-radius: 6px; padding: 12px 14px 16px; }
+  .sig .who { font-weight: 800; color: #0b2447; }
+  .sig .line { border-bottom: 1px solid #0b2447; height: 25px; margin: 13px 0 4px; }
+  .sig .cap { font-size: 8.5pt; color: #5b6b80; }
+</style>
+</head>
+<body>
+<table class="page">
+<thead><tr><td>
+  <div class="band-head">
+    <img class="brand-logo" src="../public/educare-leads-logo-white.png" alt="EduCare Leads Marketing">
+    <span class="tagline">Enrollment Growth Proposal</span>
+  </div>
+</td></tr></thead>
+<tfoot><tr><td>
+  <div class="band-foot">
+    <span><strong>EduCare Leads</strong> - 9503-3692 Quebec Inc.</span>
+    <span class="right">+1 (438) 885-2056 &nbsp;·&nbsp; Confidential</span>
+  </div>
+</td></tr></tfoot>
+<tbody><tr><td>
+
+<h1>Enrollment Growth Proposal</h1>
+<div class="h1-rule"></div>
+
+<div class="meta-card">
+  <div class="row"><span class="k">Prepared for</span> <span class="v">Moira - Chestnut Treehouse &amp; Chestnut Treehouse 3</span></div>
+  <div class="row"><span class="k">Locations</span> <span class="v">Lithonia, GA and Lawrenceville, GA</span></div>
+  <div class="row"><span class="k">Prepared by</span> <span class="v">EduCare Leads · 9503-3692 Quebec Inc.</span></div>
+  <div class="row"><span class="k">Date</span> <span class="v">August 13, 2026</span></div>
+</div>
+
+<h2>1. The Opportunity</h2>
+<p>Moira operates two childcare centers: <strong>Chestnut Treehouse</strong> in Lithonia, GA and <strong>Chestnut Treehouse 3</strong> in Lawrenceville, GA, approximately 30 minutes apart.</p>
+<p>Location #1 is licensed for <strong>148 children</strong> and is currently sitting at <strong>46 enrolled</strong>, leaving approximately <strong>102 open seats</strong>. Location #2 has a similar opportunity, but the full classroom breakdown was not available at the time of this proposal.</p>
+<div class="target-panel"><strong>Practical enrollment target:</strong> Moira said that reaching <strong>85 children at each center</strong> would make operations and day-to-day life easier. That creates a clear target of <strong>170 total children across both locations</strong>. For Location #1, that means moving from <strong>46 to 85 children</strong> - <strong>39 additional enrollments</strong>.</div>
+<p>Moira is competing in a dense market, with approximately <strong>52 childcare competitors within a 20-mile radius</strong>, including nearby competitors such as <strong>Creekstone</strong> and <strong>Childtime</strong>. Chestnut Treehouse is not a small center. The key positioning opportunity is to communicate that families get the strength and stability of a larger licensed center while still benefiting from the care, attention, and comfort of <strong>smaller class sizes</strong>.</p>
+<p>Right now, enrollment marketing is mostly offline: banners in front of the locations and flyers handed out to local businesses. There are currently <strong>no paid ads running</strong>, which means Moira is competing in a crowded market without a consistent digital enrollment engine.</p>
+
+<h2>2. Location #1 Revenue Gap &amp; 85-Child Target</h2>
+<table class="data">
+  <thead><tr><th>Classroom</th><th>Licensed</th><th>Current</th><th>Open</th><th>Tuition</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Infants</strong></td><td>11</td><td>0</td><td>11</td><td class="amt">$280 / wk</td></tr>
+    <tr><td><strong>1 year olds</strong></td><td>16</td><td>2</td><td>14</td><td class="amt">$260 / wk</td></tr>
+    <tr><td><strong>2 year olds</strong></td><td>16</td><td>3</td><td>13</td><td class="amt">$240 / wk</td></tr>
+    <tr><td><strong>3 year olds</strong></td><td>14</td><td>8</td><td>6</td><td class="amt">$220 / wk</td></tr>
+    <tr><td><strong>Georgia Pre-K</strong></td><td>20</td><td>18, soon 19</td><td>1-2</td><td>State funded</td></tr>
+    <tr><td><strong>Afterschool</strong></td><td>33</td><td>13</td><td>20</td><td>Not provided</td></tr>
+    <tr><td><strong>Additional 4-year-old room</strong></td><td>24</td><td>0</td><td>24</td><td>Pending approval</td></tr>
+  </tbody>
+</table>
+
+<p class="new-page">For the paid infant through 3-year-old classrooms alone, the open seats represent:</p>
+<div class="metrics">
+  <div class="metric"><div class="num">44</div><div class="label">Open paid seats, infants through 3-year-olds</div></div>
+  <div class="metric"><div class="num">$11,160</div><div class="label">Potential weekly tuition from those open seats</div></div>
+  <div class="metric"><div class="num">$48,360</div><div class="label">Approximate monthly tuition opportunity</div></div>
+  <div class="metric"><div class="num">$580,320</div><div class="label">Approximate annual tuition opportunity</div></div>
+</div>
+<p>To reach the first operating target at Location #1, Chestnut Treehouse needs <strong>39 additional enrollments</strong>. Based on the current gaps, the fastest path should prioritize infants, 1-year-olds, 2-year-olds, afterschool, and the upcoming 4-year-old / kindergarten room while protecting the near-full Georgia Pre-K classroom.</p>
+<p>The afterschool program and additional 4-year-old / kindergarten room create even more upside. The additional room currently has <strong>24 open seats</strong> and is bringing in no revenue while waiting for expected state approval of the kindergarten program in October. If approved and filled as a private kindergarten program, that room could represent up to <strong>$252,000 per year</strong> in program value at $10,500 per child.</p>
+
+<h2>3. Recommended Plan: Two-Location Enrollment Growth Partnership</h2>
+<div class="callout">
+  <div class="big">Recommended path: <span class="hl">Meta ads + CRM + CRO + follow-up</span></div>
+  <p>Moira needs a two-location digital enrollment engine that turns local parent attention into inquiries, booked tours, and enrollments - with each center moving toward the 85-child operating target.</p>
+</div>
+<ul class="check">
+  <li><strong>Local Meta ads</strong> - Facebook and Instagram campaigns targeting families near Lithonia and Lawrenceville.</li>
+  <li><strong>Two-location campaign structure</strong> - location-specific targeting, creative, and lead tracking.</li>
+  <li><strong>Competitive positioning</strong> - messaging that highlights smaller class sizes, trust, stability, and convenience.</li>
+  <li><strong>Lead capture</strong> - forms and landing pages designed to turn parent interest into inquiries.</li>
+  <li><strong>CRM setup and management</strong> - every lead organized by location, age group, and enrollment stage.</li>
+  <li><strong>Follow-up automations</strong> - text and email follow-up so interested families do not fall through the cracks.</li>
+  <li><strong>Tour booking support</strong> - helping move families from inquiry to scheduled tour.</li>
+  <li><strong>Full CRO review</strong> - a conversion review of the enrollment path, messaging, lead forms, landing pages, and parent inquiry flow.</li>
+  <li><strong>Reporting</strong> - visibility into ad spend, leads, booked tours, age-group demand, and enrollment progress.</li>
+</ul>
+
+<h2>4. Investment</h2>
+<h3>Enrollment Growth Partnership</h3>
+<table class="data offer">
+  <thead><tr><th>Item</th><th>Investment</th><th>Billing</th></tr></thead>
+  <tbody>
+    <tr><td><strong>EduCare Leads service management</strong></td><td class="amt">$3,000 / mo</td><td>Monthly</td></tr>
+    <tr><td><strong>Required Meta ad spend</strong></td><td class="amt">Minimum $1,000 / mo</td><td>Paid directly to Meta</td></tr>
+    <tr><td><strong>Full CRO review</strong></td><td class="amt">Included free</td><td>Included</td></tr>
+    <tr><td><strong>CRM, lead capture, and follow-up infrastructure</strong></td><td class="amt">Included</td><td>Included</td></tr>
+  </tbody>
+</table>
+<div class="note"><strong>Included CRO review:</strong> As part of the partnership, EduCare Leads will complete a full conversion rate optimization review of Moira's enrollment journey, including messaging, lead forms, landing pages, calls-to-action, mobile experience, and parent inquiry flow. Meta ad spend is paid directly to Meta and is never marked up by EduCare Leads.</div>
+
+<h2>5. Why the Partnership Option Makes Sense</h2>
+<p>Conversion matters, but with two locations, 52 nearby competitors, and a major capacity gap, the bigger opportunity is the full enrollment system:</p>
+<ul>
+  <li>Ads generate consistent local parent attention.</li>
+  <li>Landing pages, forms, and inquiry flow turn that attention into inquiries.</li>
+  <li>CRM and automations make sure every lead is followed up with quickly.</li>
+  <li>Tour booking creates the path from interest to enrollment.</li>
+  <li>Reporting shows which age groups and locations are converting best.</li>
+  <li>Ongoing management keeps campaigns improving instead of sitting still.</li>
+</ul>
+<p>With Location #1 alone representing approximately <strong>$48,360 per month</strong> in paid infant through 3-year-old open-seat opportunity, even a small number of new enrollments can quickly offset the monthly marketing investment.</p>
+
+<h2 class="new-page">6. What Success Looks Like</h2>
+<p>The immediate goal is to build a consistent pipeline of local families for both Chestnut Treehouse locations, beginning with the largest revenue gaps at Location #1 and moving toward <strong>85 children enrolled at each center</strong>.</p>
+<ul>
+  <li>Qualified local family inquiries</li>
+  <li>Booked tours by location</li>
+  <li>Leads by age group</li>
+  <li>Follow-up response rates</li>
+  <li>Cost per lead and cost per booked tour</li>
+  <li>Enrollments generated</li>
+  <li>Progress toward 85 children enrolled at each center</li>
+  <li>Location #1 progress from 46 to 85 children</li>
+  <li>Progress toward filling priority classrooms and afterschool openings</li>
+</ul>
+
+<h2>7. Next Steps</h2>
+<ol>
+  <li>Confirm the package Moira wants to move forward with.</li>
+  <li>Complete onboarding and gather photos, classroom details, licensing notes, program details, schedules, tuition, and access.</li>
+  <li>Build the CRM, lead capture, and follow-up system for both locations.</li>
+  <li>Launch local Meta ads for Lithonia and Lawrenceville.</li>
+  <li>Track leads, follow up with families, book tours, and optimize toward enrollments.</li>
+</ol>
+
+<h2>Acceptance</h2>
+<div class="sig-block">
+  <div class="sig">
+    <div class="who">Chestnut Treehouse / Chestnut Treehouse 3</div>
+    <div style="font-size:9pt;color:#5b6b80;margin-top:2px;">Moira</div>
+    <div class="line"></div><div class="cap">Signature</div>
+    <div class="line"></div><div class="cap">Name</div>
+    <div class="line"></div><div class="cap">Title</div>
+    <div class="line"></div><div class="cap">Date</div>
+  </div>
+  <div class="sig">
+    <div class="who">EduCare Leads</div>
+    <div class="line"></div><div class="cap">Signature</div>
+    <div class="line"></div><div class="cap">Name</div>
+    <div class="line"></div><div class="cap">Date</div>
+  </div>
+</div>
+
+</td></tr></tbody>
+</table>
+</body>
+</html>

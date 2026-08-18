@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Enrollment Recovery Proposal - Jelly Bean Junction</title>
+<style>
+  @page { size: Letter; margin: 14mm 16mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #0b2447; font-size: 10.2pt; line-height: 1.43; }
+  table.page { width: 100%; border-collapse: collapse; }
+  table.page > thead { display: table-header-group; }
+  table.page > tfoot { display: table-footer-group; }
+  table.page > thead td, table.page > tfoot td, table.page > tbody td { padding: 0; border: none; }
+  .band-head { background: linear-gradient(110deg, #071a37 0%, #0b2447 48%, #126e82 100%); margin: 0 -16mm 8mm; padding: 4mm 20mm; display: flex; align-items: center; gap: 12mm; }
+  .brand-logo { height: 16mm; width: auto; display: block; flex: none; }
+  .tagline { margin-left: auto; color: #b8efe4; font-size: 8pt; letter-spacing: 1.3px; text-transform: uppercase; white-space: nowrap; }
+  .band-foot { margin: 8mm -16mm 0; padding: 3mm 20mm 0; border-top: 2px solid #11a0d8; display: flex; align-items: center; color: #5b6b80; font-size: 8pt; gap: 8mm; }
+  .band-foot .right { margin-left: auto; }
+  .band-foot strong { color: #0b2447; }
+  h1 { font-size: 21pt; letter-spacing: 0.2px; margin: 0 0 2px; color: #0b2447; }
+  .h1-rule { height: 3px; width: 68px; background: #11a0d8; margin: 0 0 13px; border-radius: 2px; }
+  .meta-card { border: 1px solid #e4e9f0; border-left: 4px solid #126e82; border-radius: 6px; background: #fbfcfe; padding: 11px 15px; margin: 0 0 14px; font-size: 9.6pt; }
+  .meta-card .row { margin: 2px 0; }
+  .meta-card .k { color: #5b6b80; display: inline-block; min-width: 100px; }
+  .meta-card .v { font-weight: 700; color: #0b2447; }
+  h2 { font-size: 12.2pt; color: #0b2447; margin: 17px 0 7px; padding: 6px 0 6px 12px; border-left: 4px solid #11a0d8; background: #f4f7fb; page-break-after: avoid; }
+  h3 { font-size: 11.2pt; color: #0b2447; margin: 12px 0 5px; page-break-after: avoid; }
+  p { margin: 6px 0; }
+  ul, ol { margin: 7px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  strong { color: #071a37; }
+  .target-panel { margin: 9px 0 10px; padding: 11px 13px; border-radius: 7px; background: #edf7f5; border: 1px solid #c7e6df; color: #0b2447; page-break-inside: avoid; }
+  .target-panel strong { color: #126e82; }
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; page-break-inside: avoid; }
+  .metric { border: 1px solid #dce7ef; border-radius: 6px; padding: 9px 10px; background: #fbfcfe; min-height: 72px; }
+  .metric .num { color: #126e82; font-size: 14pt; font-weight: 800; margin-bottom: 1px; white-space: nowrap; }
+  .metric .label { color: #5b6b80; font-size: 7.8pt; line-height: 1.25; }
+  .callout { margin: 11px 0; padding: 13px 15px; border-radius: 8px; background: #0b2447; color: #fff; page-break-inside: avoid; }
+  .callout .big { font-size: 13pt; font-weight: 800; margin: 0 0 4px; }
+  .callout .hl { color: #5fe0c4; }
+  .callout p { color: rgba(255,255,255,0.86); margin: 4px 0 0; font-size: 9.7pt; }
+  ul.check { list-style: none; padding: 0; margin: 8px 0; }
+  ul.check li { position: relative; padding-left: 24px; margin: 5px 0; }
+  ul.check li::before { content: "✓"; position: absolute; left: 0; top: 0; color: #126e82; font-weight: 800; }
+  table.data { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 8px 0 11px; page-break-inside: avoid; }
+  table.data th, table.data td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e4e9f0; vertical-align: top; }
+  table.data thead th { background: #0b2447; color: #fff; font-weight: 700; border-bottom: none; }
+  table.data th:nth-child(1), table.data td:nth-child(1) { width: 56%; }
+  table.data th:nth-child(2), table.data td:nth-child(2) { width: 22%; }
+  table.data th:nth-child(3), table.data td:nth-child(3) { width: 22%; }
+  table.data td.amt { text-align: left; white-space: nowrap; font-weight: 800; color: #126e82; }
+  .note { margin: 8px 0; padding: 10px 12px; border-radius: 7px; background: #fff8e1; border: 1px solid #f3e0a6; font-size: 9.1pt; color: #6b5a14; }
+  .new-page { page-break-before: always; }
+  .sig-block { display: flex; gap: 32px; margin-top: 14px; page-break-inside: avoid; }
+  .sig { flex: 1; border: 1px solid #e4e9f0; border-radius: 6px; padding: 12px 14px 16px; }
+  .sig .who { font-weight: 800; color: #0b2447; }
+  .sig .line { border-bottom: 1px solid #0b2447; height: 25px; margin: 13px 0 4px; }
+  .sig .cap { font-size: 8.5pt; color: #5b6b80; }
+</style>
+</head>
+<body>
+<table class="page">
+<thead><tr><td>
+  <div class="band-head">
+    <img class="brand-logo" src="../public/educare-leads-logo-white.png" alt="EduCare Leads Marketing">
+    <span class="tagline">Enrollment Recovery Proposal</span>
+  </div>
+</td></tr></thead>
+<tfoot><tr><td>
+  <div class="band-foot">
+    <span><strong>EduCare Leads</strong> - 9503-3692 Quebec Inc.</span>
+    <span class="right">+1 (438) 885-2056 &nbsp;·&nbsp; Confidential</span>
+  </div>
+</td></tr></tfoot>
+<tbody><tr><td>
+
+<h1>Enrollment Recovery Proposal</h1>
+<div class="h1-rule"></div>
+
+<div class="meta-card">
+  <div class="row"><span class="k">Prepared for</span> <span class="v">Eric Kuang - Jelly Bean Junction Early Learning Center</span></div>
+  <div class="row"><span class="k">Location</span> <span class="v">Melbourne, FL</span></div>
+  <div class="row"><span class="k">Program type</span> <span class="v">Large childcare center</span></div>
+  <div class="row"><span class="k">Prepared by</span> <span class="v">EduCare Leads · 9503-3692 Quebec Inc.</span></div>
+  <div class="row"><span class="k">Date</span> <span class="v">August 18, 2026</span></div>
+</div>
+
+<h2>1. The Opportunity</h2>
+<p>Jelly Bean Junction Early Learning Center is a large childcare center in Melbourne, FL with programs serving children from <strong>6 weeks old through 6 years old</strong>, plus before- and after-school care.</p>
+<div class="metrics">
+  <div class="metric"><div class="num">190</div><div class="label">Actual operating capacity based on staff, cubbies, and room readiness</div></div>
+  <div class="metric"><div class="num">112</div><div class="label">Current enrolled seats</div></div>
+  <div class="metric"><div class="num">78</div><div class="label">Open seats against actual operating capacity</div></div>
+</div>
+<p>Eric bought the school 5 years ago when enrollment was around <strong>154 children</strong>. The last couple of years have been on the decline, and the center is now at 112 enrolled.</p>
+<div class="target-panel"><strong>Practical enrollment target:</strong> Eric expects at least <strong>150 enrolled children by February 2027</strong> and wants to start next year around <strong>140-150 enrolled</strong>. That means the immediate recovery target is <strong>38 additional enrollments</strong>.</div>
+
+<h2>2. Revenue Gap</h2>
+<p>Using the center's average tuition of <strong>$260 per week</strong>, the 78 open seats represent:</p>
+<div class="metrics">
+  <div class="metric"><div class="num">$20,280</div><div class="label">Missed weekly tuition from 78 open seats</div></div>
+  <div class="metric"><div class="num">$81,120</div><div class="label">Missed tuition per 4-week month</div></div>
+  <div class="metric"><div class="num">$973,440</div><div class="label">Potential annual missed tuition</div></div>
+</div>
+<p>Infants are especially valuable, with tuition at <strong>$300 per week</strong>. Because every room is approximately <strong>2/3 full</strong>, the growth plan needs to improve inquiry quality and conversion across the whole center.</p>
+<p>The center currently produces about <strong>$100,000 per month</strong> in revenue. Recovering enrollment toward 150 children would help Eric regain momentum, stabilize operations, and reduce the pressure of having to wear every hat himself.</p>
+
+<h2>3. Current Marketing Reality</h2>
+<ul>
+  <li>Word of mouth is currently the #1 source of inquiries.</li>
+  <li>Google Ads started last week, but budget and conversion performance are not yet clear.</li>
+  <li>The center averages about <strong>5 new leads per week</strong>.</li>
+  <li>Conversion rate is not currently tracked.</li>
+  <li>A previous service produced low-priority leads, forcing Eric and staff to spend time calling unqualified families.</li>
+</ul>
+<p>Because of that experience, this plan needs to focus on <strong>qualified leads</strong>, not just more leads. The goal is to protect Eric and his staff from wasted follow-up while building confidence through tracking, proof, and a clear plan.</p>
+
+<h2 class="new-page">4. Recommended Plan: Enrollment Growth Partnership</h2>
+<div class="callout">
+  <div class="big">Recommended path: <span class="hl">qualified leads + CRM + CRO + proof</span></div>
+  <p>EduCare Leads will build and manage an enrollment system designed to help Jelly Bean Junction move from 112 enrolled children toward 150 by February 2027.</p>
+</div>
+<ul class="check">
+  <li><strong>Local Meta ads</strong> - Facebook and Instagram campaigns targeting families near Jelly Bean Junction.</li>
+  <li><strong>Google Ads review</strong> - review current search traffic, landing experience, and lead quality.</li>
+  <li><strong>Lead qualification</strong> - forms and filters that identify age group, start timeline, care needs, and parent fit.</li>
+  <li><strong>CRM setup and management</strong> - every lead organized by classroom, program, source, and enrollment stage.</li>
+  <li><strong>Follow-up automations</strong> - text and email follow-up so interested families receive fast replies.</li>
+  <li><strong>Tour booking support</strong> - helping move qualified families from inquiry to scheduled tour.</li>
+  <li><strong>Full CRO review</strong> - a conversion review of the enrollment path, messaging, lead forms, landing pages, mobile experience, and parent inquiry flow.</li>
+  <li><strong>Proof and trust assets</strong> - support collecting and using testimonials, parent verification, case-study style proof, and center differentiators.</li>
+  <li><strong>Reporting</strong> - visibility into ad spend, lead quality, booked tours, conversion rate, and enrollment progress.</li>
+</ul>
+
+<h2>5. Investment</h2>
+<h3>Enrollment Growth Partnership</h3>
+<table class="data">
+  <thead><tr><th>Item</th><th>Investment</th><th>Billing</th></tr></thead>
+  <tbody>
+    <tr><td><strong>EduCare Leads service management</strong></td><td class="amt">$3,000 / mo</td><td>Monthly</td></tr>
+    <tr><td><strong>Required Meta ad spend</strong></td><td class="amt">Minimum $1,000 / mo</td><td>Paid directly to Meta</td></tr>
+    <tr><td><strong>Full CRO review</strong></td><td class="amt">Included free</td><td>Included</td></tr>
+    <tr><td><strong>CRM, lead capture, and follow-up infrastructure</strong></td><td class="amt">Included</td><td>Included</td></tr>
+  </tbody>
+</table>
+<div class="note">Meta ad spend is paid directly to Meta and remains fully under Jelly Bean Junction's control. EduCare Leads does not mark up ad spend.</div>
+
+<h2>6. Why This Approach Fits Jelly Bean Junction</h2>
+<p>Eric does not need random lead volume. He needs a system that brings in parents who are real, qualified, and ready to consider enrollment.</p>
+<ul>
+  <li>A large center with real operating capacity</li>
+  <li>Programs from infants through 6 years old</li>
+  <li>Before- and after-school care</li>
+  <li>A successful summer camp that served <strong>145 children</strong></li>
+  <li>A focus on being well staffed</li>
+  <li>Quality furniture and a well-maintained center environment</li>
+  <li>A clear operating philosophy: run the center like Costco, where families, staff, and children are happy</li>
+</ul>
+
+<h2 class="new-page">7. What Success Looks Like</h2>
+<ul>
+  <li>Qualified local family inquiries</li>
+  <li>Lead quality by classroom and program</li>
+  <li>Booked tours and tour show rate</li>
+  <li>Lead-to-tour and tour-to-enrollment conversion rate</li>
+  <li>New enrollments generated</li>
+  <li>Progress from 112 to 150 enrolled children by February 2027</li>
+  <li>Longer-term progress toward 190 actual operating capacity</li>
+</ul>
+
+<h2>8. Next Steps</h2>
+<ol>
+  <li>Confirm the partnership package.</li>
+  <li>Complete onboarding and gather program details, photos, tuition, classroom availability, testimonials, and access.</li>
+  <li>Review current Google Ads, tracking, landing pages, and inquiry flow.</li>
+  <li>Build the CRM, lead capture, qualification, and follow-up system.</li>
+  <li>Launch local Meta ads and begin weekly optimization.</li>
+  <li>Track results against the 150-enrollment target.</li>
+</ol>
+
+<h2>Acceptance</h2>
+<div class="sig-block">
+  <div class="sig">
+    <div class="who">Jelly Bean Junction Early Learning Center</div>
+    <div style="font-size:9pt;color:#5b6b80;margin-top:2px;">Eric Kuang</div>
+    <div class="line"></div><div class="cap">Signature</div>
+    <div class="line"></div><div class="cap">Name</div>
+    <div class="line"></div><div class="cap">Title</div>
+    <div class="line"></div><div class="cap">Date</div>
+  </div>
+  <div class="sig">
+    <div class="who">EduCare Leads</div>
+    <div class="line"></div><div class="cap">Signature</div>
+    <div class="line"></div><div class="cap">Name</div>
+    <div class="line"></div><div class="cap">Date</div>
+  </div>
+</div>
+
+</td></tr></tbody>
+</table>
+</body>
+</html>
