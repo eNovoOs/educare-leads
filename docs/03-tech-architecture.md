@@ -97,7 +97,7 @@ production.
 
 ## Tracking IDs (hard-coded in markup)
 
-- **Meta Pixel** `1534633631359400` — in `src/app/layout.tsx` and the standalone HTML decks.
+- **Meta Pixel** `1029290093151029` — in `src/app/layout.tsx` and the standalone HTML decks.
 - **Microsoft Clarity** `x4cj1ovak4` — in the standalone HTML pages (e.g. `public/deck.html`).
 
 These are live production IDs. Server-side Meta events (CAPI) are deduped against this pixel.

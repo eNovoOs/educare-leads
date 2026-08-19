@@ -102,7 +102,7 @@ site: `cd client-sites/united-friends-school && node build.js` (see that folder'
   bundled docs are in `node_modules/next/dist/docs/`.
 - `/apply`, `/apply2`, `/go`, `/onboarding`, `/thank-you` are all `robots: noindex` on purpose
   (funnel pages) — only `/` should be indexed.
-- Tracking pixels (Meta `1534633631359400`, Clarity `x4cj1ovak4`) are live production IDs baked
+- Tracking pixels (Meta `1029290093151029`, Clarity `x4cj1ovak4`) are live production IDs baked
   into markup — don't fire test traffic through production, use `META_TEST_EVENT_CODE`.
 - The standalone HTML decks in `public/` are hand-maintained (not built from `src/`) — edit the
   HTML directly.
