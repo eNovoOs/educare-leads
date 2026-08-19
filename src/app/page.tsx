@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -15,6 +16,28 @@ import {
   smsThread,
   comparison,
 } from "@/lib/site";
+
+// Program-type photo cards (free-commercial-license stock from Pexels).
+const serveCards = [
+  {
+    label: "Daycares & childcare",
+    body: "Fill your infant, toddler & preschool rooms with local families ready to enroll.",
+    img: "https://images.pexels.com/photos/8363102/pexels-photo-8363102.jpeg?auto=compress&cs=tinysrgb&w=800&h=640&fit=crop",
+    alt: "Children playing with their teacher in a childcare classroom",
+  },
+  {
+    label: "Private & independent schools",
+    body: "Pack your open houses and applications ahead of every admissions season.",
+    img: "https://images.pexels.com/photos/8613100/pexels-photo-8613100.jpeg?auto=compress&cs=tinysrgb&w=800&h=640&fit=crop",
+    alt: "Teacher giving a lesson as students raise their hands",
+  },
+  {
+    label: "Summer & enrichment camps",
+    body: "Sell out your sessions weeks earlier with hyper-local, done-for-you ads.",
+    img: "https://images.pexels.com/photos/9302795/pexels-photo-9302795.jpeg?auto=compress&cs=tinysrgb&w=800&h=640&fit=crop",
+    alt: "Group of children at an outdoor summer camp",
+  },
+];
 
 function Check({ className = "" }: { className?: string }) {
   return (
@@ -136,6 +159,36 @@ export default function Home() {
               <div key={s.label} className="px-3 py-5 text-center">
                 <p className="font-display text-2xl text-accent sm:text-3xl">{s.value}</p>
                 <p className="mt-1 text-xs leading-snug text-white/70">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WHO WE SERVE — program-type photos */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-bold uppercase tracking-wide text-brand">Who we fill</p>
+            <h2 className="font-display mt-2 text-3xl uppercase text-ink sm:text-4xl">
+              Programs like yours, full again
+            </h2>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {serveCards.map((c) => (
+              <div key={c.label} className="group overflow-hidden rounded-3xl bg-surface ring-1 ring-line">
+                <div className="aspect-[5/4] overflow-hidden">
+                  <img
+                    src={c.img}
+                    alt={c.alt}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-display text-xl uppercase text-ink">{c.label}</h3>
+                  <p className="mt-2 text-muted">{c.body}</p>
+                </div>
               </div>
             ))}
           </div>
