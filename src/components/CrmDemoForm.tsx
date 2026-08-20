@@ -31,6 +31,11 @@ type Props = {
   footnote?: React.ReactNode;
   /** Line shown above the scheduler once the lead is captured. */
   successNote?: string;
+  /**
+   * When false, the Meta "Lead" event is NOT fired (browser pixel + server CAPI
+   * both skipped). The lead is still captured (email + CRM). Defaults to true.
+   */
+  trackLead?: boolean;
 };
 
 export function CrmDemoForm({
@@ -39,6 +44,7 @@ export function CrmDemoForm({
   submitLabel = "Show Me My Times →",
   footnote,
   successNote = "last step: pick a time below and your demo is locked in. 👇",
+  trackLead = true,
 }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "booked" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -68,17 +74,21 @@ export function CrmDemoForm({
           source,
           eventId,
           sourceUrl: window.location.href,
+          skipMetaLead: !trackLead,
         }),
       });
       if (!res.ok) throw new Error("Request failed");
 
-      // Meta Pixel — Lead (shared event_id dedupes with the server CAPI event)
-      (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(
-        "track",
-        "Lead",
-        {},
-        { eventID: eventId }
-      );
+      // Meta Pixel — Lead (shared event_id dedupes with the server CAPI event).
+      // Skipped when trackLead is false (e.g. the CRM trial funnel).
+      if (trackLead) {
+        (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(
+          "track",
+          "Lead",
+          {},
+          { eventID: eventId }
+        );
+      }
 
       setLead({
         name: [data.firstName, data.lastName].filter(Boolean).join(" "),
