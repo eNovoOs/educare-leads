@@ -41,17 +41,13 @@ export function LeadForm() {
         }),
       });
       if (!res.ok) throw new Error("Request failed");
-      // Meta Pixel — Lead (shared event_id dedupes with the server-side CAPI event)
-      (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(
-        "track",
-        "Lead",
-        {},
-        { eventID: eventId }
-      );
-      // Pass name/email along so the Calendly embed on /thank-you is prefilled.
+      // The Meta "Lead" pixel now fires on /thank-you (the completion step),
+      // not here. The shared event_id lets that browser event dedupe with the
+      // server-side CAPI "Lead" already sent by /api/lead above.
       const prefill = new URLSearchParams({
         name: [data.firstName, data.lastName].filter(Boolean).join(" "),
         email: String(data.email ?? ""),
+        event_id: eventId,
       });
       router.push(`/thank-you?${prefill.toString()}`);
     } catch {

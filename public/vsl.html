@@ -447,10 +447,9 @@ src="https://www.facebook.com/tr?id=1029290093151029&ev=PageView&noscript=1"/></
       btn.disabled = true;
       btn.textContent = 'Submitting…';
       var eventId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random();
-      var data = { source: 'vsl-page', eventId: eventId, sourceUrl: location.href };
+      var data = { source: 'vsl-page', eventId: eventId, sourceUrl: location.href, skipMetaLead: true };
       new FormData(form).forEach(function (v, k) { data[k] = v; });
-      // Meta Pixel — Lead (shared event_id dedupes with the server-side CAPI event)
-      if (window.fbq) window.fbq('track', 'Lead', {}, { eventID: eventId });
+      // Lead is fired on /thank-you (funnel completion), not here.
       // Send the lead (emails info@educareleads.com + Meta CAPI), then go to Calendly.
       fetch('/api/lead', {
         method: 'POST',

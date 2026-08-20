@@ -65,16 +65,12 @@ export function UglyLeadForm() {
         }),
       });
       if (!res.ok) throw new Error("Request failed");
-      // Meta Pixel — Lead (shared event_id dedupes with the server-side CAPI event)
-      (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(
-        "track",
-        "Lead",
-        {},
-        { eventID: eventId }
-      );
+      // The Meta "Lead" pixel now fires on /thank-you (the completion step),
+      // deduped with the server-side CAPI "Lead" via the shared event_id.
       const prefill = new URLSearchParams({
         name: [data.firstName, data.lastName].filter(Boolean).join(" "),
         email: String(data.email ?? ""),
+        event_id: eventId,
       });
       router.push(`/thank-you?${prefill.toString()}`);
     } catch {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { ThankYouPixel } from "@/components/ThankYouPixel";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -12,12 +13,14 @@ export const metadata: Metadata = {
 export default async function ThankYouPage({
   searchParams,
 }: {
-  searchParams: Promise<{ name?: string; email?: string }>;
+  searchParams: Promise<{ name?: string; email?: string; event_id?: string }>;
 }) {
-  const { name } = await searchParams;
+  const { name, event_id } = await searchParams;
 
   return (
     <main className="min-h-screen bg-surface">
+      {/* Meta Pixel — fire the Lead here (funnel completion step) */}
+      <ThankYouPixel eventId={event_id} />
       <div className="mx-auto max-w-3xl px-5 py-10">
         <Logo />
       </div>
