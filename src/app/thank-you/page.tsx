@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { CalendlyEmbed } from "@/components/CalendlyEmbed";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Last Step — Book Your Call",
-  description: "Your application is in. Pick a time for your free strategy call.",
+  title: "Thank You",
+  description: "Your strategy call is confirmed.",
   robots: { index: false, follow: false },
 };
 
@@ -15,7 +14,7 @@ export default async function ThankYouPage({
 }: {
   searchParams: Promise<{ name?: string; email?: string }>;
 }) {
-  const { name, email } = await searchParams;
+  const { name } = await searchParams;
 
   return (
     <main className="min-h-screen bg-surface">
@@ -32,27 +31,17 @@ export default async function ThankYouPage({
           </span>
 
           <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-            Application received! 🎉
+            Thank you{name ? `, ${name}` : ""}! 🎉
           </h1>
           <p className="mx-auto mt-3 max-w-md text-lg text-muted">
-            <span className="font-semibold text-ink">One last step:</span> pick a
-            time below for your free 20-minute enrollment strategy call. 👇
-          </p>
-
-          {/* Calendly inline scheduler — prefilled from the form */}
-          <div className="mt-8 overflow-hidden rounded-2xl ring-1 ring-line">
-            <CalendlyEmbed name={name} email={email} />
-          </div>
-
-          <p className="mt-4 text-sm text-muted">
-            A confirmation email is also on its way to your inbox (peek in spam,
-            just in case).
+            Your free strategy call is confirmed. A confirmation email with all
+            the details is on its way to your inbox (peek in spam, just in case).
           </p>
 
           {/* Contact */}
           <div className="mt-8 rounded-2xl bg-ink px-6 py-6 text-white">
             <p className="text-sm text-white/75">
-              Can&apos;t find a time that works? Reach us directly:
+              Need to reach us before the call?
             </p>
             <div className="mt-3 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-6">
               <a href={site.phoneHref} className="font-bold text-white hover:text-cta">
