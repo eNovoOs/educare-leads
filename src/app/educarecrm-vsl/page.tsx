@@ -149,6 +149,36 @@ export default function EducareCrmVslPage() {
         </div>
       </section>
 
+      {/* WHO WE FILL — program-type photos */}
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-5">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Who we fill</p>
+            <h2 className="font-display mt-3 text-3xl tracking-tight text-ink sm:text-4xl">
+              Programs like yours, full again
+            </h2>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {[
+              { label: "Daycares & childcare", img: "https://images.pexels.com/photos/8363102/pexels-photo-8363102.jpeg?auto=compress&cs=tinysrgb&w=800&h=640&fit=crop", alt: "Children playing with their teacher in a childcare classroom" },
+              { label: "Private & independent schools", img: "https://images.pexels.com/photos/8613100/pexels-photo-8613100.jpeg?auto=compress&cs=tinysrgb&w=800&h=640&fit=crop", alt: "Teacher giving a lesson as students raise their hands" },
+              { label: "Summer & enrichment camps", img: "https://images.pexels.com/photos/9302795/pexels-photo-9302795.jpeg?auto=compress&cs=tinysrgb&w=800&h=640&fit=crop", alt: "Group of children at an outdoor summer camp" },
+            ].map((c) => (
+              <div key={c.label} className="group overflow-hidden rounded-3xl bg-surface ring-1 ring-line">
+                <div className="aspect-[5/4] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={c.img} alt={c.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-display text-lg uppercase text-ink">{c.label}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
       {/* ── What's unlocked ─────────────────────────────────────────── */}
       <section className="bg-white py-20">
         <div className="mx-auto max-w-4xl px-5">
