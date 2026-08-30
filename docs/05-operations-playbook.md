@@ -50,6 +50,8 @@ Vercel and the server logs.
   the team the full intake **plus an auto-generated brand brief** (`<client>-brand-brief.md`) and
   a **setup checklist** (Twilio number? domain access? logo? photos? Meta access?).
 - The brand brief is the single doc the build team works from.
+- For package-specific onboarding needs, use
+  **[07-client-onboarding-service-blueprint.md](./07-client-onboarding-service-blueprint.md)**.
 
 ## 7–8 · Build → Launch
 

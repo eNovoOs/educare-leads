@@ -1,120 +1,186 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { ACCESS_INVITE_EMAIL, onboardingServices, serviceName } from "@/lib/onboarding";
 
-/**
- * New-client onboarding intake endpoint.
- *
- * Emails the full onboarding submission to the team (via Resend), grouped into
- * the same sections as the form so it's easy to action. Falls back to a
- * server-side log if Resend isn't configured, so a submission is never dropped.
- *
- * Environment variables:
- *   RESEND_API_KEY        - Resend API key (enables the email)
- *   ONBOARDING_TO_EMAIL   - where onboarding goes; comma-separated for several
- *                           recipients (default: LEAD_TO_EMAIL or info@educareleads.com)
- *   LEAD_FROM_EMAIL       - verified sender (default: onboarding@resend.dev)
- */
-
-/** Accepts a single address or a comma-separated list. */
 const TO_EMAIL = (
   process.env.ONBOARDING_TO_EMAIL ||
   process.env.LEAD_TO_EMAIL ||
   "info@educareleads.com, andre@revupcmo.com"
 )
   .split(",")
-  .map((a) => a.trim())
+  .map((address) => address.trim())
   .filter(Boolean);
-const FROM_EMAIL =
-  process.env.LEAD_FROM_EMAIL || "Educare Leads <onboarding@resend.dev>";
 
-// Field key -> human label, grouped by section (mirrors the form).
+const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "Educare Leads <onboarding@resend.dev>";
+
 const SECTIONS: { title: string; fields: [string, string][] }[] = [
   {
-    title: "1 · Business",
+    title: "Project setup",
     fields: [
-      ["businessName", "Business / program name"],
-      ["legalName", "Legal entity name"],
-      ["contactName", "Contact name"],
+      ["setupPresetName", "Package preset"],
+      ["setupModules", "Services included"],
+      ["sourceUrl", "Onboarding link"],
+    ],
+  },
+  {
+    title: "Business",
+    fields: [
+      ["businessName", "Business or program"],
+      ["legalName", "Legal entity"],
+      ["contactName", "Primary contact"],
       ["role", "Role"],
       ["email", "Email"],
       ["phone", "Mobile phone"],
-      ["address", "Business address"],
-      ["locations", "Locations"],
+      ["address", "Primary address"],
+      ["locations", "Number of locations"],
       ["yearsOperating", "Years operating"],
-      ["licenseNumber", "License #"],
     ],
   },
   {
-    title: "2 · Program",
+    title: "Programs and goals",
     fields: [
-      ["services", "Programs / services"],
+      ["programs", "Programs"],
       ["hours", "Hours"],
       ["capacity", "Capacity"],
-      ["openSpots", "Open spots"],
-      ["tuition", "Tuition / pricing"],
-      ["serviceArea", "Service area"],
-      ["usp", "What makes them different"],
-      ["languages", "Languages spoken"],
-    ],
-  },
-  {
-    title: "3 · Brand & content",
-    fields: [
-      ["currentWebsite", "Current website"],
-      ["tagline", "Tagline"],
-      ["hasLogo", "Has logo?"],
-      ["brandColors", "Brand colors"],
-      ["hasPhotos", "Has photos/videos?"],
-      ["assetsLink", "Assets link"],
-      ["testimonials", "Testimonials"],
-    ],
-  },
-  {
-    title: "4 · Offer & goals",
-    fields: [
+      ["openSpots", "Current openings"],
       ["enrollmentGoal", "90-day enrollment goal"],
-      ["currentPromo", "Current promotion"],
+      ["serviceArea", "Service area"],
+      ["languages", "Languages"],
+      ["usp", "Why families choose them"],
       ["idealFamily", "Ideal family"],
-      ["objections", "#1 objection"],
-      ["competitors", "Competitors"],
+      ["currentPromo", "Current enrollment offer"],
+      ["objections", "Most common concern"],
     ],
   },
   {
-    title: "5 · Marketing & ad accounts",
+    title: "Brand and assets",
     fields: [
+      ["assetsLink", "Asset folder"],
+      ["hasLogo", "Logo status"],
+      ["hasPhotos", "Photo and video status"],
+      ["mediaConsent", "Media approval"],
+      ["brandColors", "Brand colors"],
+      ["tagline", "Tagline"],
+      ["testimonials", "Reviews and testimonials"],
+      ["brandNotes", "Brand rules"],
+    ],
+  },
+  {
+    title: "Account access",
+    fields: [
+      ["metaAccessStatus", "Meta access"],
+      ["googleAdsAccessStatus", "Google Ads access"],
+      ["analyticsAccessStatus", "Google Analytics access"],
+      ["tagManagerAccessStatus", "Google Tag Manager access"],
+      ["googleBusinessAccessStatus", "Google Business access"],
+      ["domainAccessStatus", "Domain access"],
+    ],
+  },
+  {
+    title: "Advertising",
+    fields: [
+      ["runningAds", "Ads currently running"],
+      ["primaryCampaignGoal", "Primary campaign goal"],
       ["facebookPage", "Facebook Page"],
       ["instagram", "Instagram"],
-      ["hasBusinessManager", "Has Business Manager?"],
-      ["adAccountId", "Ad Account ID"],
-      ["runningAds", "Currently running ads?"],
-      ["adBudget", "Monthly ad budget"],
-      ["canGrantMeta", "Can grant Meta access?"],
+      ["googleAdsCustomerId", "Google Ads Customer ID"],
+      ["pastCampaignNotes", "Past campaign notes"],
+      ["seasonalCampaignName", "Seasonal campaign"],
+      ["seasonalCampaignDeadline", "Launch or registration date"],
+      ["seasonalAvailability", "Seasonal availability"],
+      ["seasonalOffer", "Seasonal call-to-action"],
+      ["conversionActions", "Conversion actions"],
     ],
   },
   {
-    title: "6 · Phone & comms (Twilio?)",
+    title: "Website and domain",
     fields: [
-      ["businessPhone", "Business phone"],
-      ["phoneType", "Phone type"],
-      ["canText", "Can text on it?"],
-      ["wantsTrackingNumber", "Wants tracking/AI number?"],
-      ["forwardTo", "Forward calls to"],
-      ["currentCrm", "Current CRM / booking tool"],
+      ["currentWebsite", "Current website"],
+      ["domainName", "Domain"],
+      ["domainRegistrar", "Domain provider"],
+      ["websitePlatform", "Website platform"],
+      ["hostingProvider", "Hosting provider"],
+      ["desiredPages", "Required pages and information"],
+      ["websiteExamples", "Website examples"],
+      ["requestedWebsiteUpdates", "Priority website updates"],
     ],
   },
   {
-    title: "7 · Domain & website",
+    title: "CRM and follow-up",
     fields: [
-      ["hasDomain", "Owns a domain?"],
-      ["domainName", "Domain name"],
-      ["domainRegistrar", "Registrar"],
-      ["desiredDomain", "Desired new domain"],
-      ["canGrantDomain", "Can grant domain access?"],
-      ["googleBusiness", "Google Business Profile"],
+      ["currentCrm", "Current CRM"],
+      ["calendarLink", "Booking calendar"],
+      ["tourContact", "Tour booking contact"],
+      ["leadSources", "Lead sources"],
+      ["followUpProcess", "Current follow-up process"],
+      ["emailPlatform", "Email platform"],
+      ["emailListSize", "Email list size"],
+      ["emailGoals", "Email goals"],
+      ["emailApprover", "Email approver"],
+      ["automationGoals", "Advanced automation goals"],
     ],
   },
   {
-    title: "8 · Notes",
+    title: "Conversion and admissions",
+    fields: [
+      ["currentInquiryVolume", "Monthly inquiry volume"],
+      ["leadToTourRate", "Lead-to-tour rate"],
+      ["tourToEnrollmentRate", "Tour-to-enrollment rate"],
+      ["admissionsScriptsLink", "Admissions scripts"],
+      ["conversionBottleneck", "Conversion bottleneck"],
+    ],
+  },
+  {
+    title: "Google Business and reviews",
+    fields: [
+      ["googleBusiness", "Business Profile"],
+      ["googleBusinessStatus", "Profile status"],
+      ["reviewLink", "Review page"],
+      ["reviewContact", "Review alert contact"],
+      ["reviewProcess", "Current review process"],
+      ["localSearchPriorities", "Local search priorities"],
+    ],
+  },
+  {
+    title: "Creative, branding, and proof",
+    fields: [
+      ["creativePriority", "Creative priority"],
+      ["creativeApprover", "Creative approver"],
+      ["proofOutcomes", "Proof outcomes"],
+      ["brandRefreshGoals", "Brand refresh goals"],
+      ["shootAvailability", "Shoot details"],
+    ],
+  },
+  {
+    title: "AI reception and multi-location",
+    fields: [
+      ["businessPhone", "Main business phone"],
+      ["forwardTo", "Live call destination"],
+      ["missedCalls", "Missed call frequency"],
+      ["canText", "Current number can text"],
+      ["commonQuestions", "Common family questions"],
+      ["aiEscalationRules", "AI escalation rules"],
+      ["pastLeadCount", "Past lead count"],
+      ["pastLeadSource", "Past lead source"],
+      ["reactivationWindow", "Reactivation audience"],
+      ["reactivationOffer", "Reactivation reason"],
+      ["locationDetails", "Location details"],
+      ["routingRules", "Lead routing rules"],
+    ],
+  },
+  {
+    title: "Fractional CMO leadership",
+    fields: [
+      ["leadershipTeam", "Leadership team"],
+      ["decisionMaker", "Marketing decision-maker"],
+      ["meetingCadence", "Meeting rhythm"],
+      ["currentVendors", "Current vendors"],
+      ["marketingPriorities", "90-day marketing priorities"],
+      ["approvalProcess", "Approval process"],
+    ],
+  },
+  {
+    title: "Final notes",
     fields: [
       ["notes", "Notes"],
       ["consent", "Authorization"],
@@ -122,43 +188,55 @@ const SECTIONS: { title: string; fields: [string, string][] }[] = [
   },
 ];
 
-function renderHtml(data: Record<string, string>): string {
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function selectedServiceNames(data: Record<string, string>) {
+  return (data.setupModules || "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean)
+    .map(serviceName);
+}
+
+function renderHtml(data: Record<string, string>) {
   const sections = SECTIONS.map((section) => {
     const rows = section.fields
-      .filter(([k]) => data[k])
-      .map(
-        ([k, lbl]) =>
-          `<tr><td style="padding:6px 12px;color:#5b6b80;width:42%;vertical-align:top">${lbl}</td><td style="padding:6px 12px;font-weight:600;color:#0b2447;white-space:pre-wrap">${escapeHtml(
-            data[k]
-          )}</td></tr>`
-      )
+      .filter(([key]) => data[key])
+      .map(([key, label]) => {
+        const value = key === "setupModules" ? selectedServiceNames(data).join(", ") : data[key];
+        return `<tr>
+          <td style="padding:7px 12px;color:#5b6b80;width:38%;vertical-align:top">${escapeHtml(label)}</td>
+          <td style="padding:7px 12px;font-weight:600;color:#0b2447;white-space:pre-wrap">${escapeHtml(value)}</td>
+        </tr>`;
+      })
       .join("");
+
     if (!rows) return "";
     return `
-      <h3 style="margin:22px 0 6px;color:#1547a8;font-size:14px">${section.title}</h3>
+      <h3 style="margin:22px 0 6px;color:#1547a8;font-size:14px">${escapeHtml(section.title)}</h3>
       <table style="border-collapse:collapse;width:100%;background:#f4f7fb;border-radius:8px">${rows}</table>`;
   }).join("");
 
   return `
-    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto">
-      <h2 style="color:#0b2447;margin:0 0 2px">New client onboarding</h2>
+    <div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto">
+      <h2 style="color:#0b2447;margin:0 0 4px">Client onboarding submitted</h2>
       <p style="color:#5b6b80;margin:0 0 8px">${escapeHtml(
         data.businessName || "Unknown business"
-      )} — submitted ${new Date().toLocaleString("en-US")}</p>
+      )} - submitted ${new Date().toLocaleString("en-US")}</p>
       ${sections}
     </div>`;
 }
 
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-function slugify(s: string): string {
+function slugify(value: string) {
   return (
-    s
+    value
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "")
@@ -166,174 +244,283 @@ function slugify(s: string): string {
   );
 }
 
-/**
- * Builds the team-facing setup checklist from the answers — surfaces the
- * decisions that drive work: Twilio number, domain, logo design, Meta access.
- */
-function setupChecklist(d: Record<string, string>): string {
+function accessTask(label: string, status: string) {
+  if (/invitation sent/i.test(status)) {
+    return `- [ ] **Accept ${label} invitation** sent to \`${ACCESS_INVITE_EMAIL}\``;
+  }
+  if (/help/i.test(status)) {
+    return `- [ ] **Help client grant ${label} access** (help requested)`;
+  }
+  if (/do not have/i.test(status)) {
+    return `- [ ] **Create or recover ${label} account** (client does not have one)`;
+  }
+  return `- [ ] **Request ${label} access** using \`${ACCESS_INVITE_EMAIL}\``;
+}
+
+function includesServiceCategory(services: Set<string>, category: string) {
+  return onboardingServices.some(
+    (service) => service.category === category && services.has(service.id)
+  );
+}
+
+function setupChecklist(data: Record<string, string>) {
+  const services = new Set((data.setupModules || "").split(",").map((item) => item.trim()));
   const items: string[] = [];
 
-  const needsNumber =
-    /^yes/i.test(d.wantsTrackingNumber || "") ||
-    /landline|don't|dont|none/i.test(d.phoneType || "") ||
-    /^no/i.test(d.canText || "");
   items.push(
-    needsNumber
-      ? "- [ ] **Provision a Twilio / tracking number** (they want one, or their line can't text)"
-      : "- [x] No new phone number needed — using their existing textable number"
+    data.assetsLink
+      ? `- [ ] **Review asset folder:** ${data.assetsLink}`
+      : "- [ ] **Request asset folder** with logo, photos, video, testimonials, and brand materials"
   );
 
-  if (/register/i.test(d.hasDomain || "") || (!d.domainName && !/^yes/i.test(d.hasDomain || ""))) {
-    items.push(`- [ ] **Register a new domain**${d.desiredDomain ? ` — preferred: \`${d.desiredDomain}\`` : ""}`);
-  } else {
-    items.push(
-      `- [ ] **Get DNS access** to \`${d.domainName || "their domain"}\`${
-        d.domainRegistrar ? ` at ${d.domainRegistrar}` : ""
-      } (${d.canGrantDomain || "access TBD"})`
-    );
+  if (services.has("meta-ads") || services.has("seasonal-campaign")) {
+    items.push(accessTask("Meta", data.metaAccessStatus || ""));
+  }
+  if (
+    services.has("google-ads-review") ||
+    services.has("google-ads-management") ||
+    services.has("google-conversion-tracking")
+  ) {
+    items.push(accessTask("Google Ads", data.googleAdsAccessStatus || ""));
+  }
+  if (
+    includesServiceCategory(services, "website") ||
+    includesServiceCategory(services, "paid-ads") ||
+    includesServiceCategory(services, "cro")
+  ) {
+    items.push(accessTask("Google Analytics", data.analyticsAccessStatus || ""));
+  }
+  if (services.has("google-conversion-tracking")) {
+    items.push(accessTask("Google Tag Manager", data.tagManagerAccessStatus || ""));
+  }
+  if (includesServiceCategory(services, "local")) {
+    items.push(accessTask("Google Business Profile", data.googleBusinessAccessStatus || ""));
   }
 
-  if (/no|needs/i.test(d.hasLogo || "")) items.push("- [ ] **Design a logo** (they don't have a usable one)");
-  else if (/low quality/i.test(d.hasLogo || "")) items.push("- [ ] **Recreate / clean up logo** (low quality only)");
+  if (includesServiceCategory(services, "website")) {
+    if (/do not have a domain/i.test(data.domainAccessStatus || "")) {
+      items.push("- [ ] **Select and register a domain**");
+    } else if (/help|not sure/i.test(data.domainAccessStatus || "")) {
+      items.push("- [ ] **Help client provide domain or DNS access**");
+    } else {
+      items.push(`- [ ] **Confirm domain access**${data.domainName ? ` for \`${data.domainName}\`` : ""}`);
+    }
+  }
 
-  if (/none|few|low/i.test(d.hasPhotos || "")) items.push("- [ ] **Source / shoot photos** (limited assets)");
-  if (!d.assetsLink) items.push("- [ ] **Request asset folder** (logo, photos, videos)");
-
-  items.push(
-    `- [ ] **Get Meta partner access** — Business Manager: ${d.hasBusinessManager || "unknown"}, can grant: ${
-      d.canGrantMeta || "TBD"
-    }`
-  );
-  if (!d.facebookPage) items.push("- [ ] **Create / locate Facebook Page**");
+  if (includesServiceCategory(services, "crm")) {
+    items.push("- [ ] **Build lead pipeline, follow-up, and tour routing** from the CRM answers");
+  }
+  if (includesServiceCategory(services, "cro")) {
+    items.push("- [ ] **Prepare conversion and admissions review** with prioritized recommendations");
+  }
+  if (includesServiceCategory(services, "local")) {
+    items.push("- [ ] **Prepare local profile, review, and reputation workplan**");
+  }
+  if (includesServiceCategory(services, "creative")) {
+    items.push("- [ ] **Prepare creative, brand, and proof deliverable list**");
+  }
+  if (includesServiceCategory(services, "ai")) {
+    items.push("- [ ] **Prepare AI, routing, FAQ, or reactivation configuration**");
+  }
+  if (services.has("multi-location")) {
+    items.push("- [ ] **Build location matrix and routing rules**");
+  }
+  if (services.has("fractional-cmo")) {
+    items.push("- [ ] **Schedule leadership kickoff and create the 90-day marketing priority plan**");
+  }
+  if (/low-quality|need a logo/i.test(data.hasLogo || "")) {
+    items.push("- [ ] **Prepare or recreate the logo**");
+  }
+  if (/few|need new/i.test(data.hasPhotos || "")) {
+    items.push("- [ ] **Plan additional photo or creative sourcing**");
+  }
 
   return items.join("\n");
 }
 
-/** The deliverable: a Markdown brand brief to build the website & creatives from. */
-function brandBrief(d: Record<string, string>): string {
-  const v = (k: string, fallback = "_Not provided_") => (d[k] ? d[k] : fallback);
-  const list = (k: string) =>
-    d[k]
-      ? d[k]
-          .split(", ")
-          .map((x) => `- ${x}`)
-          .join("\n")
-      : "_Not provided_";
+function buildBrief(data: Record<string, string>) {
+  const value = (key: string, fallback = "_Not provided_") => data[key] || fallback;
+  const services = selectedServiceNames(data);
 
-  return `# Brand Brief — ${v("businessName")}
+  return `# Client Build Brief - ${value("businessName")}
 
-> Generated from the EduCare Leads onboarding intake on ${new Date().toLocaleDateString("en-US", {
+> Generated from EduCare Leads onboarding on ${new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
-  })}. Use this to build the website, ad creatives, and offer.
+  })}. This brief contains delivery inputs only; contract pricing remains outside onboarding.
 
-## Snapshot
+## Services Included
 
-| | |
-|---|---|
-| **Business** | ${v("businessName")} |
-| **Legal entity** | ${v("legalName")} |
-| **Owner / contact** | ${v("contactName")}${d.role ? ` (${d.role})` : ""} |
-| **Email** | ${v("email")} |
-| **Phone** | ${v("phone")} |
-| **Address** | ${v("address")} |
-| **Locations** | ${v("locations")} |
-| **Years operating** | ${v("yearsOperating")} |
-| **License #** | ${v("licenseNumber")} |
+**Package preset:** ${value("setupPresetName", "Custom setup")}
 
-## Positioning & Offer
+${services.length ? services.map((service) => `- ${service}`).join("\n") : "_Not provided_"}
 
-- **Ideal family:** ${v("idealFamily")}
-- **Why parents choose them (USP):** ${v("usp")}
-- **#1 objection to overcome:** ${v("objections")}
-- **Current promotion:** ${v("currentPromo")}
-- **90-day enrollment goal:** ${v("enrollmentGoal")}
-- **Competitors:** ${v("competitors")}
-
-## Programs & Services
-
-${list("services")}
+## Business Snapshot
 
 | | |
 |---|---|
-| **Hours** | ${v("hours")} |
-| **Capacity** | ${v("capacity")} |
-| **Open spots** | ${v("openSpots")} |
-| **Tuition / pricing** | ${v("tuition")} |
-| **Service area** | ${v("serviceArea")} |
-| **Languages spoken** | ${v("languages")} |
+| **Business** | ${value("businessName")} |
+| **Legal entity** | ${value("legalName")} |
+| **Primary contact** | ${value("contactName")}${data.role ? ` (${data.role})` : ""} |
+| **Email** | ${value("email")} |
+| **Phone** | ${value("phone")} |
+| **Address** | ${value("address")} |
+| **Locations** | ${value("locations")} |
+| **Years operating** | ${value("yearsOperating")} |
 
-## Brand & Content (website + creatives)
+## Enrollment Priorities
 
-- **Logo:** ${v("hasLogo")}
-- **Brand colors:** ${v("brandColors")}
-- **Tagline:** ${v("tagline")}
-- **Photos / videos:** ${v("hasPhotos")}
-- **Assets link:** ${v("assetsLink")}
-- **Current website:** ${v("currentWebsite")}
+- **Programs:** ${value("programs")}
+- **Current openings:** ${value("openSpots")}
+- **90-day goal:** ${value("enrollmentGoal")}
+- **Service area:** ${value("serviceArea")}
+- **Ideal family:** ${value("idealFamily")}
+- **Why families choose them:** ${value("usp")}
+- **Current offer:** ${value("currentPromo")}
+- **Most common concern:** ${value("objections")}
 
-### Testimonials / social proof
+## Brand and Assets
 
-${v("testimonials")}
+- **Asset folder:** ${value("assetsLink")}
+- **Logo:** ${value("hasLogo")}
+- **Photos and videos:** ${value("hasPhotos")}
+- **Media approval:** ${value("mediaConsent")}
+- **Brand colors:** ${value("brandColors")}
+- **Tagline:** ${value("tagline")}
+- **Brand rules:** ${value("brandNotes")}
+- **Testimonials:** ${value("testimonials")}
 
-## Website & Domain
+## Account Access Status
 
-- **Owns a domain:** ${v("hasDomain")}
-- **Domain:** ${v("domainName")}
-- **Registrar:** ${v("domainRegistrar")}
-- **Desired new domain:** ${v("desiredDomain")}
-- **Can grant DNS access:** ${v("canGrantDomain")}
-- **Google Business Profile:** ${v("googleBusiness")}
+| Account | Status |
+|---|---|
+| Meta | ${value("metaAccessStatus")} |
+| Google Ads | ${value("googleAdsAccessStatus")} |
+| Google Analytics | ${value("analyticsAccessStatus")} |
+| Google Tag Manager | ${value("tagManagerAccessStatus")} |
+| Google Business Profile | ${value("googleBusinessAccessStatus")} |
+| Domain | ${value("domainAccessStatus")} |
 
-## Ads & Accounts
+All direct account invitations should be sent to \`${ACCESS_INVITE_EMAIL}\`.
 
-- **Facebook Page:** ${v("facebookPage")}
-- **Instagram:** ${v("instagram")}
-- **Meta Business Manager:** ${v("hasBusinessManager")}
-- **Ad Account ID:** ${v("adAccountId")}
-- **Currently running ads:** ${v("runningAds")}
-- **Monthly ad budget:** ${v("adBudget")}
-- **Can grant Meta access:** ${v("canGrantMeta")}
+## Advertising Setup
 
-## Phone & Automation
+- **Currently running ads:** ${value("runningAds")}
+- **Primary campaign goal:** ${value("primaryCampaignGoal")}
+- **Facebook Page:** ${value("facebookPage")}
+- **Instagram:** ${value("instagram")}
+- **Google Ads Customer ID:** ${value("googleAdsCustomerId")}
+- **Past campaign notes:** ${value("pastCampaignNotes")}
+- **Seasonal campaign:** ${value("seasonalCampaignName")}
+- **Seasonal deadline:** ${value("seasonalCampaignDeadline")}
+- **Seasonal availability:** ${value("seasonalAvailability")}
+- **Conversion actions:** ${value("conversionActions")}
 
-- **Business phone:** ${v("businessPhone")} (${v("phoneType", "type unknown")})
-- **Can text on it:** ${v("canText")}
-- **Wants tracking / AI number:** ${v("wantsTrackingNumber")}
-- **Forward calls to:** ${v("forwardTo")}
-- **Current CRM / booking tool:** ${v("currentCrm")}
+## Website and Domain
+
+- **Current website:** ${value("currentWebsite")}
+- **Domain:** ${value("domainName")}
+- **Domain provider:** ${value("domainRegistrar")}
+- **Website platform:** ${value("websitePlatform")}
+- **Hosting provider:** ${value("hostingProvider")}
+- **Required pages:** ${value("desiredPages")}
+- **Website examples:** ${value("websiteExamples")}
+- **Priority updates:** ${value("requestedWebsiteUpdates")}
+
+## CRM and Follow-Up
+
+- **Current CRM:** ${value("currentCrm")}
+- **Booking calendar:** ${value("calendarLink")}
+- **Tour contact:** ${value("tourContact")}
+- **Lead sources:** ${value("leadSources")}
+- **Current process:** ${value("followUpProcess")}
+- **Email platform and list:** ${value("emailPlatform")} / ${value("emailListSize")}
+- **Email goals:** ${value("emailGoals")}
+- **Advanced automation goals:** ${value("automationGoals")}
+
+## Conversion and Admissions
+
+- **Monthly inquiries:** ${value("currentInquiryVolume")}
+- **Lead-to-tour rate:** ${value("leadToTourRate")}
+- **Tour-to-enrollment rate:** ${value("tourToEnrollmentRate")}
+- **Current scripts:** ${value("admissionsScriptsLink")}
+- **Likely bottleneck:** ${value("conversionBottleneck")}
+
+## Creative, Brand, and Proof
+
+- **Creative priority:** ${value("creativePriority")}
+- **Creative approver:** ${value("creativeApprover")}
+- **Proof outcomes:** ${value("proofOutcomes")}
+- **Brand refresh goals:** ${value("brandRefreshGoals")}
+- **Shoot details:** ${value("shootAvailability")}
+
+## Local, AI, and Routing
+
+- **Google Business Profile:** ${value("googleBusiness")} (${value("googleBusinessStatus", "status not provided")})
+- **Review page:** ${value("reviewLink")}
+- **Review process:** ${value("reviewProcess")}
+- **Local search priorities:** ${value("localSearchPriorities")}
+- **Business phone:** ${value("businessPhone")}
+- **Live call destination:** ${value("forwardTo")}
+- **Missed calls:** ${value("missedCalls")}
+- **Common family questions:** ${value("commonQuestions")}
+- **AI escalation rules:** ${value("aiEscalationRules")}
+- **Reactivation audience:** ${value("reactivationWindow")}
+- **Reactivation reason:** ${value("reactivationOffer")}
+- **Location details:** ${value("locationDetails")}
+- **Routing rules:** ${value("routingRules")}
+
+## Fractional CMO Leadership
+
+- **Leadership team:** ${value("leadershipTeam")}
+- **Decision-maker:** ${value("decisionMaker")}
+- **Meeting rhythm:** ${value("meetingCadence")}
+- **Current vendors:** ${value("currentVendors")}
+- **90-day priorities:** ${value("marketingPriorities")}
+- **Approval process:** ${value("approvalProcess")}
 
 ## Setup Checklist
 
-${setupChecklist(d)}
+${setupChecklist(data)}
 
-## Notes
+## Final Notes
 
-${v("notes")}
+${value("notes")}
 `;
 }
 
-export async function POST(req: Request) {
-  let body: Record<string, string>;
+function sanitizeBody(input: unknown) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return null;
+  return Object.fromEntries(
+    Object.entries(input as Record<string, unknown>)
+      .filter(([, value]) => typeof value === "string")
+      .map(([key, value]) => [key.slice(0, 100), String(value).slice(0, 20000)])
+  );
+}
+
+export async function POST(request: Request) {
+  let body: Record<string, string> | null;
   try {
-    body = await req.json();
+    body = sanitizeBody(await request.json());
   } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    body = null;
   }
 
-  if (!body.businessName || !body.contactName || !body.email || !body.phone) {
+  if (!body) {
+    return NextResponse.json({ error: "Invalid submission." }, { status: 400 });
+  }
+  if (!body.businessName || !body.contactName || !body.email || !body.phone || body.consent !== "Yes") {
     return NextResponse.json(
-      { error: "Missing required fields (business name, contact, email, phone)." },
+      { error: "Missing required business, contact, or authorization information." },
       { status: 422 }
     );
   }
 
-  // The deliverable: a Markdown brand brief to build the website & creatives from.
-  const brief = brandBrief(body);
-  const briefFilename = `${slugify(body.businessName)}-brand-brief.md`;
-
+  const brief = buildBrief(body);
+  const briefFilename = `${slugify(body.businessName)}-build-brief.md`;
   let emailed = false;
+
   if (process.env.RESEND_API_KEY) {
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
@@ -349,19 +536,17 @@ export async function POST(req: Request) {
       });
       if (error) console.error("[onboarding] Resend error:", error);
       else emailed = true;
-    } catch (err) {
-      console.error("[onboarding] Email send failed:", err);
+    } catch (error) {
+      console.error("[onboarding] Email send failed:", error);
     }
   } else {
-    console.log("[onboarding] (RESEND_API_KEY not set) Submission:", body);
-    console.log(`[onboarding] Brand brief (${briefFilename}):\n${brief}`);
+    console.log("[onboarding] RESEND_API_KEY not set. Submission:", body);
+    console.log(`[onboarding] Build brief (${briefFilename}):\n${brief}`);
   }
 
   if (!emailed) {
-    // Never drop an onboarding submission.
     console.log("[onboarding] Recoverable submission payload:", body);
   }
 
-  // Brief is delivered to the team via email — not returned to the form filler.
   return NextResponse.json({ ok: true, emailed });
 }

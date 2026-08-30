@@ -21,6 +21,7 @@ day to day. If you're new, read the docs in order.
 | 4 | **[04-content-and-assets.md](./04-content-and-assets.md)** | The pitch deck, VSL video (Remotion), proposals, contracts, ad creatives, social assets, and client sites. |
 | 5 | **[05-operations-playbook.md](./05-operations-playbook.md)** | How the business runs end-to-end: lead → strategy call → onboarding → build → launch → optimize. |
 | 6 | **[06-dev-setup-and-deploy.md](./06-dev-setup-and-deploy.md)** | Get the app running locally, edit copy, deploy, and regenerate the deck PDF / VSL video. |
+| 7 | **[07-client-onboarding-service-blueprint.md](./07-client-onboarding-service-blueprint.md)** | Service-by-service onboarding needs, access requests, assets, and recommended smart intake flow. |
 
 ### Deep-reference material (kept alongside)
 

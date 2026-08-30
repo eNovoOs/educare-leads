@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Logo } from "@/components/Logo";
 import { OnboardingForm } from "@/components/OnboardingForm";
+import { normalizeOnboardingServices, onboardingPresets } from "@/lib/onboarding";
 
 export const metadata: Metadata = {
   title: "Client Onboarding — EduCare Leads",
@@ -9,35 +10,53 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function OnboardingPage() {
+type OnboardingSearchParams = Promise<{
+  client?: string | string[];
+  services?: string | string[];
+  preset?: string | string[];
+  key?: string | string[];
+}>;
+
+function first(value?: string | string[]) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function OnboardingPage({
+  searchParams,
+}: {
+  searchParams: OnboardingSearchParams;
+}) {
+  const params = await searchParams;
+  const clientName = first(params.client)?.slice(0, 120) || "";
+  const draftKey = first(params.key)?.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80) || "general";
+  const serviceIds = normalizeOnboardingServices(params.services);
+  const preset = onboardingPresets.find((item) => item.id === first(params.preset));
+
   return (
     <main className="min-h-screen bg-surface">
-      {/* Top bar */}
       <div className="border-b border-line bg-white">
-        <div className="mx-auto max-w-3xl px-5 py-5">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
           <Logo />
+          <div className="text-right">
+            <p className="text-xs font-semibold text-ink">Secure client onboarding</p>
+            <p className="mt-0.5 text-xs text-muted">Your progress saves automatically</p>
+          </div>
         </div>
       </div>
 
-      {/* Intro */}
-      <div className="mx-auto max-w-3xl px-5 pt-12 pb-6">
-        <span className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand">
-          <span className="h-2 w-2 rounded-full bg-cta" /> New client onboarding
-        </span>
-        <h1 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl">
-          Let&apos;s build your enrollment system
-        </h1>
-        <p className="mt-4 max-w-xl text-lg text-muted">
-          Fill this out once and we&apos;ll have everything we need to design your website, create your
-          ad creatives, position your offer, and connect your accounts. Takes about 10 minutes — and you
-          can paste links instead of uploading files.
-        </p>
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
+        <OnboardingForm
+          clientName={clientName}
+          draftKey={draftKey}
+          serviceIds={serviceIds}
+          presetId={preset?.id || "custom"}
+          presetName={preset?.name || "Custom setup"}
+        />
       </div>
 
-      {/* Form */}
-      <div className="mx-auto max-w-3xl px-5 pb-24">
-        <OnboardingForm />
-      </div>
+      <footer className="border-t border-line bg-white px-5 py-5 text-center text-xs text-muted">
+        Never send passwords through this form. EduCare Leads will only ask you to grant account access.
+      </footer>
     </main>
   );
 }
