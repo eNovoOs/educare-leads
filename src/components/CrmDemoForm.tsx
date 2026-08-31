@@ -1,16 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CalendlyEmbed } from "./CalendlyEmbed";
 
-// Short qualifying form for the /educarecrm page.
+// Short qualifying form for the /educarecrm* pages.
 //
 // Deliberately different from LeadForm (used on /apply): that form gates a
 // high-ticket done-for-you engagement and asks 9 questions, including a
 // revenue qualifier. This is a software demo — the ask is lighter, so the
-// form is 5 fields and the scheduler appears inline on submit instead of
-// routing to /thank-you. The lead is POSTed before the calendar renders, so
-// an abandoned booking is still a captured lead.
+// form is 5 fields and the scheduler appears inline on submit. The lead is
+// POSTed before the calendar renders, so an abandoned booking is still a
+// captured lead (email + CRM).
+//
+// The Meta "Lead" event does NOT fire here. It fires on /crm-thank-you, which
+// the user reaches once the inline Calendly booking completes (see the
+// event_scheduled redirect below) — so Lead == booked demo.
 
 const programTypes = [
   "Daycare / childcare center",
@@ -31,11 +35,6 @@ type Props = {
   footnote?: React.ReactNode;
   /** Line shown above the scheduler once the lead is captured. */
   successNote?: string;
-  /**
-   * When false, the Meta "Lead" event is NOT fired (browser pixel + server CAPI
-   * both skipped). The lead is still captured (email + CRM). Defaults to true.
-   */
-  trackLead?: boolean;
 };
 
 export function CrmDemoForm({
@@ -44,14 +43,32 @@ export function CrmDemoForm({
   submitLabel = "Show Me My Times →",
   footnote,
   successNote = "last step: pick a time below and your demo is locked in. 👇",
-  trackLead = true,
 }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "booked" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
-  const [lead, setLead] = useState<{ name: string; email: string }>({
+  const [lead, setLead] = useState<{ name: string; email: string; eventId: string }>({
     name: "",
     email: "",
+    eventId: "",
   });
+
+  // When the inline Calendly booking completes, send the user to the CRM
+  // thank-you page — that's where the Meta "Lead" fires (funnel completion).
+  useEffect(() => {
+    if (status !== "booked") return;
+    function onMessage(e: MessageEvent) {
+      if (e.data && e.data.event === "calendly.event_scheduled") {
+        const q = new URLSearchParams({
+          name: lead.name,
+          email: lead.email,
+          event_id: lead.eventId,
+        });
+        window.location.href = `/crm-thank-you?${q.toString()}`;
+      }
+    }
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [status, lead]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -74,25 +91,16 @@ export function CrmDemoForm({
           source,
           eventId,
           sourceUrl: window.location.href,
-          skipMetaLead: !trackLead,
+          // The Meta "Lead" (pixel + CAPI) fires on /crm-thank-you, not here.
+          skipMetaLead: true,
         }),
       });
       if (!res.ok) throw new Error("Request failed");
 
-      // Meta Pixel — Lead (shared event_id dedupes with the server CAPI event).
-      // Skipped when trackLead is false (e.g. the CRM trial funnel).
-      if (trackLead) {
-        (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(
-          "track",
-          "Lead",
-          {},
-          { eventID: eventId }
-        );
-      }
-
       setLead({
         name: [data.firstName, data.lastName].filter(Boolean).join(" "),
         email: String(data.email ?? ""),
+        eventId,
       });
       setStatus("booked");
     } catch {
@@ -103,7 +111,8 @@ export function CrmDemoForm({
     }
   }
 
-  // Step 2 — scheduler, revealed in place. No navigation, no lost context.
+  // Step 2 — scheduler, revealed in place. On booking, we redirect to
+  // /crm-thank-you (handled by the effect above).
   if (status === "booked") {
     return (
       <div>
