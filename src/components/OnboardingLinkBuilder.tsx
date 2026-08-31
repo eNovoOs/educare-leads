@@ -47,7 +47,8 @@ export function OnboardingLinkBuilder() {
       return;
     }
 
-    const url = new URL("/onboarding", window.location.origin);
+    const clientPath = window.location.hostname === "onboarding.educareleads.com" ? "/" : "/onboarding";
+    const url = new URL(clientPath, window.location.origin);
     url.searchParams.set("client", clientName.trim());
     url.searchParams.set("services", services.join(","));
     if (presetId !== "custom") url.searchParams.set("preset", presetId);
