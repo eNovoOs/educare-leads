@@ -1,20 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { CalendlyEmbed } from "./CalendlyEmbed";
+import { useState } from "react";
+import { site } from "@/lib/site";
 
 // Short qualifying form for the /educarecrm* pages.
 //
-// Deliberately different from LeadForm (used on /apply): that form gates a
-// high-ticket done-for-you engagement and asks 9 questions, including a
-// revenue qualifier. This is a software demo — the ask is lighter, so the
-// form is 5 fields and the scheduler appears inline on submit. The lead is
-// POSTed before the calendar renders, so an abandoned booking is still a
-// captured lead (email + CRM).
-//
-// The Meta "Lead" event does NOT fire here. It fires on /crm-thank-you, which
-// the user reaches once the inline Calendly booking completes (see the
-// event_scheduled redirect below) — so Lead == booked demo.
+// On submit it captures the lead (email + CRM) and then redirects the user to
+// Calendly to book. The Meta "Lead" event does NOT fire here — it fires on
+// /crm-thank-you, which the Calendly event type is configured to redirect to
+// after a booking completes. So Lead == booked demo.
 
 const programTypes = [
   "Daycare / childcare center",
@@ -33,7 +27,7 @@ type Props = {
   submitLabel?: string;
   /** Small print under the button. */
   footnote?: React.ReactNode;
-  /** Line shown above the scheduler once the lead is captured. */
+  /** @deprecated No longer shown — the form now redirects to Calendly on submit. */
   successNote?: string;
 };
 
@@ -42,33 +36,9 @@ export function CrmDemoForm({
   source = "educarecrm-page",
   submitLabel = "Show Me My Times →",
   footnote,
-  successNote = "last step: pick a time below and your demo is locked in. 👇",
 }: Props) {
-  const [status, setStatus] = useState<"idle" | "loading" | "booked" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
-  const [lead, setLead] = useState<{ name: string; email: string; eventId: string }>({
-    name: "",
-    email: "",
-    eventId: "",
-  });
-
-  // When the inline Calendly booking completes, send the user to the CRM
-  // thank-you page — that's where the Meta "Lead" fires (funnel completion).
-  useEffect(() => {
-    if (status !== "booked") return;
-    function onMessage(e: MessageEvent) {
-      if (e.data && e.data.event === "calendly.event_scheduled") {
-        const q = new URLSearchParams({
-          name: lead.name,
-          email: lead.email,
-          event_id: lead.eventId,
-        });
-        window.location.href = `/crm-thank-you?${q.toString()}`;
-      }
-    }
-    window.addEventListener("message", onMessage);
-    return () => window.removeEventListener("message", onMessage);
-  }, [status, lead]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,47 +67,22 @@ export function CrmDemoForm({
       });
       if (!res.ok) throw new Error("Request failed");
 
-      setLead({
-        name: [data.firstName, data.lastName].filter(Boolean).join(" "),
-        email: String(data.email ?? ""),
-        eventId,
-      });
-      setStatus("booked");
+      // Send them to Calendly to book (prefilled). Calendly is configured to
+      // redirect to /crm-thank-you once the booking is confirmed, where the
+      // Meta "Lead" fires.
+      const name = [data.firstName, data.lastName].filter(Boolean).join(" ");
+      const params = new URLSearchParams();
+      if (name) params.set("name", name);
+      if (data.email) params.set("email", String(data.email));
+      const sep = site.crmCalendlyUrl.includes("?") ? "&" : "?";
+      const qs = params.toString();
+      window.location.href = qs ? `${site.crmCalendlyUrl}${sep}${qs}` : site.crmCalendlyUrl;
     } catch {
       setStatus("error");
       setError(
         "Something went wrong sending that. Please try again, or call us directly."
       );
     }
-  }
-
-  // Step 2 — scheduler, revealed in place. On booking, we redirect to
-  // /crm-thank-you (handled by the effect above).
-  if (status === "booked") {
-    return (
-      <div>
-        <div className="flex items-start gap-3 rounded-2xl bg-cta/10 px-4 py-3 text-left">
-          <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-cta text-white">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path
-                d="M20 6 9 17l-5-5"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-          <p className="text-sm font-semibold text-ink">
-            Got it{lead.name ? `, ${lead.name.split(" ")[0]}` : ""} —{" "}
-            {successNote}
-          </p>
-        </div>
-        <div className="mt-4 overflow-hidden rounded-2xl ring-1 ring-line">
-          <CalendlyEmbed name={lead.name} email={lead.email} />
-        </div>
-      </div>
-    );
   }
 
   const field =
