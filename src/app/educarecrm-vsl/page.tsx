@@ -352,7 +352,6 @@ export default function EducareCrmVslPage() {
             </div>
             <CrmDemoForm
               source="educarecrm-vsl"
-              trackLead={false}
               submitLabel={`Start My ${trial.days}-Day Free Trial →`}
               footnote={formFootnote}
               successNote="last step: pick your onboarding slot below and your trial starts. 👇"
