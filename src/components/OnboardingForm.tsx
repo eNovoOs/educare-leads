@@ -65,6 +65,8 @@ const programOptions = [
   "Other",
 ];
 
+const programDescriptionMinimum = 30;
+
 const metaServiceIds: OnboardingServiceId[] = ["meta-ads", "seasonal-campaign"];
 const googleAdsServiceIds: OnboardingServiceId[] = [
   "google-ads-review",
@@ -133,6 +135,24 @@ function arrayValue(value: FormValue | undefined) {
   return Array.isArray(value) ? value : [];
 }
 
+function programDescriptionField(program: string) {
+  const suffix = program
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+  return `programDescription_${suffix}`;
+}
+
+function formatProgramDescriptions(data: FormState) {
+  return arrayValue(data.programs)
+    .map((program) => {
+      const description = stringValue(data[programDescriptionField(program)]).trim();
+      return description ? `${program}:\n${description}` : "";
+    })
+    .filter(Boolean)
+    .join("\n\n");
+}
+
 function Field({
   name,
   label,
@@ -181,12 +201,14 @@ function Area({
   onChange,
   placeholder,
   hint,
+  required,
+  error,
   rows = 4,
-}: Omit<FieldProps, "type" | "required" | "error"> & { rows?: number }) {
+}: Omit<FieldProps, "type"> & { rows?: number }) {
   return (
     <div>
       <label className={labelClass} htmlFor={name}>
-        {label}
+        {label} {required && <span className="text-cta">*</span>}
       </label>
       <textarea
         id={name}
@@ -195,9 +217,21 @@ function Area({
         onChange={(event) => onChange(name, event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className={`${inputClass} resize-y`}
+        required={required}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${name}-error` : hint ? `${name}-hint` : undefined}
+        className={`${inputClass} resize-y ${error ? "border-red-500 focus:border-red-500 focus:ring-red-100" : ""}`}
       />
-      {hint && <p className="mt-1.5 text-xs leading-5 text-muted">{hint}</p>}
+      {hint && !error && (
+        <p id={`${name}-hint`} className="mt-1.5 text-xs leading-5 text-muted">
+          {hint}
+        </p>
+      )}
+      {error && (
+        <p id={`${name}-error`} className="mt-1.5 text-xs font-medium text-red-600">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -599,6 +633,7 @@ export function OnboardingForm({
       consent: "Authorization",
     };
     const nextErrors: Record<string, string> = {};
+    const programErrors: Record<string, string> = {};
 
     for (const name of requiredByStep[currentStep] || []) {
       const value = data[name];
@@ -611,8 +646,24 @@ export function OnboardingForm({
       nextErrors.email = "Enter a valid email address.";
     }
 
+    if (currentStep === 1 || currentStep === steps.length - 1) {
+      for (const program of arrayValue(data.programs)) {
+        const field = programDescriptionField(program);
+        const description = stringValue(data[field]).trim();
+        if (!description) {
+          programErrors[field] = `Describe your ${program.toLowerCase()} before continuing.`;
+        } else if (description.length < programDescriptionMinimum) {
+          programErrors[field] = `Please add a little more detail about your ${program.toLowerCase()}.`;
+        }
+      }
+      Object.assign(nextErrors, programErrors);
+    }
+
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) {
+      if (currentStep === steps.length - 1 && Object.keys(programErrors).length) {
+        setCurrentStep(1);
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
       return false;
     }
@@ -646,6 +697,7 @@ export function OnboardingForm({
     const payload = Object.fromEntries(
       Object.entries(data).map(([key, value]) => [key, Array.isArray(value) ? value.join(", ") : value])
     );
+    const programDescriptions = formatProgramDescriptions(data);
 
     try {
       const response = await fetch("/api/onboarding", {
@@ -653,6 +705,7 @@ export function OnboardingForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...payload,
+          programDescriptions,
           setupModules: serviceIds.join(", "),
           setupPreset: presetId,
           setupPresetName: presetName,
@@ -884,7 +937,36 @@ export function OnboardingForm({
                     options={programOptions}
                     selected={arrayValue(data.programs)}
                     onChange={setValue}
+                    hint="Select every program you currently offer. We will ask for a short description of each selection."
                   />
+                  {arrayValue(data.programs).length > 0 && (
+                    <section className="border-t border-line pt-6" aria-labelledby="program-description-heading">
+                      <div className="mb-5">
+                        <h2 id="program-description-heading" className="text-lg font-extrabold text-ink">
+                          Describe each selected program
+                        </h2>
+                        <p className="mt-1 text-sm leading-6 text-muted">
+                          This gives us the details needed to represent each program accurately in campaigns, pages, and follow-up.
+                        </p>
+                      </div>
+                      <div className="space-y-5">
+                        {arrayValue(data.programs).map((program) => {
+                          const field = programDescriptionField(program);
+                          return (
+                            <Area
+                              key={program}
+                              {...fieldProps(field)}
+                              label={program === "Other" ? "Describe your other program" : `Tell us about your ${program.toLowerCase()}`}
+                              placeholder="Include ages or grades, schedule or session dates, curriculum or activities, what makes it special, and current availability."
+                              hint={`Please provide at least ${programDescriptionMinimum} characters. Do not include private information about individual children.`}
+                              rows={4}
+                              required
+                            />
+                          );
+                        })}
+                      </div>
+                    </section>
+                  )}
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field {...fieldProps("hours")} label="Hours of operation" placeholder="Monday-Friday, 6:30am-6pm" />
                     <Field {...fieldProps("capacity")} label="Licensed or total capacity" placeholder="For example: 80 children" />
@@ -1327,6 +1409,7 @@ export function OnboardingForm({
                     onEdit={() => setCurrentStep(1)}
                     rows={[
                       ["Programs", data.programs],
+                      ["Program descriptions", formatProgramDescriptions(data)],
                       ["Current openings", data.openSpots],
                       ["90-day goal", data.enrollmentGoal],
                       ["Why families choose you", data.usp],

@@ -40,6 +40,7 @@ const SECTIONS: { title: string; fields: [string, string][] }[] = [
     title: "Programs and goals",
     fields: [
       ["programs", "Programs"],
+      ["programDescriptions", "Program descriptions"],
       ["hours", "Hours"],
       ["capacity", "Capacity"],
       ["openSpots", "Current openings"],
@@ -379,6 +380,10 @@ ${services.length ? services.map((service) => `- ${service}`).join("\n") : "_Not
 - **Why families choose them:** ${value("usp")}
 - **Current offer:** ${value("currentPromo")}
 - **Most common concern:** ${value("objections")}
+
+## Program Descriptions
+
+${value("programDescriptions")}
 
 ## Brand and Assets
 
