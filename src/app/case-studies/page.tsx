@@ -1,482 +1,145 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
-import {
-  BadgeCheck,
-  CalendarRange,
-  Check,
-  CircleDashed,
-  Languages,
-  MapPin,
-  Search,
-  Target,
-} from "lucide-react";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CTAButton } from "@/components/CTAButton";
-import { site } from "@/lib/site";
+import { caseStudies, stats } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Summer Camp Advertising Case Study",
+  title: "Case Studies — Real Enrollment Results",
   description:
-    "A source-labeled Meta and Google Ads campaign study for a multi-location summer camp, including spend, leads, impressions, CTR, and cost per lead.",
+    "Real results from the done-for-you enrollment system we install for daycares, schools, and camps. Browse the case studies and see the numbers.",
   alternates: { canonical: "/case-studies" },
 };
 
-const metaCampaigns = [
-  {
-    name: "General lead campaign",
-    scope: "Multi-location",
-    leads: 175,
-    costPerLead: 4.04,
-    spend: 707.85,
-    impressions: 49_454,
-  },
-  {
-    name: "Partner relaunch campaign",
-    scope: "Multi-location",
-    leads: 339,
-    costPerLead: 2.63,
-    spend: 892.02,
-    impressions: 70_432,
-  },
-  {
-    name: "French-language campaign",
-    scope: "By location",
-    leads: 557,
-    costPerLead: 7.26,
-    spend: 4_043.82,
-    impressions: 282_684,
-  },
-  {
-    name: "Remarketing campaign",
-    scope: "Multi-location",
-    leads: 77,
-    costPerLead: 3.58,
-    spend: 275.71,
-    impressions: 15_905,
-  },
-  {
-    name: "Location lead campaign",
-    scope: "Ottawa",
-    leads: 81,
-    costPerLead: 6.13,
-    spend: 496.47,
-    impressions: 29_344,
-  },
-];
-
-const metaTotals = metaCampaigns.reduce(
-  (totals, campaign) => ({
-    leads: totals.leads + campaign.leads,
-    spend: totals.spend + campaign.spend,
-    impressions: totals.impressions + campaign.impressions,
-  }),
-  { leads: 0, spend: 0, impressions: 0 },
-);
-
-const metaBlendedCostPerLead = metaTotals.spend / metaTotals.leads;
-const googleTotals = {
-  impressions: 423_980,
-  spend: 25_112.46,
-  ctr: 6.73,
-  averageCpc: 0.88,
-};
-
-const formatNumber = new Intl.NumberFormat("en-CA");
-const formatDollar = (value: number) =>
-  `$${value.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-const formatCad = (value: number) =>
-  `CA$${value.toLocaleString("en-CA", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-
-const metaSummary = [
-  { value: formatNumber.format(metaTotals.leads), label: "Meta form leads" },
-  {
-    value: formatDollar(metaBlendedCostPerLead),
-    label: "Blended cost per lead",
-  },
-  {
-    value: formatNumber.format(metaTotals.impressions),
-    label: "Meta impressions",
-  },
-  { value: formatDollar(metaTotals.spend), label: "Meta spend" },
-];
-
-const googleSummary = [
-  {
-    value: formatNumber.format(googleTotals.impressions),
-    label: "Google impressions",
-  },
-  { value: `${googleTotals.ctr}%`, label: "Account CTR" },
-  {
-    value: formatCad(googleTotals.averageCpc),
-    label: "Average CPC",
-  },
-  { value: formatCad(googleTotals.spend), label: "Google spend" },
-];
-
-function SourceLabel({ children }: { children: React.ReactNode }) {
+function Arrow({ className = "" }: { className?: string }) {
   return (
-    <span className="inline-flex items-center gap-2 border border-line bg-white px-3 py-2 text-xs font-bold uppercase text-ink">
-      <BadgeCheck className="h-4 w-4 text-teal" aria-hidden />
-      {children}
-    </span>
+    <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
-export default function CaseStudiesPage() {
-  const combinedImpressions = metaTotals.impressions + googleTotals.impressions;
-
+export default function CaseStudiesIndex() {
   return (
     <>
       <Header />
 
-      <main>
-        <section className="bg-ink text-white">
-          <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-            <div className="max-w-4xl">
-              <p className="text-sm font-bold uppercase text-accent">
-                Verified campaign study
-              </p>
-              <h1 className="font-display mt-4 text-4xl uppercase leading-[1.05] sm:text-5xl lg:text-6xl">
-                1,229 Meta leads at a $5.22 blended cost per lead
-              </h1>
-              <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/75 sm:text-xl">
-                An anonymized, multi-location summer camp used English and French
-                campaigns across Meta and Google to create demand throughout its
-                2026 registration season.
-              </p>
-            </div>
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-ink-deep via-ink to-ink-soft text-white">
+        <div className="pointer-events-none absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-brand/30 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-48 -left-40 h-[28rem] w-[28rem] rounded-full bg-cta/20 blur-3xl" />
+        <div className="relative mx-auto max-w-4xl px-5 py-20 text-center lg:py-24">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white/90 ring-1 ring-white/15">
+            <span className="h-2 w-2 rounded-full bg-cta" />
+            Case studies
+          </span>
+          <h1 className="font-display mt-6 text-4xl uppercase leading-[1.02] sm:text-5xl lg:text-[3.4rem]">
+            Real programs. <span className="text-cta">Real results.</span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-white/80">
+            The numbers behind the done-for-you enrollment system we install for
+            daycares, schools, and camps. Pick a story below and see exactly what
+            changed.
+          </p>
+        </div>
 
-            <div className="mt-10 grid border-y border-white/15 sm:grid-cols-3">
-              <div className="py-5 sm:border-r sm:border-white/15 sm:pr-6">
-                <p className="text-xs font-bold uppercase text-white/50">Program</p>
-                <p className="mt-2 text-lg font-bold">Multi-location summer camp</p>
+        {/* STAT BAR */}
+        <div className="relative border-t border-white/10 bg-black/20">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px px-5 py-2 sm:grid-cols-4">
+            {stats.map((s) => (
+              <div key={s.label} className="px-3 py-5 text-center">
+                <p className="font-display text-2xl text-accent sm:text-3xl">{s.value}</p>
+                <p className="mt-1 text-xs leading-snug text-white/70">{s.label}</p>
               </div>
-              <div className="border-t border-white/15 py-5 sm:border-r sm:border-t-0 sm:border-white/15 sm:px-6">
-                <p className="text-xs font-bold uppercase text-white/50">Markets</p>
-                <p className="mt-2 text-lg font-bold">Canadian, English + French</p>
-              </div>
-              <div className="border-t border-white/15 py-5 sm:border-t-0 sm:pl-6">
-                <p className="text-xs font-bold uppercase text-white/50">Sources</p>
-                <p className="mt-2 text-lg font-bold">Meta Ads + Google Ads</p>
-              </div>
-            </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="border-b border-line bg-white">
-          <div className="mx-auto grid max-w-6xl gap-8 px-5 py-14 lg:grid-cols-[0.82fr_1.18fr]">
-            <div>
-              <p className="text-sm font-bold uppercase text-brand">The campaign</p>
-              <h2 className="font-display mt-2 text-3xl uppercase text-ink sm:text-4xl">
-                Local intent, split by channel and language
-              </h2>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2">
-              {[
-                {
-                  icon: Languages,
-                  title: "Bilingual structure",
-                  body: "Separate English and French campaigns matched how families searched and responded.",
-                },
-                {
-                  icon: MapPin,
-                  title: "Location coverage",
-                  body: "Campaigns covered all locations, with additional city-specific activity for Toronto and Ottawa.",
-                },
-                {
-                  icon: Target,
-                  title: "Meta lead capture",
-                  body: "Instant forms and remarketing campaigns converted parent interest into trackable inquiries.",
-                },
-                {
-                  icon: Search,
-                  title: "Google demand capture",
-                  body: "Search and Performance Max campaigns reached families actively researching camps.",
-                },
-              ].map((item) => (
-                <div key={item.title} className="border-t border-line pt-5">
-                  <item.icon className="h-6 w-6 text-cta" aria-hidden />
-                  <h3 className="mt-4 text-lg font-bold text-ink">{item.title}</h3>
-                  <p className="mt-2 leading-relaxed text-muted">{item.body}</p>
+      {/* CARDS GRID */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <div className="grid gap-6 md:grid-cols-2">
+            {caseStudies.map((cs) => (
+              <Link
+                key={cs.slug}
+                href={cs.href}
+                className="group flex flex-col rounded-3xl bg-white p-8 shadow-sm ring-1 ring-line transition-all hover:-translate-y-1 hover:shadow-xl hover:ring-cta/40"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand ring-1 ring-line">
+                    {cs.tag}
+                  </span>
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-cta/10 text-cta transition-colors group-hover:bg-cta group-hover:text-white">
+                    <Arrow />
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        <section id="meta-results" className="scroll-mt-20 bg-surface">
-          <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-            <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-sm font-bold uppercase text-brand">Meta Ads results</p>
-                <h2 className="font-display mt-2 text-3xl uppercase text-ink sm:text-4xl">
-                  Five campaigns generated 1,229 form leads
+                <div className="mt-6 flex items-center gap-2.5">
+                  {"logo" in cs && cs.logo ? (
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface p-1 ring-1 ring-line">
+                      <img src={cs.logo} alt="" className="h-full w-full object-contain" />
+                    </span>
+                  ) : null}
+                  <p className="text-sm font-medium text-muted">{cs.client}</p>
+                </div>
+                <h2 className="font-display mt-2 text-2xl uppercase leading-tight text-ink">
+                  {cs.title}
                 </h2>
-                <p className="mt-4 text-lg leading-relaxed text-muted">
-                  Results below are form leads reported by Meta, not booked tours or
-                  confirmed registrations.
-                </p>
-              </div>
-              <div className="shrink-0">
-                <SourceLabel>Jan 1 to Jul 30, 2026</SourceLabel>
-              </div>
-            </div>
+                <p className="mt-3 flex-1 text-ink-soft">{cs.teaser}</p>
 
-            <div className="mt-10 grid border-y border-line bg-white sm:grid-cols-2 lg:grid-cols-4">
-              {metaSummary.map((metric, index) => (
-                <div
-                  key={metric.label}
-                  className={`p-5 lg:p-6 ${
-                    index > 0 ? "border-t border-line sm:border-t-0 sm:border-l" : ""
-                  } ${index === 2 ? "sm:border-l-0 lg:border-l" : ""}`}
-                >
-                  <p className="font-display text-3xl text-ink">{metric.value}</p>
-                  <p className="mt-2 text-sm font-semibold text-muted">{metric.label}</p>
+                <div className="mt-7 grid grid-cols-3 gap-3 border-t border-line pt-6">
+                  {cs.stats.map((st) => (
+                    <div key={st.label}>
+                      <p className="font-display text-2xl text-cta">{st.value}</p>
+                      <p className="mt-1 text-xs leading-snug text-muted">{st.label}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            <div className="mt-8 overflow-hidden rounded-lg border border-line bg-white">
-              <div className="border-b border-line px-5 py-4">
-                <h3 className="font-bold text-ink">Campaign detail</h3>
-                <p className="mt-1 text-sm text-muted">
-                  Campaign names are generalized to keep the client anonymous.
-                </p>
-              </div>
-              <div className="divide-y divide-line md:hidden">
-                {metaCampaigns.map((campaign) => (
-                  <div key={campaign.name} className="px-5 py-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <p className="font-bold text-ink">{campaign.name}</p>
-                      <span className="shrink-0 text-xs font-semibold text-muted">
-                        {campaign.scope}
-                      </span>
-                    </div>
-                    <dl className="mt-4 grid grid-cols-2 gap-x-5 gap-y-4">
-                      <div>
-                        <dt className="text-xs font-bold uppercase text-muted">Leads</dt>
-                        <dd className="mt-1 text-lg font-bold text-ink">
-                          {formatNumber.format(campaign.leads)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs font-bold uppercase text-muted">Cost / lead</dt>
-                        <dd className="mt-1 text-lg font-bold text-ink">
-                          {formatDollar(campaign.costPerLead)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs font-bold uppercase text-muted">Spend</dt>
-                        <dd className="mt-1 font-semibold text-ink">
-                          {formatDollar(campaign.spend)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs font-bold uppercase text-muted">Impressions</dt>
-                        <dd className="mt-1 font-semibold text-ink">
-                          {formatNumber.format(campaign.impressions)}
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
-                ))}
-                <div className="bg-surface px-5 py-5">
-                  <p className="font-bold text-ink">Total / blended</p>
-                  <dl className="mt-4 grid grid-cols-2 gap-x-5 gap-y-4">
-                    <div>
-                      <dt className="text-xs font-bold uppercase text-muted">Leads</dt>
-                      <dd className="mt-1 text-lg font-bold text-ink">
-                        {formatNumber.format(metaTotals.leads)}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-bold uppercase text-muted">Cost / lead</dt>
-                      <dd className="mt-1 text-lg font-bold text-ink">
-                        {formatDollar(metaBlendedCostPerLead)}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-bold uppercase text-muted">Spend</dt>
-                      <dd className="mt-1 font-semibold text-ink">
-                        {formatDollar(metaTotals.spend)}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-bold uppercase text-muted">Impressions</dt>
-                      <dd className="mt-1 font-semibold text-ink">
-                        {formatNumber.format(metaTotals.impressions)}
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-              </div>
-              <div className="hidden overflow-x-auto md:block">
-                <table className="w-full min-w-[760px] border-collapse text-left">
-                  <thead className="bg-ink text-xs uppercase text-white/70">
-                    <tr>
-                      <th className="px-5 py-3 font-bold">Campaign</th>
-                      <th className="px-5 py-3 font-bold">Scope</th>
-                      <th className="px-5 py-3 text-right font-bold">Leads</th>
-                      <th className="px-5 py-3 text-right font-bold">Cost / lead</th>
-                      <th className="px-5 py-3 text-right font-bold">Spend</th>
-                      <th className="px-5 py-3 text-right font-bold">Impressions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {metaCampaigns.map((campaign) => (
-                      <tr key={campaign.name} className="border-t border-line text-sm">
-                        <td className="px-5 py-4 font-semibold text-ink">{campaign.name}</td>
-                        <td className="px-5 py-4 text-muted">{campaign.scope}</td>
-                        <td className="px-5 py-4 text-right font-semibold text-ink">
-                          {formatNumber.format(campaign.leads)}
-                        </td>
-                        <td className="px-5 py-4 text-right text-ink">
-                          {formatDollar(campaign.costPerLead)}
-                        </td>
-                        <td className="px-5 py-4 text-right text-ink">
-                          {formatDollar(campaign.spend)}
-                        </td>
-                        <td className="px-5 py-4 text-right text-ink">
-                          {formatNumber.format(campaign.impressions)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot className="border-t-2 border-ink bg-surface text-sm font-bold text-ink">
-                    <tr>
-                      <td className="px-5 py-4" colSpan={2}>Total / blended</td>
-                      <td className="px-5 py-4 text-right">{formatNumber.format(metaTotals.leads)}</td>
-                      <td className="px-5 py-4 text-right">{formatDollar(metaBlendedCostPerLead)}</td>
-                      <td className="px-5 py-4 text-right">{formatDollar(metaTotals.spend)}</td>
-                      <td className="px-5 py-4 text-right">{formatNumber.format(metaTotals.impressions)}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
+                <span className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-cta">
+                  View case study
+                  <Arrow className="transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            ))}
 
-        <section id="google-results" className="scroll-mt-20 bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-            <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-sm font-bold uppercase text-brand">Google Ads results</p>
-                <h2 className="font-display mt-2 text-3xl uppercase text-ink sm:text-4xl">
-                  423,980 impressions at a 6.73% click-through rate
-                </h2>
-                <p className="mt-4 text-lg leading-relaxed text-muted">
-                  Search and Performance Max campaigns captured English and French
-                  registration demand across the account.
-                </p>
-              </div>
-              <div className="shrink-0">
-                <SourceLabel>Jan 1 to Jul 31, 2026</SourceLabel>
-              </div>
-            </div>
-
-            <div className="mt-10 grid border-y border-line sm:grid-cols-2 lg:grid-cols-4">
-              {googleSummary.map((metric, index) => (
-                <div
-                  key={metric.label}
-                  className={`py-5 lg:py-6 ${
-                    index > 0 ? "border-t border-line sm:border-t-0 sm:border-l sm:pl-6" : ""
-                  } ${index === 2 ? "sm:border-l-0 lg:border-l lg:pl-6" : ""}`}
-                >
-                  <p className="font-display text-3xl text-ink">{metric.value}</p>
-                  <p className="mt-2 text-sm font-semibold text-muted">{metric.label}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-10 grid gap-8 border-l-4 border-cta bg-surface px-6 py-6 md:grid-cols-[0.7fr_1.3fr] md:px-8">
-              <div>
-                <p className="text-sm font-bold uppercase text-brand">Strongest search signal</p>
-                <p className="font-display mt-2 text-4xl text-ink">16.68% CTR</p>
-                <p className="mt-1 font-semibold text-muted">English, all locations</p>
-              </div>
-              <div className="md:border-l md:border-line md:pl-8">
-                <p className="leading-relaxed text-ink-soft">
-                  The highest-volume English search campaign recorded 45,166
-                  impressions, a 16.68% CTR, and a CA$0.71 average CPC. That is a
-                  useful indicator of strong local search intent, but it is not an
-                  enrollment or revenue claim.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-ink text-white">
-          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:py-20">
-            <div>
-              <p className="text-sm font-bold uppercase text-accent">Combined visibility</p>
-              <p className="font-display mt-3 text-5xl sm:text-6xl">
-                {formatNumber.format(combinedImpressions)}
+            {/* More coming — placeholder card */}
+            <div className="flex flex-col items-start justify-center rounded-3xl border-2 border-dashed border-line p-8 text-left">
+              <span className="font-display text-2xl uppercase text-muted">
+                More on the way
+              </span>
+              <p className="mt-3 text-muted">
+                We&apos;re adding new daycare, school, and camp results as programs
+                hit capacity. Want to be the next one?
               </p>
-              <p className="mt-2 text-lg font-bold">reported ad impressions</p>
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-white/55">
-                Meta through July 30 plus Google through July 31. Impressions are
-                not unique people and may overlap across channels.
-              </p>
-            </div>
-            <div>
-              <h2 className="font-display text-3xl uppercase sm:text-4xl">
-                What these numbers prove, and what they do not
-              </h2>
-              <div className="mt-7 grid gap-4 sm:grid-cols-2">
-                {[
-                  "Meta form submissions, spend, and campaign-level cost per lead are verified.",
-                  "Google impressions, spend, CTR, and average CPC are verified.",
-                ].map((item) => (
-                  <div key={item} className="flex gap-3 border-t border-white/15 pt-4">
-                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden />
-                    <p className="text-sm leading-relaxed text-white/80">{item}</p>
-                  </div>
-                ))}
-                {[
-                  "Booked tours and appointments still need a CRM or calendar export.",
-                  "Registrations, enrollment revenue, and ROAS are not claimed in this study.",
-                ].map((item) => (
-                  <div key={item} className="flex gap-3 border-t border-white/15 pt-4">
-                    <CircleDashed className="mt-0.5 h-5 w-5 shrink-0 text-white/45" aria-hidden />
-                    <p className="text-sm leading-relaxed text-white/65">{item}</p>
-                  </div>
-                ))}
+              <div className="mt-6">
+                <CTAButton size="md">Book Your Free Call</CTAButton>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="bg-surface">
-          <div className="mx-auto max-w-4xl px-5 py-16 text-center lg:py-20">
-            <CalendarRange className="mx-auto h-8 w-8 text-cta" aria-hidden />
-            <h2 className="font-display mt-5 text-3xl uppercase leading-tight text-ink sm:text-5xl">
-              Build a measurable enrollment campaign in your market
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-              We&apos;ll map the channels, languages, locations, and follow-up needed
-              for your program, then show you exactly how performance will be tracked.
-            </p>
-            <div className="mt-8 flex justify-center">
-              <CTAButton size="lg">Map My Enrollment Plan</CTAButton>
-            </div>
-            <p className="mt-4 text-sm text-muted">
-              For childcare and education programs above {site.minMonthlyRevenue}
-            </p>
-            <p className="mt-8 text-xs text-muted">
-              Data reviewed in Meta Ads Manager and Google Ads on September 8, 2026.
-              Results vary by market, offer, budget, and follow-up.
-            </p>
+      {/* FINAL CTA */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-ink-deep via-ink to-ink-soft text-white">
+        <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-cta/20 blur-3xl" />
+        <div className="relative mx-auto max-w-4xl px-5 py-20 text-center">
+          <h2 className="font-display text-3xl uppercase leading-tight sm:text-5xl">
+            Your program could be the next case study
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-lg text-white/75">
+            Book a free 20-minute call and we&apos;ll map out how many families
+            your market can produce — and what it takes to fill every spot in 90
+            days.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <CTAButton size="lg">Book Your Free Call</CTAButton>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       <Footer />
     </>

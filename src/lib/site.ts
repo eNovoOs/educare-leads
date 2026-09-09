@@ -87,90 +87,147 @@ export const results = [
   },
 ];
 
+export const caseStudy = {
+  slug: "bilingual-camp",
+  kicker: "Case study · Summer & enrichment camp",
+  client: "Laurus Summer Camp — bilingual day camp · Canada",
+  headline: "Same budget. Double the clicks. Half the cost.",
+  sub:
+    "We rebuilt this camp's ads, website, and registration flow — then re-architected the whole ad account. On a near-identical budget year over year, click-through more than doubled and cost per click was cut in half.",
+  window: "Jan 1 – Jul 3, 2025 vs Jan 1 – Jul 3, 2026 · identical window, near-identical budget",
+
+  // The four headline numbers (snapshot bar).
+  snapshot: [
+    { value: "2×", label: "Click-through rate (1.26% → 2.62%)" },
+    { value: "−50%", label: "Cost per click (CA$1.00 → CA$0.50)" },
+    { value: "×4.4", label: "Higher-intent leads year over year" },
+    { value: "+103%", label: "Ad clicks on the same spend" },
+  ],
+
+  // Hero proof card — the cleanest, most defensible comparison.
+  hero: {
+    big: "2×",
+    bigLabel: "click-through rate — on flat budget & flat CPM",
+    rows: [
+      ["Ad spend (CAD)", "+2.3%"],
+      ["Cost per 1,000 views (CPM)", "+4.5% — flat"],
+      ["Click-through rate", "+108%"],
+      ["Cost per click", "−50%"],
+    ] as [string, string][],
+    note:
+      "When impression costs hold steady but click-through doubles, the lever is the creative and the website — not cheaper ad space.",
+  },
+
+  // The situation.
+  situation: {
+    kicker: "The situation",
+    title: "A camp relying on two generic campaigns",
+    body:
+      "This bilingual day-camp brand ran the same summer playbook every year: two broad ad campaigns, no split by location or program, and a dated website that leaked interested families before they ever registered. Demand was there — the follow-through wasn't.",
+  },
+
+  // What we installed (maps to the Educare enrollment system).
+  installed: {
+    kicker: "What we installed",
+    title: "A refreshed engine, end to end",
+    items: [
+      {
+        name: "Rebuilt creative",
+        body: "Fresh ad creative and offers, replacing the tired static ads that families had scrolled past for two summers.",
+      },
+      {
+        name: "Full website rebuild + CRO",
+        body: "A rebuilt, conversion-optimized website and dedicated landing pages per program, so ad clicks turned into registrations instead of bounces.",
+      },
+      {
+        name: "Registration-flow QA",
+        body: "We audited and fixed the online registration flow end to end, closing the gaps where families were dropping off before they enrolled.",
+      },
+      {
+        name: "Re-architected ad account",
+        body: "Two generic campaigns became a segmented engine: per-location and per-program lead campaigns, dedicated website-lead campaigns, and remarketing.",
+      },
+    ],
+  },
+
+  // Year-over-year results table.
+  table: {
+    kicker: "The results",
+    title: "Year over year, same window, same budget",
+    columns: ["Metric", "2025", "2026", "Change"],
+    rows: [
+      ["Ad spend (CAD)", "CA$29,666", "CA$30,338", "+2.3%"],
+      ["Impressions", "2,361,557", "2,312,388", "−2.1%"],
+      ["Cost per 1,000 views", "CA$12.56", "CA$13.12", "+4.5%"],
+      ["Clicks", "29,743", "60,494", "+103%"],
+      ["Click-through rate", "1.26%", "2.62%", "+108%"],
+      ["Cost per click", "CA$1.00", "CA$0.50", "−50%"],
+      ["Higher-intent leads", "745", "3,283", "+341%"],
+      ["Cost per lead (like-for-like)", "CA$7.15", "CA$5.42", "−24%"],
+    ] as [string, string, string, string][],
+    // rows to visually emphasize (green highlight)
+    highlight: [3, 4, 5, 6, 7],
+  },
+
+  // The three stories.
+  stories: [
+    {
+      title: "The efficiency story",
+      body:
+        "Clicks doubled (+103%) on just +2.3% more spend. Click-through rate jumped +108% while the cost of ad space held flat — so the gains came from better creative and a better website, not cheaper inventory.",
+    },
+    {
+      title: "The leads story",
+      body:
+        "Higher-intent leads grew ×4.4 year over year (+341%) — and at a 24% lower cost per lead. More qualified families, each one cheaper to reach.",
+    },
+    {
+      title: "The architecture story",
+      body:
+        "Two broad campaigns became a segmented lead engine — per location, per program, plus dedicated website-lead and remarketing campaigns. The paid-media version of the new website.",
+    },
+  ],
+
+  takeaway:
+    "Same market, same budget — but a rebuilt engine turned twice the traffic into 4× the qualified families, each one cheaper to reach.",
+
+  // Honesty / methodology footnote — keeps the proof credible.
+  methodology:
+    "All figures in CAD, Meta-attributed, from the live ad account over identical Jan 1 – Jul 3 windows in 2025 vs 2026 on a near-identical budget. “Higher-intent leads” exclude one low-friction instant-form campaign; gross leads were far higher (8,048) but we report the qualified figure. Many registrations close in the camp's registration software, outside the ad platform's tracking, so these numbers understate true enrollment. Results vary by market and effort.",
+};
+
+// Case-study index — cards shown on /case-studies. Each links to a
+// dedicated detail page. Add new entries here as more studies ship.
 export const caseStudies = [
   {
-    slug: "multi-site-daycare",
-    label: "Daycare group",
-    location: "Texas",
-    headline: "Filled the infant room and built a waitlist in under two months",
-    summary:
-      "A two-location childcare group needed a steadier way to create demand for high-value rooms without adding more front-desk follow-up.",
-    timeframe: "50 days",
-    spend: "Meta + Google",
-    metrics: [
-      { value: "42", label: "new enrollments" },
-      { value: "$14.10", label: "avg. cost per booked family" },
-      { value: "82%", label: "show-up rate" },
+    slug: "bilingual-camp",
+    href: "/case-studies/bilingual-camp",
+    tag: "Summer & enrichment camp",
+    client: "Laurus Summer Camp · Canada",
+    logo: "/case-studies/laurus/laurus-logo.png",
+    title: "Same budget. Double the clicks. Half the cost.",
+    teaser:
+      "A rebuilt ad, website, and registration engine doubled click-through and cut cost per click in half — on a flat budget, year over year.",
+    stats: [
+      { value: "2×", label: "Click-through rate" },
+      { value: "−50%", label: "Cost per click" },
+      { value: "×4.4", label: "Higher-intent leads" },
     ],
-    before: [
-      "Tours depended on word of mouth and inconsistent inbound calls.",
-      "Lead response time varied by staff availability.",
-      "The infant room had open seats with high monthly revenue at stake.",
-    ],
-    installed: [
-      "Hyper-local parent ads around each center",
-      "Instant SMS follow-up and tour booking",
-      "CRM tracking from first inquiry to enrolled family",
-    ],
-    quote:
-      "We went from praying for a phone call to turning families away. EduCare Leads filled our infant room and built a waitlist in under two months.",
-    attribution: "Maria T., Owner",
   },
   {
-    slug: "private-school-applications",
-    label: "Private school",
-    location: "Florida",
-    headline: "Packed the open-house calendar with qualified local families",
-    summary:
-      "A private school needed more mission-aligned applicants and a faster path from inquiry to admissions conversation.",
-    timeframe: "45 days",
-    spend: "Meta + Google",
-    metrics: [
-      { value: "61", label: "applications" },
-      { value: "7 sec", label: "AI first reply" },
-      { value: "4.2x", label: "average ROAS snapshot" },
+    slug: "nens-sans",
+    href: "/case-studies/nens-sans",
+    tag: "Daycare & childcare center",
+    client: "Nen's Sans Daycare · Springfield, VA",
+    logo: "/case-studies/nens-sans/nens-sans-logo.png",
+    title: "A bilingual daycare's new home online",
+    teaser:
+      "We designed and built Nen's Sans a fast, bilingual website that turns visitors into booked tours — brand, copy, and every program page.",
+    stats: [
+      { value: "Custom", label: "Full website build" },
+      { value: "EN · ES", label: "Bilingual by design" },
+      { value: "Mobile", label: "Fast, mobile-first" },
     ],
-    before: [
-      "Families were researching silently but not always booking a visit.",
-      "Admissions follow-up competed with daily school operations.",
-      "Open houses were filling too slowly for the enrollment window.",
-    ],
-    installed: [
-      "Program-specific ad angles for local parents",
-      "Automated qualification and calendar booking",
-      "Weekly reporting on lead quality and booked visits",
-    ],
-    quote:
-      "Our open-house calendar was packed for the first time in years. The AI follow-up booked families before our admissions team could even pick up the phone.",
-    attribution: "James P., Admissions Director",
-  },
-  {
-    slug: "summer-camp-sellout",
-    label: "Summer camp",
-    location: "Georgia",
-    headline: "Sold out summer sessions and opened a waitlist three weeks after launch",
-    summary:
-      "A camp operator wanted predictable registrations before the seasonal rush, with follow-up happening after hours and on weekends.",
-    timeframe: "3 weeks",
-    spend: "Meta",
-    metrics: [
-      { value: "100%", label: "sessions filled" },
-      { value: "3 wk", label: "to waitlist" },
-      { value: "24/7", label: "reply coverage" },
-    ],
-    before: [
-      "Registration depended on last year's list and occasional referrals.",
-      "Parent questions came in outside office hours.",
-      "The team needed momentum before the busiest enrollment period.",
-    ],
-    installed: [
-      "Seasonal creative built around urgency and fit",
-      "Parent SMS answers for common registration questions",
-      "Campaign tracking tied to session capacity",
-    ],
-    quote:
-      "We filled every session and started a waitlist a full month earlier than last year. Registrations came in while we slept.",
-    attribution: "Aisha R., Director",
   },
 ];
 
