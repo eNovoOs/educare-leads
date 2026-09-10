@@ -234,7 +234,7 @@ export const caseStudies = [
     href: "/case-studies/nemesis",
     tag: "Youth sports · Basketball program",
     client: "Nemesis Basketball · Québec",
-    logo: "/case-studies/nemesis/nemesis-logo.png",
+    logo: "/case-studies/nemesis/nemesis-logo-dark.png",
     title: "The whole marketing department for a growing basketball program",
     teaser:
       "For 18+ months we ran Nemesis Basketball's entire marketing — brand, bilingual social, multi-season registration ads, merch, events, and the website — filling recreational-to-elite programs season after season.",

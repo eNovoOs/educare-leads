@@ -80,7 +80,7 @@ export default function NemesisCaseStudyPage() {
             {/* Brand lockup */}
             <div className="mt-6 flex items-center gap-3">
               <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white p-1.5 shadow-lg">
-                <img src={`${IMG}/nemesis-logo.png`} alt="Nemesis Basketball logo" className="h-full w-full object-contain" />
+                <img src={`${IMG}/nemesis-logo-dark.png`} alt="Nemesis Basketball logo" className="h-full w-full object-contain" />
               </span>
               <div>
                 <p className="text-sm font-bold text-white">Nemesis Basketball</p>
