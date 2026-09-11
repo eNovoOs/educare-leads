@@ -5,10 +5,9 @@ import { site } from "@/lib/site";
 
 // Short qualifying form for the /educarecrm* pages.
 //
-// On submit it captures the lead (email + CRM) and then redirects the user to
-// Calendly to book. The Meta "Lead" event does NOT fire here — it fires on
-// /crm-thank-you, which the Calendly event type is configured to redirect to
-// after a booking completes. So Lead == booked demo.
+// On submit it captures the lead (email + CRM), records the Meta "Lead" event,
+// and then redirects the user to Calendly to book. A completed booking is
+// tracked separately as "Schedule" on /crm-thank-you.
 
 const programTypes = [
   "Daycare / childcare center",
@@ -61,15 +60,21 @@ export function CrmDemoForm({
           source,
           eventId,
           sourceUrl: window.location.href,
-          // The Meta "Lead" (pixel + CAPI) fires on /crm-thank-you, not here.
-          skipMetaLead: true,
         }),
       });
       if (!res.ok) throw new Error("Request failed");
 
+      // Mirror the server-side CAPI event in the browser. Meta deduplicates
+      // both copies with this shared event ID, while either copy can still
+      // attribute the lead if the other is blocked or delayed.
+      const fbq = (window as unknown as {
+        fbq?: (...args: unknown[]) => void;
+      }).fbq;
+      fbq?.("track", "Lead", {}, { eventID: eventId });
+
       // Send them to Calendly to book (prefilled). Calendly is configured to
-      // redirect to /crm-thank-you once the booking is confirmed, where the
-      // Meta "Lead" fires.
+      // redirect to /crm-thank-you once the booking is confirmed, where a
+      // separate Meta "Schedule" event fires.
       const name = [data.firstName, data.lastName].filter(Boolean).join(" ");
       const params = new URLSearchParams();
       if (name) params.set("name", name);

@@ -3,21 +3,27 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Fires the Meta "Lead" event on the thank-you page — the completion step of
- * the funnel (form → Calendly → /thank-you or /crm-thank-you). The pixel itself
- * is initialised globally in layout.tsx, so here we only track the conversion.
+ * Fires a Meta conversion event on a thank-you page. The default is "Lead";
+ * CRM bookings use "Schedule" so a form submission and a booked demo remain
+ * distinct conversions. The pixel itself is initialised globally in layout.tsx.
  *
  * The pixel script loads with strategy="afterInteractive", which can execute
  * AFTER this effect runs — so `window.fbq` may not exist yet on first tick.
  * We therefore poll briefly until it's available and only then fire, so the
- * Lead never gets silently dropped (this was previously the case on
- * /crm-thank-you, which has no CAPI fallback).
+ * The conversion never gets silently dropped if the component mounts before
+ * the global pixel is ready.
  *
- * `eventId` is passed through from the form's querystring so this browser event
- * dedupes with any server-side CAPI "Lead". If missing (e.g. arriving via
- * Calendly's redirect), a fresh id is generated so the event still fires.
+ * `eventId` can be passed through from the form's querystring so a browser Lead
+ * dedupes with its server-side CAPI copy. If missing (for example after a
+ * Calendly redirect), a fresh id is generated so the event still fires.
  */
-export function ThankYouPixel({ eventId }: { eventId?: string }) {
+export function ThankYouPixel({
+  eventId,
+  eventName = "Lead",
+}: {
+  eventId?: string;
+  eventName?: "Lead" | "Schedule";
+}) {
   const fired = useRef(false);
 
   useEffect(() => {
@@ -32,7 +38,7 @@ export function ThankYouPixel({ eventId }: { eventId?: string }) {
     function fire(): boolean {
       const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
       if (!fbq) return false;
-      fbq("track", "Lead", {}, { eventID: id });
+      fbq("track", eventName, {}, { eventID: id });
       fired.current = true;
       return true;
     }
@@ -48,7 +54,7 @@ export function ThankYouPixel({ eventId }: { eventId?: string }) {
     }, 200);
 
     return () => clearInterval(timer);
-  }, [eventId]);
+  }, [eventId, eventName]);
 
   return null;
 }

@@ -38,8 +38,6 @@ type LeadPayload = {
   source?: string;
   eventId?: string;
   sourceUrl?: string;
-  /** When true, the Meta CAPI "Lead" event is skipped (capture still happens). */
-  skipMetaLead?: boolean;
 };
 
 /** Accepts a single address or a comma-separated list. */
@@ -188,8 +186,8 @@ export async function POST(req: Request) {
   }
 
   // 2) Server-side Meta Conversions API "Lead" event (deduped with the browser pixel).
-  //    Skipped when the form opts out (e.g. the CRM trial funnel) — capture still happens.
-  const tracked = body.skipMetaLead ? false : await sendMetaCapi(req, body);
+  // Every accepted website lead must be sent; individual forms cannot opt out.
+  const tracked = await sendMetaCapi(req, body);
 
   // 3) Forward to eNovo CRM, if configured.
   let forwarded = false;
