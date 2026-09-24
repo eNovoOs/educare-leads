@@ -19,8 +19,8 @@ export default async function CrmThankYouPage({
 
   return (
     <main className="min-h-screen bg-surface">
-      {/* Meta Pixel — the form is the Lead; a completed booking is Schedule. */}
-      <ThankYouPixel eventId={event_id} eventName="Schedule" />
+      {/* Meta Pixel — all bookings count as Lead (funnel unified to /thank-you). */}
+      <ThankYouPixel eventId={event_id} />
 
       <div className="mx-auto max-w-3xl px-5 py-10">
         <Logo />
