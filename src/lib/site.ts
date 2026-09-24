@@ -14,9 +14,9 @@ export const site = {
   email: "info@educareleads.com",
   bookingPath: "/apply",
   // Calendly scheduling link — every "Book a Call" CTA opens this.
-  calendlyUrl: "https://calendly.com/d/dv8r-s8f-3vt/connect-w-andre-j",
+  calendlyUrl: "https://calendly.com/educareleads-info/60min",
   // Separate Calendly link for the CRM funnel (educarecrm* pages) only.
-  crmCalendlyUrl: "https://calendly.com/d/d2j9-jyr-wxd/connect-w-andre-j-crm",
+  crmCalendlyUrl: "https://calendly.com/educareleads-info/60min",
   // Minimum monthly revenue we work with (qualification gate).
   minMonthlyRevenue: "$25k/month",
 };
