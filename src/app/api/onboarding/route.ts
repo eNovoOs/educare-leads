@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { ACCESS_INVITE_EMAIL, onboardingServices, serviceName } from "@/lib/onboarding";
+import { notificationRecipients } from "@/lib/emailRecipients";
 
-const TO_EMAIL = (
+const TO_EMAIL = notificationRecipients(
   process.env.ONBOARDING_TO_EMAIL ||
-  process.env.LEAD_TO_EMAIL ||
-  "info@educareleads.com, andre@revupcmo.com"
-)
-  .split(",")
-  .map((address) => address.trim())
-  .filter(Boolean);
+    process.env.LEAD_TO_EMAIL,
+  ["andre@revupcmo.com"],
+);
 
 const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "Educare Leads <onboarding@resend.dev>";
 

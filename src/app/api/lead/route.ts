@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import crypto from "crypto";
+import { notificationRecipients } from "@/lib/emailRecipients";
 
 /**
  * Lead intake endpoint.
@@ -14,8 +15,8 @@ import crypto from "crypto";
  *
  * Environment variables (set in .env.local / Vercel project settings):
  *   RESEND_API_KEY       - Resend API key (enables the email notification)
- *   LEAD_TO_EMAIL        - where leads are sent; comma-separated for several
- *                          recipients (default: info@educareleads.com)
+ *   LEAD_TO_EMAIL        - optional additional recipients, comma-separated;
+ *                          info@educareleads.com is always included
  *   LEAD_FROM_EMAIL      - verified sender (default: onboarding@resend.dev)
  *   META_PIXEL_ID        - Meta pixel / dataset id (enables Conversions API)
  *   META_CAPI_TOKEN      - Meta Conversions API access token
@@ -40,17 +41,9 @@ type LeadPayload = {
   sourceUrl?: string;
 };
 
-/** Accepts a single address or a comma-separated list. */
-function recipients(value: string | undefined, fallback: string): string[] {
-  return (value || fallback)
-    .split(",")
-    .map((a) => a.trim())
-    .filter(Boolean);
-}
-
-const TO_EMAIL = recipients(
+const TO_EMAIL = notificationRecipients(
   process.env.LEAD_TO_EMAIL,
-  "info@educareleads.com, andre@revupcmo.com"
+  ["andre@revupcmo.com"],
 );
 const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "Educare Leads <onboarding@resend.dev>";
 
@@ -157,7 +150,7 @@ export async function POST(req: Request) {
     source: body.source ?? "website",
   };
 
-  // 1) Email the lead to info@educareleads.com.
+  // 1) Email the lead to info@educareleads.com and any configured recipients.
   let emailed = false;
   if (process.env.RESEND_API_KEY) {
     try {
