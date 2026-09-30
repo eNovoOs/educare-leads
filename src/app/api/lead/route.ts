@@ -41,10 +41,7 @@ type LeadPayload = {
   sourceUrl?: string;
 };
 
-const TO_EMAIL = notificationRecipients(
-  process.env.LEAD_TO_EMAIL,
-  ["andre@revupcmo.com"],
-);
+const TO_EMAIL = notificationRecipients(process.env.LEAD_TO_EMAIL);
 const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "Educare Leads <onboarding@resend.dev>";
 
 function leadRows(lead: Record<string, unknown>) {

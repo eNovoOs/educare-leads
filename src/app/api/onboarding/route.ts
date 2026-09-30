@@ -6,7 +6,6 @@ import { notificationRecipients } from "@/lib/emailRecipients";
 const TO_EMAIL = notificationRecipients(
   process.env.ONBOARDING_TO_EMAIL ||
     process.env.LEAD_TO_EMAIL,
-  ["andre@revupcmo.com"],
 );
 
 const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "Educare Leads <onboarding@resend.dev>";
