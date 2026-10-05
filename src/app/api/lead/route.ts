@@ -35,6 +35,7 @@ type LeadPayload = {
   city?: string;
   locations?: string;
   revenue?: string;
+  budget?: string;
   goal?: string;
   source?: string;
   eventId?: string;
@@ -54,6 +55,7 @@ function leadRows(lead: Record<string, unknown>) {
     city: "City / market",
     locations: "Locations",
     revenue: "Monthly revenue",
+    budget: "Willing to invest",
     goal: "#1 enrollment goal",
     source: "Source",
     submittedAt: "Submitted",
