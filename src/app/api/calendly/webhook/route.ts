@@ -6,13 +6,13 @@ import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
 /**
  * Calendly webhook receiver (subscribe to invitee.created + invitee.canceled).
  *
- *  - invitee.created  -> send prep/confirmation email now, schedule 24h/3h/1h reminders
+ *  - invitee.created  -> send confirmation email now; schedule 24h/3h/1h Resend reminders ONLY if ENABLE_RESEND_REMINDERS=true (default off: Calendly Workflows sends them)
  *  - invitee.canceled -> cancel that event's pending reminders.
  *    A Calendly reschedule fires invitee.canceled (rescheduled: true) for the old
  *    time and invitee.created for the new one, so both cases are handled by the
  *    two branches above (old reminders cancelled, new ones scheduled).
  *
- * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM (optional).
+ * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM, ENABLE_RESEND_REMINDERS (optional).
  */
 
 export const runtime = "nodejs";

@@ -23,7 +23,7 @@ export function safeUrl(url: string | undefined | null): string {
 
 /** Lead-facing sender. EMAIL_FROM wins; the sending domain is send.educareleads.com. */
 export const LEAD_EMAIL_FROM =
-  process.env.EMAIL_FROM || "Educare Leads <hello@send.educareleads.com>";
+  process.env.EMAIL_FROM || "Jessica at Educare Leads <jessica@send.educareleads.com>";
 export const LEAD_EMAIL_REPLY_TO = site.email;
 export const CALL_MINUTES = 20;
 
@@ -60,10 +60,10 @@ export function layout(opts: {
   <div style="background:#ffffff;border-radius:12px;padding:28px 26px">
     <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#0b2447">${esc(opts.heading)}</h1>
     ${p}${bullets}${cta}${secondary}
-    <p style="margin:18px 0 0;font-size:15px;line-height:1.55;color:#1f2d3d">Talk soon,<br>The ${esc(site.name)} team</p>
+    <p style="margin:18px 0 0;font-size:15px;line-height:1.55;color:#1f2d3d">Talk soon,<br>Jessica, Educare Leads</p>
   </div>
   <p style="margin:14px 8px 0;font-size:12px;line-height:1.5;color:#8392a5">
-    Questions? Reply to this email, write <a href="mailto:${esc(site.email)}" style="color:#8392a5">${esc(site.email)}</a> or call <a href="${esc(site.phoneHref)}" style="color:#8392a5">${esc(site.phone)}</a>.<br>
+    Questions? Just reply to this email (it comes straight to me), write <a href="mailto:${esc(site.email)}" style="color:#8392a5">${esc(site.email)}</a> or call <a href="${esc(site.phoneHref)}" style="color:#8392a5">${esc(site.phone)}</a>.<br>
     You're receiving this because you requested a call with ${esc(site.name)}.
   </p>
 </div></body></html>`;
@@ -82,7 +82,7 @@ export function plain(opts: {
     out.push(...opts.bullets.items.map((i) => `- ${i}`), "");
   }
   for (const l of opts.links ?? []) out.push(`${l.label}: ${l.url}`);
-  out.push("", "Talk soon,", `The ${site.name} team`, "", `Questions? Reply to this email, write ${site.email} or call ${site.phone}.`);
+  out.push("", "Talk soon,", "Jessica, Educare Leads", "", `Questions? Just reply to this email (it comes straight to me), write ${site.email} or call ${site.phone}.`);
   return out.join("\n");
 }
 

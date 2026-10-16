@@ -73,20 +73,21 @@ Flow: ad → VSL/squeeze page → lead form → `POST /api/lead` → redirect to
 |-------|-------|
 | `/booked` page (what to expect, prep checklist, noindex, Meta pixel) | `src/app/booked/page.tsx` |
 | "Next step: book your call" email, sent from `/api/lead` to the lead | `src/lib/emails/templates.ts` → `nextStepEmail` |
-| Booking confirmation/prep email + 24h / 3h / 1h reminders | `src/lib/emails/templates.ts`, scheduling in `src/lib/emails/schedule.ts` |
+| Booking confirmation/prep email (always) + optional 24h / 3h / 1h reminders (`ENABLE_RESEND_REMINDERS=true`) | `src/lib/emails/templates.ts`, scheduling in `src/lib/emails/schedule.ts` |
 | Calendly webhook (`invitee.created`, `invitee.canceled`) | `src/app/api/calendly/webhook/route.ts` |
 | Calendly prefill (name, email, phone `a1`, UTMs) + signature check | `src/lib/calendly.ts` |
 | Preview all emails as HTML (sends nothing) | `npx tsx scripts/render-emails.ts out/emails` |
 
-Reminders use Resend `scheduledAt`. No database is needed: on cancel/reschedule the webhook lists recent Resend emails and cancels those still `scheduled` for that recipient at exactly start-24h/3h/1h of the cancelled slot (see `cancelReminders`). A Calendly reschedule sends `invitee.canceled` (old time) + `invitee.created` (new time), so old reminders are cancelled and new ones scheduled.
+Reminders (only when `ENABLE_RESEND_REMINDERS=true`) use Resend `scheduledAt`; by default Calendly Workflows sends reminders. No database is needed: on cancel/reschedule the webhook lists recent Resend emails and cancels those still `scheduled` for that recipient at exactly start-24h/3h/1h of the cancelled slot (see `cancelReminders`). A Calendly reschedule sends `invitee.canceled` (old time) + `invitee.created` (new time), so old reminders are cancelled and new ones scheduled.
 
 ### Environment variables
 
 | Var | Purpose |
 |-----|---------|
 | `RESEND_API_KEY` | Already used. Also sends lead-facing emails. |
-| `EMAIL_FROM` | Sender for lead-facing emails. Default `Educare Leads <hello@send.educareleads.com>` (domain must stay verified in Resend). `LEAD_FROM_EMAIL` still controls only the internal alert. |
+| `EMAIL_FROM` | Sender for lead-facing emails. Default `Jessica at Educare Leads <jessica@send.educareleads.com>`, reply-to `info@educareleads.com` (domain must stay verified in Resend). All lead emails are written in Jessica's first-person voice. `LEAD_FROM_EMAIL` still controls only the internal alert. |
 | `CALENDLY_WEBHOOK_SIGNING_KEY` | **Required** for `/api/calendly/webhook`. You choose it when creating the subscription (below). Without it the route returns 500. |
+| `ENABLE_RESEND_REMINDERS` | Optional. **Off by default.** Set to `true` to have the webhook also schedule 24h/3h/1h reminders via Resend. Leave off while Calendly Workflows sends them, otherwise leads get duplicates. The confirmation email is always sent. |
 | `CALENDLY_API_TOKEN` | Not used by the app; only needed to run the one-off subscription `curl` below. |
 | `CALENDLY_PHONE_PARAM` | Optional. Calendly custom-answer param for phone (default `a1`; set empty to disable). |
 
@@ -111,6 +112,7 @@ Reminders use Resend `scheduledAt`. No database is needed: on cancel/reschedule 
        "signing_key": "<same value as CALENDLY_WEBHOOK_SIGNING_KEY>"
      }'
    ```
-5. **Test** with a booking using your own address and check the Resend dashboard (confirmation sent, three reminders `scheduled`); then cancel it and confirm they show `canceled`.
+5. **Calendly Workflows**: create workflows for 24h / 3h / 1h email reminders before the event. The confirmation text from Jessica comes from eNovo CRM SMS (see `educare-sms-plan.md`); the `/booked` page and confirmation email promise it, so it must be live before deploy.
+6. **Test** with a booking using your own address and check the Resend dashboard (confirmation sent; with `ENABLE_RESEND_REMINDERS=true` also three `scheduled` reminders, which should show `canceled` after you cancel).
 
 > The eNovo CRM also sends its own nurture emails. Review overlap with these reminders so leads don't get duplicates.

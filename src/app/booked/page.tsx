@@ -12,6 +12,10 @@ export const metadata: Metadata = {
 
 const checklist = [
   {
+    title: "Confirm your spot",
+    body: "Reply to the text message from Jessica you'll get shortly. Our team member only joins confirmed calls.",
+  },
+  {
     title: "Have your numbers handy",
     body: "Roughly how many children are enrolled, how many spots are open, and what you're doing for marketing today. Estimates are fine.",
   },
@@ -72,8 +76,25 @@ export default async function BookedPage({
             You&apos;re booked{firstName ? `, ${firstName}` : ""}.
           </h1>
           <p className="mx-auto mt-3 max-w-md text-lg text-muted">
-            Your call is confirmed. A confirmation with your join link is on its way to your
-            inbox (check spam or promotions just in case).
+            Your call is on the calendar. A confirmation email with your join link is on its way
+            (check spam or promotions just in case). One more step: confirm by text, below.
+          </p>
+        </section>
+
+        <section className="rounded-3xl border-2 border-cta bg-cta/5 p-6 sm:p-10" aria-labelledby="confirm-heading">
+          <p className="text-sm font-bold uppercase tracking-wide text-cta">One quick step</p>
+          <h2 id="confirm-heading" className="mt-1 text-2xl font-extrabold text-ink">
+            Check your phone: reply to Jessica&apos;s text to confirm
+          </h2>
+          <p className="mt-3 text-muted">
+            Right after you book, you&apos;ll get a text message from <strong className="text-ink">Jessica</strong> at
+            Educare Leads. <strong className="text-ink">Please reply to confirm your booking.</strong> Our team
+            member only joins calls that have been confirmed, so without your reply they won&apos;t be on the call.
+            It takes a few seconds, and it helps us keep every slot for families who plan to attend.
+          </p>
+          <p className="mt-3 text-sm text-muted">
+            Don&apos;t see it? Check that the phone number on your booking is correct, or email us at{" "}
+            <a href={`mailto:${site.email}`} className="font-semibold text-ink underline">{site.email}</a>.
           </p>
         </section>
 
@@ -81,8 +102,8 @@ export default async function BookedPage({
           <h2 className="text-xl font-extrabold text-ink">What to expect</h2>
           <p className="mt-3 text-muted">
             The call is <strong className="text-ink">20 minutes</strong> with a member of our team.
-            It&apos;s a working conversation about your program, not a slideshow. We&apos;ll
-            send reminders 24 hours, 3 hours and 1 hour before.
+            It&apos;s a working conversation about your program, not a slideshow. You&apos;ll
+            get reminders 24 hours, 3 hours and 1 hour before.
           </p>
           <h3 className="mt-6 text-base font-bold text-ink">What we&apos;ll cover</h3>
           <ul className="mt-3 space-y-2 text-muted">

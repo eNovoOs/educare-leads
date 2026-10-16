@@ -45,7 +45,11 @@ export async function sendBookingEmails(
     else result.confirmation = true;
   }
 
+  // Reminders are OFF by default: Calendly Workflows sends the 24h/3h/1h emails.
+  // Set ENABLE_RESEND_REMINDERS=true to schedule them via Resend as well.
+  const remindersOn = process.env.ENABLE_RESEND_REMINDERS === "true";
   for (const { key: offset, ms } of REMINDER_OFFSETS) {
+    if (!remindersOn) break;
     await sleep(600);
     const sendAt = start - ms;
     if (sendAt < now + MIN_LEAD_MS || sendAt > now + MAX_SCHEDULE_AHEAD_MS) {
