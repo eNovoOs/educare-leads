@@ -2,12 +2,17 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import crypto from "crypto";
 import { notificationRecipients } from "@/lib/emailRecipients";
+import { buildCalendlyUrl, utmFromUrl, UTM_KEYS, type Utm } from "@/lib/calendly";
+import { esc } from "@/lib/emails/base";
+import { nextStepEmail } from "@/lib/emails/templates";
+import { LEAD_EMAIL_FROM, LEAD_EMAIL_REPLY_TO } from "@/lib/emails/base";
 
 /**
  * Lead intake endpoint.
  *
  * On every submission it:
- *   1. Emails the lead to info@educareleads.com (via Resend),
+ *   1. Emails the lead to info@educareleads.com (via Resend) and sends the lead
+ *      a "next step: book your call" email (if they gave an email),
  *   2. Sends a server-side "Lead" event to the Meta Conversions API
  *      (deduplicated with the browser pixel via a shared event_id), and
  *   3. Forwards it to the eNovo CRM webhook (if configured).
@@ -17,7 +22,9 @@ import { notificationRecipients } from "@/lib/emailRecipients";
  *   RESEND_API_KEY       - Resend API key (enables the email notification)
  *   LEAD_TO_EMAIL        - optional additional recipients, comma-separated;
  *                          info@educareleads.com is always included
- *   LEAD_FROM_EMAIL      - verified sender (default: onboarding@resend.dev)
+ *   LEAD_FROM_EMAIL      - sender for the INTERNAL alert (default: onboarding@resend.dev)
+ *   EMAIL_FROM           - sender for LEAD-FACING emails
+ *                          (default: Educare Leads <hello@send.educareleads.com>)
  *   META_PIXEL_ID        - Meta pixel / dataset id (enables Conversions API)
  *   META_CAPI_TOKEN      - Meta Conversions API access token
  *   META_TEST_EVENT_CODE - optional, to see events in Events Manager > Test Events
@@ -40,7 +47,7 @@ type LeadPayload = {
   source?: string;
   eventId?: string;
   sourceUrl?: string;
-};
+} & Partial<Record<(typeof UTM_KEYS)[number], string>>;
 
 const TO_EMAIL = notificationRecipients(process.env.LEAD_TO_EMAIL);
 const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "Educare Leads <onboarding@resend.dev>";
@@ -62,7 +69,7 @@ function leadRows(lead: Record<string, unknown>) {
   };
   return Object.entries(labels)
     .filter(([k]) => lead[k])
-    .map(([k, label]) => `<tr><td style="padding:6px 12px;color:#5b6b80">${label}</td><td style="padding:6px 12px;font-weight:600;color:#0b2447">${String(lead[k])}</td></tr>`)
+    .map(([k, label]) => `<tr><td style="padding:6px 12px;color:#5b6b80">${esc(label)}</td><td style="padding:6px 12px;font-weight:600;color:#0b2447">${esc(lead[k])}</td></tr>`)
     .join("");
 }
 
@@ -142,6 +149,13 @@ export async function POST(req: Request) {
     );
   }
 
+  // UTMs: explicit body fields win, otherwise parse them off the page URL.
+  const utm: Utm = { ...utmFromUrl(body.sourceUrl) };
+  for (const k of UTM_KEYS) {
+    const v = body[k];
+    if (typeof v === "string" && v) utm[k] = v.slice(0, 200);
+  }
+
   const lead = {
     ...body,
     fullName: [body.firstName, body.lastName].filter(Boolean).join(" "),
@@ -162,7 +176,7 @@ export async function POST(req: Request) {
         html: `
           <div style="font-family:Arial,sans-serif;max-width:560px">
             <h2 style="color:#0b2447;margin:0 0 4px">New enrollment lead</h2>
-            <p style="color:#5b6b80;margin:0 0 16px">Source: ${lead.source}</p>
+            <p style="color:#5b6b80;margin:0 0 16px">Source: ${esc(lead.source)}</p>
             <table style="border-collapse:collapse;width:100%;background:#f4f7fb;border-radius:8px">
               ${leadRows(lead)}
             </table>
@@ -175,6 +189,33 @@ export async function POST(req: Request) {
     }
   } else {
     console.log("[lead] (RESEND_API_KEY not set) New lead:", lead);
+  }
+
+  // 1b) Lead-facing "next step: book your call" email. Failure never blocks the lead.
+  const calendlyUrl = buildCalendlyUrl({
+    name: [body.firstName, body.lastName].filter(Boolean).join(" "),
+    email: body.email,
+    phone: body.phone,
+    utm,
+  });
+  let leadEmailed = false;
+  if (process.env.RESEND_API_KEY && body.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+    try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const m = nextStepEmail({ name: body.firstName, calendlyUrl });
+      const { error } = await resend.emails.send({
+        from: LEAD_EMAIL_FROM,
+        to: body.email,
+        replyTo: LEAD_EMAIL_REPLY_TO,
+        subject: m.subject,
+        html: m.html,
+        text: m.text,
+      });
+      if (error) console.error("[lead] Lead-facing email error:", error);
+      else leadEmailed = true;
+    } catch (err) {
+      console.error("[lead] Lead-facing email failed:", err);
+    }
   }
 
   // 2) Server-side Meta Conversions API "Lead" event (deduped with the browser pixel).
@@ -208,5 +249,5 @@ export async function POST(req: Request) {
     console.log("[lead] Recoverable lead payload:", lead);
   }
 
-  return NextResponse.json({ ok: true, emailed, tracked, forwarded });
+  return NextResponse.json({ ok: true, emailed, leadEmailed, tracked, forwarded, calendlyUrl });
 }

@@ -187,8 +187,9 @@ src="https://www.facebook.com/tr?id=1029290093151029&ev=PageView&noscript=1"/></
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-      }).catch(function () {}).then(function () {
-        window.location.href = CAL;
+      }).then(function (r) { return r.json(); }).catch(function () { return {}; }).then(function (j) {
+        // Server returns the Calendly link prefilled with name/email/phone + UTMs.
+        window.location.href = (j && j.calendlyUrl) || CAL;
       });
     });
   })();
