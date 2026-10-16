@@ -17,7 +17,7 @@ const checklist = [
   },
   {
     title: "Pick a quiet spot",
-    body: "A place where you can talk for the full 60 minutes with a stable connection.",
+    body: "A place where you can talk for the full 20 minutes with a stable connection.",
   },
   {
     title: "Find your join link",
@@ -80,7 +80,7 @@ export default async function BookedPage({
         <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-line sm:p-10">
           <h2 className="text-xl font-extrabold text-ink">What to expect</h2>
           <p className="mt-3 text-muted">
-            The call is <strong className="text-ink">60 minutes</strong> with a member of our team.
+            The call is <strong className="text-ink">20 minutes</strong> with a member of our team.
             It&apos;s a working conversation about your program, not a slideshow. We&apos;ll
             send reminders 24 hours, 3 hours and 1 hour before.
           </p>

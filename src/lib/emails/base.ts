@@ -25,7 +25,7 @@ export function safeUrl(url: string | undefined | null): string {
 export const LEAD_EMAIL_FROM =
   process.env.EMAIL_FROM || "Educare Leads <hello@send.educareleads.com>";
 export const LEAD_EMAIL_REPLY_TO = site.email;
-export const CALL_MINUTES = 60;
+export const CALL_MINUTES = 20;
 
 export type RenderedEmail = { subject: string; html: string; text: string };
 

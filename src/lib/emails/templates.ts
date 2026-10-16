@@ -107,7 +107,7 @@ export function reminderEmail(offset: ReminderOffset, b: BookingDetails): Render
     "3h": {
       subject: `Your call is in 3 hours (${when})`,
       heading: "Your call is in about 3 hours",
-      lead: `We're talking at ${when}. It runs ${CALL_MINUTES} minutes, so it helps to block the full hour.`,
+      lead: `We're talking at ${when}. It runs ${CALL_MINUTES} minutes, so it helps to block the time.`,
       tips: [prepItems[0], prepItems[3]],
     },
     "1h": {

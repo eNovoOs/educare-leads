@@ -114,4 +114,3 @@ Reminders use Resend `scheduledAt`. No database is needed: on cancel/reschedule 
 5. **Test** with a booking using your own address and check the Resend dashboard (confirmation sent, three reminders `scheduled`); then cancel it and confirm they show `canceled`.
 
 > The eNovo CRM also sends its own nurture emails. Review overlap with these reminders so leads don't get duplicates.
-> The Calendly event is **60 minutes**; older page copy (`/apply`, `/apply2`, `/go`, case studies, `/educarecrm*`) still says "20-minute". New copy says 60.
