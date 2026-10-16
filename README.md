@@ -87,6 +87,7 @@ Reminders (only when `ENABLE_RESEND_REMINDERS=true`) use Resend `scheduledAt`; b
 | `RESEND_API_KEY` | Already used. Also sends lead-facing emails. |
 | `EMAIL_FROM` | Sender for lead-facing emails. Default `Jessica at Educare Leads <jessica@send.educareleads.com>`, reply-to `info@educareleads.com` (domain must stay verified in Resend). All lead emails are written in Jessica's first-person voice. `LEAD_FROM_EMAIL` still controls only the internal alert. |
 | `CALENDLY_WEBHOOK_SIGNING_KEY` | **Required** for `/api/calendly/webhook`. You choose it when creating the subscription (below). Without it the route returns 500. |
+| `ENABLE_RESEND_NURTURE` | Optional, **off by default**. `true` upserts the lead as a Resend contact and sends event `lead.submitted` {email, first_name, source} from `/api/lead`, and sends `call.booked` {email, scheduled_at} from the Calendly webhook (`invitee.created` only). While on, the standalone immediate "next step" email is skipped (the automation's Email 1 replaces it). |
 | `ENABLE_RESEND_REMINDERS` | Optional. **Off by default.** Set to `true` to have the webhook also schedule 24h/3h/1h reminders via Resend. Leave off while Calendly Workflows sends them, otherwise leads get duplicates. The confirmation email is always sent. |
 | `CALENDLY_API_TOKEN` | Not used by the app; only needed to run the one-off subscription `curl` below. |
 | `CALENDLY_PHONE_PARAM` | Optional. Calendly custom-answer param for phone (default `a1`; set empty to disable). |
@@ -114,5 +115,12 @@ Reminders (only when `ENABLE_RESEND_REMINDERS=true`) use Resend `scheduledAt`; b
    ```
 5. **Calendly Workflows**: create workflows for 24h / 3h / 1h email reminders before the event. The confirmation text from Jessica comes from eNovo CRM SMS (see `educare-sms-plan.md`); the `/booked` page and confirmation email promise it, so it must be live before deploy.
 6. **Test** with a booking using your own address and check the Resend dashboard (confirmation sent; with `ENABLE_RESEND_REMINDERS=true` also three `scheduled` reminders, which should show `canceled` after you cancel).
+
+### Resend nurture automation ("Educare Lead Nurture (6 emails)", id `01a144d4-4d4a-7748-b787-dca9560f2510`)
+Enable order: (1) merge + deploy; (2) set `ENABLE_RESEND_NURTURE=true` in Vercel and redeploy; (3) only then enable the automation in Resend (it is currently disabled); (4) test with your own address.
+Known limits:
+- A duplicate `lead.submitted` for the same email can re-enter the automation (restart the sequence); there is no dedupe in this repo.
+- Nurture emails need a physical postal address in the footer for CAN-SPAM; it is not in the templates yet. Add it before enabling.
+- Overlaps with eNovo CRM's own nurture emails; review before enabling.
 
 > The eNovo CRM also sends its own nurture emails. Review overlap with these reminders so leads don't get duplicates.

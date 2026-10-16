@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { verifyCalendlySignature } from "@/lib/calendly";
+import { sendCallBooked } from "@/lib/emails/nurture";
 import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
 
 /**
@@ -12,7 +13,7 @@ import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
  *    time and invitee.created for the new one, so both cases are handled by the
  *    two branches above (old reminders cancelled, new ones scheduled).
  *
- * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM, ENABLE_RESEND_REMINDERS (optional).
+ * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM, ENABLE_RESEND_REMINDERS, ENABLE_RESEND_NURTURE (optional).
  */
 
 export const runtime = "nodejs";
@@ -77,6 +78,8 @@ export async function POST(req: Request) {
       },
       p.uri || p.email,
     );
+    // Exit the nurture automation (no-op unless ENABLE_RESEND_NURTURE=true).
+    await sendCallBooked(resend, p.email, new Date(startTime).toISOString());
     return NextResponse.json({ ok: true, ...result });
   }
 

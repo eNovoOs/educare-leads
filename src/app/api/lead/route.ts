@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { notificationRecipients } from "@/lib/emailRecipients";
 import { buildCalendlyUrl, utmFromUrl, UTM_KEYS, type Utm } from "@/lib/calendly";
 import { esc } from "@/lib/emails/base";
+import { nurtureEnabled, sendLeadSubmitted } from "@/lib/emails/nurture";
 import { nextStepEmail } from "@/lib/emails/templates";
 import { LEAD_EMAIL_FROM, LEAD_EMAIL_REPLY_TO } from "@/lib/emails/base";
 
@@ -24,7 +25,9 @@ import { LEAD_EMAIL_FROM, LEAD_EMAIL_REPLY_TO } from "@/lib/emails/base";
  *                          info@educareleads.com is always included
  *   LEAD_FROM_EMAIL      - sender for the INTERNAL alert (default: onboarding@resend.dev)
  *   EMAIL_FROM           - sender for LEAD-FACING emails
- *                          (default: Educare Leads <hello@send.educareleads.com>)
+ *                          (default: Jessica at Educare Leads <jessica@send.educareleads.com>)
+ *   ENABLE_RESEND_NURTURE - "true" fires Resend automation events (lead.submitted) and
+ *                          skips the immediate "next step" email (nurture Email 1 replaces it)
  *   META_PIXEL_ID        - Meta pixel / dataset id (enables Conversions API)
  *   META_CAPI_TOKEN      - Meta Conversions API access token
  *   META_TEST_EVENT_CODE - optional, to see events in Events Manager > Test Events
@@ -199,7 +202,15 @@ export async function POST(req: Request) {
     utm,
   });
   let leadEmailed = false;
-  if (process.env.RESEND_API_KEY && body.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+  if (nurtureEnabled() && process.env.RESEND_API_KEY) {
+    // Nurture automation sends its own Email 1; skip the standalone email to avoid a duplicate.
+    await sendLeadSubmitted(new Resend(process.env.RESEND_API_KEY), {
+      email: body.email,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      source: lead.source,
+    });
+  } else if (process.env.RESEND_API_KEY && body.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
       const m = nextStepEmail({ name: body.firstName, calendlyUrl });
