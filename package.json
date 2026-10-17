@@ -19,7 +19,9 @@
     "crm:render": "remotion render CrmVSL out/educare-crm-vsl.mp4",
     "crm:still": "remotion still CrmVSL out/crm-frame.png",
     "crm:measure": "bash scripts/measure-crm-vo.sh",
-    "crm:render:music": "remotion render CrmVSL out/educare-crm-vsl.mp4 --props={\"hasAudio\":true,\"hasMusic\":true}"
+    "crm:render:music": "remotion render CrmVSL out/educare-crm-vsl.mp4 --props={\"hasAudio\":true,\"hasMusic\":true}",
+    "booked:render": "remotion render BookedVideo out/educare-booked.mp4 --crf=28",
+    "booked:still": "remotion still BookedVideo out/educare-booked-poster.png --frame=45"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.472",

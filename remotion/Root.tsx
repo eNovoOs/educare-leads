@@ -8,6 +8,9 @@ import {
   totalDurationInFrames as crmDuration,
 } from "./crm/script";
 
+import { BookedVideo } from "./booked/BookedVideo";
+import { FPS as BK_FPS, totalDurationInFrames as bkDuration } from "./booked/script";
+
 export const RemotionRoot: React.FC = () => {
   return (
     <>
@@ -31,6 +34,9 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         defaultProps={{ hasAudio: true, hasMusic: false }}
       />
+
+      {/* /booked explainer — 16:9, 9 scenes, Zoe voiceover */}
+      <Composition id="BookedVideo" component={BookedVideo} durationInFrames={bkDuration} fps={BK_FPS} width={1920} height={1080} />
 
       {/* Short branded intro — vertical 9:16 */}
       <Composition
