@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { Resend } from "resend";
 import { verifyCalendlySignature } from "@/lib/calendly";
 import { sendCallBooked } from "@/lib/emails/nurture";
-import { sendBookingSmsWebhook, getFirstName, type BookingInvitee } from "@/lib/bookingSms";
+import { sendBookingSmsWebhook, sendBookingCancelWebhook, getFirstName, type BookingInvitee } from "@/lib/bookingSms";
 import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
 
 /**
@@ -14,7 +14,7 @@ import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
  *    time and invitee.created for the new one, so both cases are handled by the
  *    two branches above (old reminders cancelled, new ones scheduled).
  *
- * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM, ENABLE_RESEND_REMINDERS, ENABLE_RESEND_NURTURE, CRM_BOOKING_SMS_WEBHOOK_URL (optional).
+ * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM, ENABLE_RESEND_REMINDERS, ENABLE_RESEND_NURTURE, CRM_BOOKING_SMS_WEBHOOK_URL (optional), CRM_BOOKING_CANCEL_WEBHOOK_URL (optional).
  */
 
 export const runtime = "nodejs";
@@ -58,6 +58,20 @@ export async function POST(req: Request) {
   }
 
   const p = event.payload;
+
+  // CRM cancel hook (optional env). Runs after the response is sent so it can never
+  // delay/block the 200 to Calendly, and independently of the email config below.
+  // For a reschedule Calendly sends canceled (rescheduled: true) then created, so the
+  // old booking is cancelled here and the new one is posted by the created branch.
+  if (event.event === "invitee.canceled" && p && process.env.CRM_BOOKING_CANCEL_WEBHOOK_URL) {
+    after(async () => {
+      try {
+        await sendBookingCancelWebhook(p as BookingInvitee);
+      } catch {
+        console.error("[calendly] CRM cancel webhook error");
+      }
+    });
+  }
   const startTime = p?.scheduled_event?.start_time;
   if (!p?.email || !startTime) {
     return NextResponse.json({ ok: true, ignored: "missing email or start_time" });
