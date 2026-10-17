@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { site } from "@/lib/site";
+import { normalizePhone } from "@/lib/bookingSms";
 
 // Short qualifying form for the /educarecrm* pages.
 //
@@ -79,6 +80,9 @@ export function CrmDemoForm({
       const params = new URLSearchParams();
       if (name) params.set("name", name);
       if (data.email) params.set("email", String(data.email));
+      // a2 = Calendly's "Mobile phone number" custom question (a1 = notes, left empty).
+      const phone = normalizePhone(String(data.phone ?? ""));
+      if (phone) params.set("a2", phone);
       const sep = site.crmCalendlyUrl.includes("?") ? "&" : "?";
       const qs = params.toString();
       window.location.href = qs ? `${site.crmCalendlyUrl}${sep}${qs}` : site.crmCalendlyUrl;
