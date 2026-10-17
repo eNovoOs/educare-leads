@@ -12,6 +12,8 @@ export type BookingInvitee = {
   reschedule_url?: string;
   text_reminder_number?: string | null;
   questions_and_answers?: QA[] | null;
+  updated_at?: string;
+  cancellation?: { created_at?: string } | null;
   scheduled_event?: {
     name?: string;
     start_time?: string;
@@ -56,6 +58,22 @@ function fmt(date: Date, tz: string | undefined, opts: Intl.DateTimeFormatOption
   }
 }
 
+/** CRM date format 'MM/DD/YYYY hh:mm AM/PM' in America/Toronto (DST-aware). Returns "" for an invalid date. */
+export function formatCrmDatetime(d: Date): string {
+  if (Number.isNaN(d.getTime())) return "";
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Toronto",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h12",
+  }).formatToParts(d);
+  const g = (t: string) => parts.find((x) => x.type === t)?.value ?? "";
+  return `${g("month")}/${g("day")}/${g("year")} ${g("hour")}:${g("minute")} ${g("dayPeriod").toUpperCase()}`;
+}
+
 export function buildBookingSmsPayload(p: BookingInvitee, startTime: string) {
   const d = new Date(startTime);
   const tz = p.timezone;
@@ -70,6 +88,7 @@ export function buildBookingSmsPayload(p: BookingInvitee, startTime: string) {
     start_time_iso: d.toISOString(),
     start_date_text: fmt(d, tz, { weekday: "long", month: "short", day: "numeric" }),
     start_time_text: fmt(d, tz, { hour: "numeric", minute: "2-digit", timeZoneName: "short" }),
+    start_datetime_crm: formatCrmDatetime(d),
     timezone: tz || "UTC",
     join_url: p.scheduled_event?.location?.join_url || "",
     reschedule_url: p.reschedule_url || "",
@@ -93,6 +112,41 @@ export async function sendBookingSmsWebhook(p: BookingInvitee, startTime: string
     return res.ok;
   } catch (err) {
     console.error("[calendly] CRM SMS webhook failed:", err);
+    return false;
+  }
+}
+
+export function buildBookingCancelPayload(p: BookingInvitee, now: Date = new Date()) {
+  const first = getFirstName(p);
+  const last = p.last_name?.trim() || "";
+  const canceledRaw = p.cancellation?.created_at || p.updated_at;
+  const c = canceledRaw ? new Date(canceledRaw) : now;
+  return {
+    event: "canceled" as const,
+    email: p.email || "",
+    phone: normalizePhone(getInviteePhone(p)),
+    first_name: first,
+    name: p.name?.trim() || [first, last].filter(Boolean).join(" "),
+    event_name: p.scheduled_event?.name || "",
+    canceled_at: (Number.isNaN(c.getTime()) ? now : c).toISOString(),
+  };
+}
+
+/** POST to CRM_BOOKING_CANCEL_WEBHOOK_URL (no-op if unset). Never throws; logs no PII/URL. */
+export async function sendBookingCancelWebhook(p: BookingInvitee): Promise<boolean> {
+  const url = process.env.CRM_BOOKING_CANCEL_WEBHOOK_URL;
+  if (!url) return false;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(buildBookingCancelPayload(p)),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) console.error("[calendly] CRM cancel webhook non-2xx:", res.status);
+    return res.ok;
+  } catch (err) {
+    console.error("[calendly] CRM cancel webhook failed:", err instanceof Error ? err.name : "error");
     return false;
   }
 }
