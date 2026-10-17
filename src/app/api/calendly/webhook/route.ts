@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { verifyCalendlySignature } from "@/lib/calendly";
 import { sendCallBooked } from "@/lib/emails/nurture";
+import { sendBookingSmsWebhook, getFirstName, type BookingInvitee } from "@/lib/bookingSms";
 import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
 
 /**
@@ -13,7 +14,7 @@ import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
  *    time and invitee.created for the new one, so both cases are handled by the
  *    two branches above (old reminders cancelled, new ones scheduled).
  *
- * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM, ENABLE_RESEND_REMINDERS, ENABLE_RESEND_NURTURE (optional).
+ * Env: CALENDLY_WEBHOOK_SIGNING_KEY, RESEND_API_KEY, EMAIL_FROM, ENABLE_RESEND_REMINDERS, ENABLE_RESEND_NURTURE, CRM_BOOKING_SMS_WEBHOOK_URL (optional).
  */
 
 export const runtime = "nodejs";
@@ -21,13 +22,17 @@ export const runtime = "nodejs";
 type Invitee = {
   uri?: string;
   email?: string;
-  name?: string;
-  first_name?: string;
+  name?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  text_reminder_number?: string | null;
+  questions_and_answers?: { question?: string; answer?: string }[] | null;
   timezone?: string;
   cancel_url?: string;
   reschedule_url?: string;
   rescheduled?: boolean;
   scheduled_event?: {
+    name?: string;
     start_time?: string;
     location?: { type?: string; join_url?: string; location?: string } | null;
   };
@@ -69,7 +74,7 @@ export async function POST(req: Request) {
       resend,
       p.email,
       {
-        name: p.first_name || p.name,
+        name: getFirstName(p) || undefined,
         startTime,
         timezone: p.timezone,
         joinUrl,
@@ -80,6 +85,12 @@ export async function POST(req: Request) {
     );
     // Exit the nurture automation (no-op unless ENABLE_RESEND_NURTURE=true).
     await sendCallBooked(resend, p.email, new Date(startTime).toISOString());
+    // Forward to the CRM SMS webhook (skipped if unset; never breaks the above).
+    try {
+      await sendBookingSmsWebhook(p as BookingInvitee, startTime);
+    } catch (err) {
+      console.error("[calendly] CRM SMS webhook error:", err);
+    }
     return NextResponse.json({ ok: true, ...result });
   }
 
