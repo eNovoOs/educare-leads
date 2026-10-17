@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:booking-sms": "node scripts/test-booking-sms.mjs",
+    "test:calendly-url": "node scripts/test-calendly-url.mjs",
     "video": "remotion studio",
     "video:render": "remotion render EducareIntro out/educare-intro.mp4",
     "video:still": "remotion still EducareIntro out/educare-intro.png --frame=90",

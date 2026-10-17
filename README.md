@@ -90,13 +90,13 @@ Reminders (only when `ENABLE_RESEND_REMINDERS=true`) use Resend `scheduledAt`; b
 | `ENABLE_RESEND_NURTURE` | Optional, **off by default**. `true` upserts the lead as a Resend contact and sends event `lead.submitted` {email, first_name, source} from `/api/lead`, and sends `call.booked` {email, scheduled_at} from the Calendly webhook (`invitee.created` only). While on, the standalone immediate "next step" email is skipped (the automation's Email 1 replaces it). |
 | `ENABLE_RESEND_REMINDERS` | Optional. **Off by default.** Set to `true` to have the webhook also schedule 24h/3h/1h reminders via Resend. Leave off while Calendly Workflows sends them, otherwise leads get duplicates. The confirmation email is always sent. |
 | `CALENDLY_API_TOKEN` | Not used by the app; only needed to run the one-off subscription `curl` below. |
-| `CALENDLY_PHONE_PARAM` | Optional. Calendly custom-answer param for phone (default `a1`; set empty to disable). |
+| `CALENDLY_PHONE_PARAM` | Optional. Calendly custom-answer param for phone (default `a2` = 2nd custom question "Mobile phone number"; set empty to disable). |
 
 ### Manual setup (once)
 
 1. **Vercel**: add `CALENDLY_WEBHOOK_SIGNING_KEY` (e.g. `openssl rand -hex 32`) and optionally `EMAIL_FROM` to the Production (and Preview) environment, then redeploy.
 2. **Calendly event → Confirmation page**: Event type settings → "When booking is made" → *Redirect to an external site* → `https://educareleads.com/booked` (tick "Pass event details to your redirect URL" if you want `?name=` for personalisation).
-3. **Calendly custom question**: make sure the event has a "phone number" question as the **first** custom question so `a1` fills it (or set `CALENDLY_PHONE_PARAM`). Webhooks need a paid plan (you have one).
+3. **Calendly custom question**: make sure the event has a "phone number" question as the **second** custom question (after the notes question) so `a2` fills it (or set `CALENDLY_PHONE_PARAM`). Webhooks need a paid plan (you have one).
 4. **Create the webhook subscription** (after the deployment is live; use a token from the Calendly account that owns the `educareleads-info/60min` event):
    ```bash
    # find your org + user URIs

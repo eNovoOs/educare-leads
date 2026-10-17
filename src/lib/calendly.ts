@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { site } from "@/lib/site";
+import { normalizePhone } from "@/lib/bookingSms";
 
 /** UTM keys Calendly understands and passes through to the booking record. */
 export const UTM_KEYS = [
@@ -11,6 +12,9 @@ export const UTM_KEYS = [
 ] as const;
 
 export type Utm = Partial<Record<(typeof UTM_KEYS)[number], string>>;
+
+/** Calendly custom-answer param for the "Mobile phone number" question (2nd custom question). */
+export const CALENDLY_PHONE_PARAM_DEFAULT = "a2";
 
 /** Pull utm_* params out of a URL string (e.g. the form's sourceUrl). */
 export function utmFromUrl(url: string | undefined): Utm {
@@ -30,8 +34,10 @@ export function utmFromUrl(url: string | undefined): Utm {
 
 /**
  * Calendly link prefilled with the lead's details.
- * name + email are standard prefill params; a1 is the first custom question
- * (phone) on the event type. UTMs are passed through to the booking.
+ * name + email are standard prefill params. Custom questions are a1..aN in
+ * order: a1 = "Please share anything that will help prepare for our meeting."
+ * (left empty), a2 = required "Mobile phone number". The phone is sent as
+ * E.164 (+1 assumed for 10 digits). UTMs are passed through to the booking.
  */
 export function buildCalendlyUrl(opts: {
   name?: string;
@@ -42,10 +48,11 @@ export function buildCalendlyUrl(opts: {
   const url = new URL(site.calendlyUrl);
   if (opts.name) url.searchParams.set("name", opts.name);
   if (opts.email) url.searchParams.set("email", opts.email);
-  // a1 = first custom question on the event type. CALENDLY_PHONE_PARAM can
-  // change it (e.g. "a2"), or be set to an empty string to disable phone prefill.
-  const phoneParam = process.env.CALENDLY_PHONE_PARAM ?? "a1";
-  if (opts.phone && phoneParam) url.searchParams.set(phoneParam, opts.phone);
+  // a2 = "Mobile phone number" (2nd custom question). CALENDLY_PHONE_PARAM can
+  // override it, or be set to an empty string to disable phone prefill.
+  const phoneParam = process.env.CALENDLY_PHONE_PARAM ?? CALENDLY_PHONE_PARAM_DEFAULT;
+  const phone = normalizePhone(opts.phone);
+  if (phone && phoneParam) url.searchParams.set(phoneParam, phone); // URLSearchParams encodes "+" as %2B
   for (const [k, v] of Object.entries(opts.utm ?? {})) {
     if (v) url.searchParams.set(k, v);
   }
