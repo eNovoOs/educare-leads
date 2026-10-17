@@ -27,6 +27,11 @@ export const LEAD_EMAIL_FROM =
 export const LEAD_EMAIL_REPLY_TO = site.email;
 export const CALL_MINUTES = 20;
 
+/** Logo hosted from /public/email (480px wide file, shown at 240px for retina). */
+export const EMAIL_LOGO_URL = "https://www.educareleads.com/email/educare-logo.png";
+export const emailLogoHtml = (): string =>
+  `<div style="text-align:center;margin:0 0 20px"><img src="${EMAIL_LOGO_URL}" alt="Educare Leads" width="240" style="display:inline-block;width:240px;max-width:100%;height:auto;border:0" /></div>`;
+
 export type RenderedEmail = { subject: string; html: string; text: string };
 
 export type Cta = { label: string; url: string };
@@ -58,6 +63,7 @@ export function layout(opts: {
 <span style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(opts.preheader)}</span>
 <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:24px 16px">
   <div style="background:#ffffff;border-radius:12px;padding:28px 26px">
+    ${emailLogoHtml()}
     <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#0b2447">${esc(opts.heading)}</h1>
     ${p}${bullets}${cta}${secondary}
     <p style="margin:18px 0 0;font-size:15px;line-height:1.55;color:#1f2d3d">Talk soon,<br>Jessica, Educare Leads</p>

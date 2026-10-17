@@ -3,7 +3,7 @@ import { Resend } from "resend";
 import crypto from "crypto";
 import { notificationRecipients } from "@/lib/emailRecipients";
 import { buildCalendlyUrl, utmFromUrl, UTM_KEYS, type Utm } from "@/lib/calendly";
-import { esc } from "@/lib/emails/base";
+import { emailLogoHtml, esc } from "@/lib/emails/base";
 import { nurtureEnabled, sendLeadSubmitted } from "@/lib/emails/nurture";
 import { nextStepEmail } from "@/lib/emails/templates";
 import { LEAD_EMAIL_FROM, LEAD_EMAIL_REPLY_TO } from "@/lib/emails/base";
@@ -178,6 +178,7 @@ export async function POST(req: Request) {
         subject: `New lead: ${lead.fullName}${lead.business ? " — " + lead.business : ""}`,
         html: `
           <div style="font-family:Arial,sans-serif;max-width:560px">
+            ${emailLogoHtml()}
             <h2 style="color:#0b2447;margin:0 0 4px">New enrollment lead</h2>
             <p style="color:#5b6b80;margin:0 0 16px">Source: ${esc(lead.source)}</p>
             <table style="border-collapse:collapse;width:100%;background:#f4f7fb;border-radius:8px">
