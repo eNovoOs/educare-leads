@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { ThankYouPixel } from "@/components/ThankYouPixel";
+import { VslPlayer } from "@/components/VslPlayer";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -13,18 +14,18 @@ export const metadata: Metadata = {
 const checklist = [
   {
     title: "Confirm your spot",
-    body: "Reply to the text message from Jessica you'll get shortly. Our team member only joins confirmed calls.",
+    body: "Reply YES to the text message from Jessica you'll get shortly. Our team member only joins confirmed calls.",
   },
   {
     title: "Have your numbers handy",
-    body: "Roughly how many children are enrolled, how many spots are open, and what you're doing for marketing today. Estimates are fine.",
+    body: "Roughly how much revenue your program brings in each month and how many spots are open right now. Estimates are fine.",
   },
   {
     title: "Pick a quiet spot",
     body: "A place where you can talk for the full 20 minutes with a stable connection.",
   },
   {
-    title: "Find your join link",
+    title: "Find your Google Meet link",
     body: "It's in the confirmation email we're sending you now, and in your Calendly invite. Check spam or promotions if you don't see it.",
   },
   {
@@ -77,18 +78,27 @@ export default async function BookedPage({
           </h1>
           <p className="mx-auto mt-3 max-w-md text-lg text-muted">
             Your call is on the calendar. A confirmation email with your join link is on its way
-            (check spam or promotions just in case). One more step: confirm by text, below.
+            (check spam or promotions just in case). One more step: reply YES to our text, below.
           </p>
+        </section>
+
+        <section aria-labelledby="video-heading" className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-line sm:p-6">
+          <h2 id="video-heading" className="mb-3 px-1 text-lg font-extrabold text-ink">
+            Watch: how to get ready (about 75 seconds)
+          </h2>
+          <div className="aspect-video overflow-hidden rounded-2xl bg-ink ring-1 ring-line">
+            <VslPlayer src="/educare-booked.mp4" poster="/educare-booked-poster.jpg" />
+          </div>
         </section>
 
         <section className="rounded-3xl border-2 border-cta bg-cta/5 p-6 sm:p-10" aria-labelledby="confirm-heading">
           <p className="text-sm font-bold uppercase tracking-wide text-cta">One quick step</p>
           <h2 id="confirm-heading" className="mt-1 text-2xl font-extrabold text-ink">
-            Check your phone: reply to Jessica&apos;s text to confirm
+            Check your phone: reply YES to Jessica&apos;s text
           </h2>
           <p className="mt-3 text-muted">
             Right after you book, you&apos;ll get a text message from <strong className="text-ink">Jessica</strong> at
-            Educare Leads. <strong className="text-ink">Please reply to confirm your booking.</strong> Our team
+            Educare Leads. <strong className="text-ink">Please reply YES to confirm your booking.</strong> Our team
             member only joins calls that have been confirmed, so without your reply they won&apos;t be on the call.
             It takes a few seconds, and it helps us keep every slot for families who plan to attend.
           </p>
