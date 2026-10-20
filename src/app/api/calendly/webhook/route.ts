@@ -1,7 +1,7 @@
 import { NextResponse, after } from "next/server";
 import { Resend } from "resend";
 import { verifyCalendlySignature } from "@/lib/calendly";
-import { sendCallBooked } from "@/lib/emails/nurture";
+import { sendCallBooked, sendCallCanceled } from "@/lib/emails/nurture";
 import { sendBookingSmsWebhook, sendBookingCancelWebhook, getFirstName, type BookingInvitee } from "@/lib/bookingSms";
 import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
 
@@ -98,7 +98,13 @@ export async function POST(req: Request) {
       p.uri || p.email,
     );
     // Exit the nurture automation (no-op unless ENABLE_RESEND_NURTURE=true).
-    await sendCallBooked(resend, p.email, new Date(startTime).toISOString());
+    // Also triggers the post-booking value automation.
+    await sendCallBooked(resend, p.email, {
+      scheduledAt: new Date(startTime).toISOString(),
+      firstName: getFirstName(p) || undefined,
+      rescheduleUrl: p.reschedule_url,
+      timezone: p.timezone,
+    });
     // Forward to the CRM SMS webhook (skipped if unset; never breaks the above).
     try {
       await sendBookingSmsWebhook(p as BookingInvitee, startTime);
@@ -110,6 +116,11 @@ export async function POST(req: Request) {
 
   if (event.event === "invitee.canceled") {
     const result = await cancelReminders(resend, p.email, startTime);
+    // Exit the post-booking value automation (no-op unless ENABLE_RESEND_NURTURE=true).
+    await sendCallCanceled(resend, p.email, {
+      scheduledAt: new Date(startTime).toISOString(),
+      rescheduled: !!p.rescheduled,
+    });
     return NextResponse.json({ ok: true, ...result });
   }
 

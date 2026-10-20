@@ -35,16 +35,70 @@ export async function sendLeadSubmitted(
   }
 }
 
-export async function sendCallBooked(resend: Resend, email: string, scheduledAt: string): Promise<void> {
+export type CallBookedInfo = {
+  scheduledAt: string; // ISO start time of the call
+  firstName?: string;
+  rescheduleUrl?: string;
+  timezone?: string; // invitee IANA timezone, used for call_day
+};
+
+/** Weekday name of the call in the invitee's timezone (e.g. "Thursday"). */
+export function callDay(scheduledAt: string, timezone?: string): string {
+  const d = new Date(scheduledAt);
+  try {
+    return d.toLocaleDateString("en-US", { weekday: "long", timeZone: timezone || "America/Toronto" });
+  } catch {
+    return d.toLocaleDateString("en-US", { weekday: "long", timeZone: "America/Toronto" });
+  }
+}
+
+/**
+ * Fires `call.booked`. Used as the exit event of the nurture automation and as the
+ * trigger of "Educare Post-Booking Value (5 emails)".
+ * Payload: {email, scheduled_at, first_name, reschedule_url, call_day, hours_until_call}
+ * hours_until_call (hours from booking to call start, at send time) lets the automation
+ * apply the skip rules with simple numeric conditions.
+ */
+export async function sendCallBooked(resend: Resend, email: string, info: CallBookedInfo): Promise<void> {
   if (!nurtureEnabled()) return;
   try {
+    const hoursUntilCall = Math.round(((new Date(info.scheduledAt).getTime() - Date.now()) / 36e5) * 10) / 10;
     const { error } = await resend.events.send({
       event: "call.booked",
       email,
-      payload: { email, scheduled_at: scheduledAt },
+      payload: {
+        email,
+        scheduled_at: info.scheduledAt,
+        first_name: info.firstName ?? "",
+        reschedule_url: info.rescheduleUrl ?? "",
+        call_day: callDay(info.scheduledAt, info.timezone),
+        hours_until_call: hoursUntilCall,
+      },
     });
     if (error) console.error("[nurture] call.booked failed:", error);
   } catch (err) {
     console.error("[nurture] call.booked threw:", err);
+  }
+}
+
+/**
+ * Fires `call.canceled` on Calendly invitee.canceled (including the cancel half of a
+ * reschedule). Exit event of the post-booking automation.
+ */
+export async function sendCallCanceled(
+  resend: Resend,
+  email: string,
+  info: { scheduledAt: string; rescheduled?: boolean },
+): Promise<void> {
+  if (!nurtureEnabled()) return;
+  try {
+    const { error } = await resend.events.send({
+      event: "call.canceled",
+      email,
+      payload: { email, scheduled_at: info.scheduledAt, rescheduled: !!info.rescheduled },
+    });
+    if (error) console.error("[nurture] call.canceled failed:", error);
+  } catch (err) {
+    console.error("[nurture] call.canceled threw:", err);
   }
 }
