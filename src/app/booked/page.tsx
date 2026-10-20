@@ -4,6 +4,8 @@ import { Logo } from "@/components/Logo";
 import { ThankYouPixel } from "@/components/ThankYouPixel";
 import { VslPlayer } from "@/components/VslPlayer";
 import { site } from "@/lib/site";
+import { externalIdFor } from "@/lib/meta";
+import { META_CURRENCY, SCHEDULE_VALUE, scheduleEventId } from "@/lib/metaConfig";
 
 export const metadata: Metadata = {
   title: "You're booked — here's how to get ready",
@@ -52,15 +54,43 @@ const cover = [
 export default async function BookedPage({
   searchParams,
 }: {
-  searchParams: Promise<{ name?: string; event_id?: string }>;
+  searchParams: Promise<{
+    name?: string;
+    invitee_uuid?: string;
+    invitee_email?: string;
+    invitee_first_name?: string;
+    invitee_last_name?: string;
+    invitee_full_name?: string;
+  }>;
 }) {
-  const { name, event_id } = await searchParams;
+  const sp = await searchParams;
+  const name = sp.name || sp.invitee_first_name || sp.invitee_full_name;
+  // Calendly's redirect ("pass event details") includes invitee_uuid; the webhook
+  // derives the same event_id from the invitee URI, so browser + CAPI dedupe.
+  const uuid = (sp.invitee_uuid || "").replace(/[^a-zA-Z0-9-]/g, "");
+  const email = (sp.invitee_email || "").trim().toLowerCase();
+  const userData: Record<string, string> = {};
+  if (email) {
+    userData.em = email;
+    userData.external_id = externalIdFor(email);
+  }
+  if (sp.invitee_first_name) userData.fn = sp.invitee_first_name.trim().toLowerCase();
+  if (sp.invitee_last_name) userData.ln = sp.invitee_last_name.trim().toLowerCase();
   const firstName = (name || "").trim().split(/\s+/)[0];
 
   return (
     <main className="min-h-screen bg-surface">
-      {/* Meta Pixel — same behaviour as /thank-you: a completed booking counts as Lead. */}
-      <ThankYouPixel eventId={event_id} />
+      {/* Meta Pixel — a completed booking fires Schedule (deduped with the webhook's CAPI
+          Schedule). Without invitee_uuid we can't dedupe, so the server event alone counts. */}
+      {uuid && (
+        <ThankYouPixel
+          eventName="Schedule"
+          eventId={scheduleEventId(uuid)}
+          value={SCHEDULE_VALUE}
+          currency={META_CURRENCY}
+          userData={userData}
+        />
+      )}
 
       <div className="mx-auto max-w-3xl px-5 py-10">
         <Logo />
