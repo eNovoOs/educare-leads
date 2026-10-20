@@ -69,8 +69,9 @@ export async function sendCallBooked(resend: Resend, email: string, info: CallBo
       payload: {
         email,
         scheduled_at: info.scheduledAt,
-        first_name: info.firstName ?? "",
-        reschedule_url: info.rescheduleUrl ?? "",
+        // Empty strings would bypass template fallbacks, so send explicit defaults.
+        first_name: info.firstName?.trim() || "there",
+        reschedule_url: info.rescheduleUrl?.trim() || "https://calendly.com/educareleads-info/60min",
         call_day: callDay(info.scheduledAt, info.timezone),
         hours_until_call: hoursUntilCall,
       },
