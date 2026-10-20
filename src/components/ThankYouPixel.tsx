@@ -47,7 +47,7 @@ export function ThankYouPixel({
       const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
       if (!fbq) return false;
       if (userData && Object.keys(userData).length) fbq("init", META_PIXEL_ID_PUBLIC, userData);
-      const params = value != null ? { value, currency: currency || "USD" } : {};
+      const params = value != null ? { value, currency: currency || "CAD" } : {};
       fbq("track", eventName, params, { eventID: id });
       fired.current = true;
       return true;
