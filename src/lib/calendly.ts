@@ -44,6 +44,10 @@ export function buildCalendlyUrl(opts: {
   email?: string;
   phone?: string;
   utm?: Utm;
+  /** Raw fbclid, kept on the Calendly URL so it survives into redirects. */
+  fbclid?: string;
+  /** Meta click/browser context (see encodeTrackingToken in lib/meta), sent as salesforce_uuid. */
+  trackingToken?: string;
 }): string {
   const url = new URL(site.calendlyUrl);
   if (opts.name) url.searchParams.set("name", opts.name);
@@ -56,6 +60,9 @@ export function buildCalendlyUrl(opts: {
   for (const [k, v] of Object.entries(opts.utm ?? {})) {
     if (v) url.searchParams.set(k, v);
   }
+  if (opts.fbclid) url.searchParams.set("fbclid", opts.fbclid.slice(0, 500));
+  // Calendly echoes salesforce_uuid back in the webhook's payload.tracking.
+  if (opts.trackingToken) url.searchParams.set("salesforce_uuid", opts.trackingToken);
   return url.toString();
 }
 

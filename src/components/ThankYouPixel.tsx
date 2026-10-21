@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { META_PIXEL_ID_PUBLIC } from "@/lib/metaConfig";
 
 /**
  * Fires a Meta conversion event on a thank-you page. The default is "Lead";
@@ -20,9 +21,16 @@ import { useEffect, useRef } from "react";
 export function ThankYouPixel({
   eventId,
   eventName = "Lead",
+  value,
+  currency,
+  userData,
 }: {
   eventId?: string;
   eventName?: "Lead" | "Schedule";
+  value?: number;
+  currency?: string;
+  /** Manual advanced matching (em/fn/ln plain; the pixel hashes them. external_id pre-hashed). */
+  userData?: Record<string, string>;
 }) {
   const fired = useRef(false);
 
@@ -38,7 +46,9 @@ export function ThankYouPixel({
     function fire(): boolean {
       const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
       if (!fbq) return false;
-      fbq("track", eventName, {}, { eventID: id });
+      if (userData && Object.keys(userData).length) fbq("init", META_PIXEL_ID_PUBLIC, userData);
+      const params = value != null ? { value, currency: currency || "CAD" } : {};
+      fbq("track", eventName, params, { eventID: id });
       fired.current = true;
       return true;
     }
@@ -54,6 +64,7 @@ export function ThankYouPixel({
     }, 200);
 
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fire once per mount
   }, [eventId, eventName]);
 
   return null;

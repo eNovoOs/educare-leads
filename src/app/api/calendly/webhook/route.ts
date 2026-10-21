@@ -1,8 +1,10 @@
 import { NextResponse, after } from "next/server";
 import { Resend } from "resend";
 import { verifyCalendlySignature } from "@/lib/calendly";
+import { buildUserData, decodeTrackingToken, sendCapiEvent } from "@/lib/meta";
+import { META_CURRENCY, SCHEDULE_VALUE, scheduleEventId } from "@/lib/metaConfig";
 import { sendCallBooked, sendCallCanceled } from "@/lib/emails/nurture";
-import { sendBookingSmsWebhook, sendBookingCancelWebhook, getFirstName, type BookingInvitee } from "@/lib/bookingSms";
+import { sendBookingSmsWebhook, sendBookingCancelWebhook, getFirstName, getInviteePhone, type BookingInvitee } from "@/lib/bookingSms";
 import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
 
 /**
@@ -19,6 +21,37 @@ import { cancelReminders, sendBookingEmails } from "@/lib/emails/schedule";
 
 export const runtime = "nodejs";
 
+/**
+ * Server-side Meta "Schedule" for a new booking. event_id is derived from the
+ * invitee uuid so it dedupes with the /booked pixel (invitee_uuid redirect param)
+ * and with Calendly webhook retries. Reschedules (old_invitee set) are skipped
+ * so one booked call is counted once.
+ */
+async function sendScheduleCapi(p: Invitee) {
+  const uuid = (p.uri || "").split("/").filter(Boolean).pop();
+  if (!uuid || !p.email) return;
+  const ctx = decodeTrackingToken(p.tracking?.salesforce_uuid);
+  const [first, ...rest] = (p.name || "").trim().split(/\s+/);
+  await sendCapiEvent(
+    {
+      event_name: "Schedule",
+      event_id: scheduleEventId(uuid),
+      // "website" requires the browser UA; without it this is a server-originated event.
+      action_source: ctx.ua ? "website" : "system_generated",
+      event_source_url: "https://www.educareleads.com/booked",
+      user_data: buildUserData({
+        ...ctx,
+        email: p.email,
+        phone: getInviteePhone(p as BookingInvitee),
+        firstName: p.first_name || first || undefined,
+        lastName: p.last_name || rest.join(" ") || undefined,
+      }),
+      custom_data: { value: SCHEDULE_VALUE, currency: META_CURRENCY },
+    },
+    "calendly",
+  );
+}
+
 type Invitee = {
   uri?: string;
   email?: string;
@@ -31,6 +64,9 @@ type Invitee = {
   cancel_url?: string;
   reschedule_url?: string;
   rescheduled?: boolean;
+  /** Set on invitee.created when this booking replaces a rescheduled one. */
+  old_invitee?: string | null;
+  tracking?: { salesforce_uuid?: string | null; [k: string]: unknown } | null;
   scheduled_event?: {
     name?: string;
     start_time?: string;
@@ -69,6 +105,16 @@ export async function POST(req: Request) {
         await sendBookingCancelWebhook(p as BookingInvitee);
       } catch {
         console.error("[calendly] CRM cancel webhook error");
+      }
+    });
+  }
+  // Meta CAPI Schedule (needs only META_* env). Runs after the response.
+  if (event.event === "invitee.created" && p?.email && !p.old_invitee) {
+    after(async () => {
+      try {
+        await sendScheduleCapi(p);
+      } catch {
+        console.error("[calendly] Meta Schedule error");
       }
     });
   }

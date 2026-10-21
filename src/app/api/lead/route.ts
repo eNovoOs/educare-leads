@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import crypto from "crypto";
+import {
+  buildUserData, encodeTrackingToken, fbcFromFbclid, fbclidFromUrl, getCookie, sendCapiEvent, type TrackingContext,
+} from "@/lib/meta";
+import { LEAD_VALUE, META_CURRENCY } from "@/lib/metaConfig";
 import { notificationRecipients } from "@/lib/emailRecipients";
 import { buildCalendlyUrl, utmFromUrl, UTM_KEYS, type Utm } from "@/lib/calendly";
 import { emailLogoHtml, esc } from "@/lib/emails/base";
@@ -50,6 +53,9 @@ type LeadPayload = {
   source?: string;
   eventId?: string;
   sourceUrl?: string;
+  fbclid?: string;
+  fbc?: string;
+  fbp?: string;
 } & Partial<Record<(typeof UTM_KEYS)[number], string>>;
 
 const TO_EMAIL = notificationRecipients(process.env.LEAD_TO_EMAIL);
@@ -76,64 +82,30 @@ function leadRows(lead: Record<string, unknown>) {
     .join("");
 }
 
-const sha256 = (v: string) => crypto.createHash("sha256").update(v.trim().toLowerCase()).digest("hex");
-
-function getCookie(cookieHeader: string | null, name: string): string | undefined {
-  if (!cookieHeader) return undefined;
-  const m = cookieHeader.match(new RegExp("(?:^|; )" + name + "=([^;]+)"));
-  return m ? decodeURIComponent(m[1]) : undefined;
+/** Click/browser context for Meta: cookies first, then body fields, then fbclid on the page URL. */
+function metaContext(req: Request, body: LeadPayload): TrackingContext {
+  const cookieHeader = req.headers.get("cookie");
+  const fbclid = body.fbclid || fbclidFromUrl(body.sourceUrl);
+  return {
+    fbc: getCookie(cookieHeader, "_fbc") || body.fbc || fbcFromFbclid(fbclid),
+    fbp: getCookie(cookieHeader, "_fbp") || body.fbp,
+    ip: (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || undefined,
+    ua: req.headers.get("user-agent") || undefined,
+  };
 }
 
-async function sendMetaCapi(req: Request, lead: LeadPayload & { firstName?: string; lastName?: string }) {
-  const PIXEL = process.env.META_PIXEL_ID;
-  const TOKEN = process.env.META_CAPI_TOKEN;
-  if (!PIXEL || !TOKEN) return false;
-
-  const cookieHeader = req.headers.get("cookie");
-  const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || undefined;
-  const ua = req.headers.get("user-agent") || undefined;
-
-  const userData: Record<string, unknown> = {
-    client_ip_address: ip,
-    client_user_agent: ua,
-    fbp: getCookie(cookieHeader, "_fbp"),
-    fbc: getCookie(cookieHeader, "_fbc"),
-  };
-  if (lead.email) userData.em = [sha256(lead.email)];
-  if (lead.phone) userData.ph = [sha256(lead.phone.replace(/[^0-9]/g, ""))];
-  if (lead.firstName) userData.fn = [sha256(lead.firstName)];
-  if (lead.lastName) userData.ln = [sha256(lead.lastName)];
-
-  const payload: Record<string, unknown> = {
-    data: [
-      {
-        event_name: "Lead",
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: lead.eventId,
-        action_source: "website",
-        event_source_url: lead.sourceUrl,
-        user_data: userData,
-      },
-    ],
-  };
-  if (process.env.META_TEST_EVENT_CODE) {
-    payload.test_event_code = process.env.META_TEST_EVENT_CODE;
-  }
-
-  try {
-    const res = await fetch(
-      `https://graph.facebook.com/v21.0/${PIXEL}/events?access_token=${TOKEN}`,
-      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
-    );
-    if (!res.ok) {
-      console.error("[lead] Meta CAPI error:", res.status, await res.text());
-      return false;
-    }
-    return true;
-  } catch (err) {
-    console.error("[lead] Meta CAPI send failed:", err);
-    return false;
-  }
+function sendLeadCapi(ctx: TrackingContext, lead: LeadPayload) {
+  return sendCapiEvent(
+    {
+      event_name: "Lead",
+      event_id: lead.eventId,
+      action_source: "website",
+      event_source_url: lead.sourceUrl,
+      user_data: buildUserData({ ...ctx, email: lead.email, phone: lead.phone, firstName: lead.firstName, lastName: lead.lastName }),
+      custom_data: { value: LEAD_VALUE, currency: META_CURRENCY },
+    },
+    "lead",
+  );
 }
 
 export async function POST(req: Request) {
@@ -195,12 +167,16 @@ export async function POST(req: Request) {
     console.log("[lead] (RESEND_API_KEY not set) New lead:", lead);
   }
 
+  const ctx = metaContext(req, body);
+
   // 1b) Lead-facing "next step: book your call" email. Failure never blocks the lead.
   const calendlyUrl = buildCalendlyUrl({
     name: [body.firstName, body.lastName].filter(Boolean).join(" "),
     email: body.email,
     phone: body.phone,
     utm,
+    fbclid: body.fbclid || fbclidFromUrl(body.sourceUrl),
+    trackingToken: encodeTrackingToken(ctx),
   });
   let leadEmailed = false;
   if (nurtureEnabled() && process.env.RESEND_API_KEY) {
@@ -232,7 +208,7 @@ export async function POST(req: Request) {
 
   // 2) Server-side Meta Conversions API "Lead" event (deduped with the browser pixel).
   // Every accepted website lead must be sent; individual forms cannot opt out.
-  const tracked = await sendMetaCapi(req, body);
+  const tracked = await sendLeadCapi(ctx, body);
 
   // 3) Forward to eNovo CRM, if configured.
   let forwarded = false;

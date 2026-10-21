@@ -13,6 +13,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- Meta Pixel Code -->
 <script>
+// Persist fbclid as _fbc so /api/lead and Calendly carry the click id.
+(function(){try{var m=location.search.match(/[?&]fbclid=([^&]+)/);if(!m)return;var v=decodeURIComponent(m[1]);var c=document.cookie.match(/(?:^|; )_fbc=([^;]+)/);if(c&&decodeURIComponent(c[1]).split('.').slice(3).join('.')===v)return;var h=location.hostname.replace(/^www\./,'');document.cookie='_fbc='+encodeURIComponent('fb.1.'+Date.now()+'.'+v)+'; Max-Age=7776000; Path=/; SameSite=Lax'+(h.indexOf('.')>0&&h!=='localhost'?'; Domain=.'+h:'');}catch(e){}})();
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -447,17 +449,41 @@ src="https://www.facebook.com/tr?id=1029290093151029&ev=PageView&noscript=1"/></
       btn.disabled = true;
       btn.textContent = 'Submitting…';
       var eventId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random();
-      var data = { source: 'vsl-page', eventId: eventId, sourceUrl: location.href, skipMetaLead: true };
+      var data = { source: 'vsl-page', eventId: eventId, sourceUrl: location.href };
       new FormData(form).forEach(function (v, k) { data[k] = v; });
-      // Lead is fired on /thank-you (funnel completion), not here.
-      // Send the lead (emails info@educareleads.com + Meta CAPI), then go to Calendly.
+      // Browser Lead shares eventId with the server CAPI Lead sent by /api/lead (dedup).
+      // Keep LEAD_VALUE / META_CURRENCY in sync with src/lib/metaConfig.ts.
+      var LEAD_VALUE = 25, CURRENCY = 'CAD', PIXEL = '1029290093151029';
+      function sha256Hex(s) {
+        if (!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.resolve('');
+        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)).then(function (b) {
+          return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+        }).catch(function () { return ''; });
+      }
+      function fireLead() {
+        var email = String(data.email || '').trim().toLowerCase();
+        var digits = String(data.phone || '').replace(/\D/g, '');
+        if (digits.length === 10) digits = '1' + digits;
+        return sha256Hex(email).then(function (xid) {
+          if (!window.fbq) return;
+          var am = { em: email, fn: String(data.firstName || '').trim().toLowerCase(), ln: String(data.lastName || '').trim().toLowerCase() };
+          if (digits.length >= 8) am.ph = digits;
+          if (xid) am.external_id = xid;
+          fbq('init', PIXEL, am);
+          fbq('track', 'Lead', { value: LEAD_VALUE, currency: CURRENCY }, { eventID: eventId });
+        }).catch(function () {});
+      }
       fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-      }).then(function (r) { return r.json(); }).catch(function () { return {}; }).then(function (j) {
-        // Server returns the Calendly link prefilled with name/email/phone + UTMs.
-        window.location.href = (j && j.calendlyUrl) || CAL;
+      }).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }).then(function (j) {
+        // Server returns the Calendly link prefilled with name/email/phone + UTMs + Meta context.
+        var dest = (j && j.calendlyUrl) || CAL;
+        var go = function () { window.location.href = dest; };
+        if (!(j && j.ok)) return go();
+        // Give the pixel request a moment to leave before navigating.
+        fireLead().then(function () { setTimeout(go, 400); });
       });
     });
   })();

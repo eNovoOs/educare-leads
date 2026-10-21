@@ -92,7 +92,8 @@ export default function RootLayout({
         </Script>
         {/* Meta Pixel */}
         <Script id="meta-pixel" strategy="afterInteractive">
-          {`!function(f,b,e,v,n,t,s)
+          {`(function(){try{var m=location.search.match(/[?&]fbclid=([^&]+)/);if(!m)return;var v=decodeURIComponent(m[1]);var c=document.cookie.match(/(?:^|; )_fbc=([^;]+)/);if(c&&decodeURIComponent(c[1]).split('.').slice(3).join('.')===v)return;var h=location.hostname.replace(/^www\\./,'');document.cookie='_fbc='+encodeURIComponent('fb.1.'+Date.now()+'.'+v)+'; Max-Age=7776000; Path=/; SameSite=Lax'+(h.indexOf('.')>0&&h!=='localhost'?'; Domain=.'+h:'');}catch(e){}})();
+!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
