@@ -27,12 +27,13 @@ export const runtime = "nodejs";
  * and with Calendly webhook retries. Reschedules (old_invitee set) are skipped
  * so one booked call is counted once.
  */
-async function sendScheduleCapi(p: Invitee) {
+async function sendScheduleCapi(p: Invitee): Promise<string> {
   const uuid = (p.uri || "").split("/").filter(Boolean).pop();
-  if (!uuid || !p.email) return;
+  if (!uuid || !p.email) return "skipped (no invitee uuid/email)";
+  if (!process.env.META_PIXEL_ID || !process.env.META_CAPI_TOKEN) return "skipped (META_* not set)";
   const ctx = decodeTrackingToken(p.tracking?.salesforce_uuid);
   const [first, ...rest] = (p.name || "").trim().split(/\s+/);
-  await sendCapiEvent(
+  const ok = await sendCapiEvent(
     {
       event_name: "Schedule",
       event_id: scheduleEventId(uuid),
@@ -50,6 +51,19 @@ async function sendScheduleCapi(p: Invitee) {
     },
     "calendly",
   );
+  return ok ? `sent (${scheduleEventId(uuid)}, ua:${ctx.ua ? "y" : "n"}, fbc:${ctx.fbc ? "y" : "n"})` : "failed (see Meta CAPI error above)";
+}
+
+/** Run independent side effects; one failure never blocks the others. Logs every outcome. */
+async function runAll(label: string, tasks: Record<string, () => Promise<unknown>>) {
+  const names = Object.keys(tasks);
+  const settled = await Promise.allSettled(names.map((n) => tasks[n]()));
+  const out: Record<string, unknown> = {};
+  settled.forEach((r, i) => {
+    out[names[i]] = r.status === "fulfilled" ? r.value : `error: ${r.reason instanceof Error ? r.reason.message : String(r.reason)}`;
+  });
+  console.log(`[calendly] ${label} outcomes:`, JSON.stringify(out));
+  return out;
 }
 
 type Invitee = {
@@ -95,80 +109,84 @@ export async function POST(req: Request) {
 
   const p = event.payload;
 
-  // CRM cancel hook (optional env). Runs after the response is sent so it can never
-  // delay/block the 200 to Calendly, and independently of the email config below.
-  // For a reschedule Calendly sends canceled (rescheduled: true) then created, so the
-  // old booking is cancelled here and the new one is posted by the created branch.
-  if (event.event === "invitee.canceled" && p && process.env.CRM_BOOKING_CANCEL_WEBHOOK_URL) {
-    after(async () => {
-      try {
-        await sendBookingCancelWebhook(p as BookingInvitee);
-      } catch {
-        console.error("[calendly] CRM cancel webhook error");
-      }
-    });
+  if (event.event !== "invitee.created" && event.event !== "invitee.canceled") {
+    return NextResponse.json({ ok: true, ignored: event.event });
   }
-  // Meta CAPI Schedule (needs only META_* env). Runs after the response.
-  if (event.event === "invitee.created" && p?.email && !p.old_invitee) {
-    after(async () => {
-      try {
-        await sendScheduleCapi(p);
-      } catch {
-        console.error("[calendly] Meta Schedule error");
-      }
-    });
-  }
-  const startTime = p?.scheduled_event?.start_time;
-  if (!p?.email || !startTime) {
-    return NextResponse.json({ ok: true, ignored: "missing email or start_time" });
-  }
-  if (!process.env.RESEND_API_KEY) {
-    console.error("[calendly] RESEND_API_KEY is not set; no emails sent");
-    return NextResponse.json({ ok: true, ignored: "email not configured" });
-  }
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  if (!p) return NextResponse.json({ ok: true, ignored: "missing payload" });
+
+  const startTime = p.scheduled_event?.start_time;
+  const email = p.email;
+  const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+  const needs = (cond: unknown, why: string) => (cond ? null : `skipped (${why})`);
+  console.log(`[calendly] ${event.event} received`, {
+    hasEmail: !!email, hasStart: !!startTime, resend: !!resend, rescheduled: !!p.rescheduled, oldInvitee: !!p.old_invitee,
+  });
 
   if (event.event === "invitee.created") {
-    const joinUrl = p.scheduled_event?.location?.join_url;
-    const result = await sendBookingEmails(
-      resend,
-      p.email,
-      {
-        name: getFirstName(p) || undefined,
-        startTime,
-        timezone: p.timezone,
-        joinUrl,
-        rescheduleUrl: p.reschedule_url,
-        cancelUrl: p.cancel_url,
-      },
-      p.uri || p.email,
+    // Meta + CRM SMS don't depend on Resend; run them after the response so Calendly gets a fast 200.
+    after(() =>
+      runAll("invitee.created (after)", {
+        metaSchedule: async () =>
+          p.old_invitee ? "skipped (reschedule; counted on original booking)" : sendScheduleCapi(p),
+        crmSms: async () =>
+          needs(startTime, "no start_time") ??
+          needs(process.env.CRM_BOOKING_SMS_WEBHOOK_URL, "CRM_BOOKING_SMS_WEBHOOK_URL not set") ??
+          ((await sendBookingSmsWebhook(p as BookingInvitee, startTime!)) ? "sent" : "failed"),
+      }).then(() => undefined),
     );
-    // Exit the nurture automation (no-op unless ENABLE_RESEND_NURTURE=true).
-    // Also triggers the post-booking value automation.
-    await sendCallBooked(resend, p.email, {
-      scheduledAt: new Date(startTime).toISOString(),
-      firstName: getFirstName(p) || undefined,
-      rescheduleUrl: p.reschedule_url,
-      timezone: p.timezone,
+    const out = await runAll("invitee.created", {
+      confirmationEmail: async () =>
+        needs(email && startTime, "missing email or start_time") ??
+        needs(resend, "RESEND_API_KEY not set") ??
+        sendBookingEmails(
+          resend!,
+          email!,
+          {
+            name: getFirstName(p) || undefined,
+            startTime: startTime!,
+            timezone: p.timezone,
+            joinUrl: p.scheduled_event?.location?.join_url,
+            rescheduleUrl: p.reschedule_url,
+            cancelUrl: p.cancel_url,
+          },
+          p.uri || email!,
+        ),
+      // Nurture exit + post-booking automation (no-op unless ENABLE_RESEND_NURTURE=true; needs a full-access key).
+      callBooked: async () =>
+        needs(email && startTime, "missing email or start_time") ??
+        needs(resend, "RESEND_API_KEY not set") ??
+        sendCallBooked(resend!, email!, {
+          scheduledAt: new Date(startTime!).toISOString(),
+          firstName: getFirstName(p) || undefined,
+          rescheduleUrl: p.reschedule_url,
+          timezone: p.timezone,
+        }).then(() => "done"),
     });
-    // Forward to the CRM SMS webhook (skipped if unset; never breaks the above).
-    try {
-      await sendBookingSmsWebhook(p as BookingInvitee, startTime);
-    } catch (err) {
-      console.error("[calendly] CRM SMS webhook error:", err);
-    }
-    return NextResponse.json({ ok: true, ...result });
+    const conf = out.confirmationEmail;
+    return NextResponse.json({ ok: true, ...(conf && typeof conf === "object" ? conf : {}), outcomes: out });
   }
 
-  if (event.event === "invitee.canceled") {
-    const result = await cancelReminders(resend, p.email, startTime);
-    // Exit the post-booking value automation (no-op unless ENABLE_RESEND_NURTURE=true).
-    await sendCallCanceled(resend, p.email, {
-      scheduledAt: new Date(startTime).toISOString(),
-      rescheduled: !!p.rescheduled,
-    });
-    return NextResponse.json({ ok: true, ...result });
+  // invitee.canceled. For a reschedule Calendly sends canceled (rescheduled: true) then created.
+  if (process.env.CRM_BOOKING_CANCEL_WEBHOOK_URL) {
+    after(() =>
+      runAll("invitee.canceled (after)", {
+        crmCancel: () => sendBookingCancelWebhook(p as BookingInvitee),
+      }).then(() => undefined),
+    );
   }
-
-  return NextResponse.json({ ok: true, ignored: event.event });
+  const out = await runAll("invitee.canceled", {
+    cancelReminders: async () =>
+      needs(email && startTime, "missing email or start_time") ??
+      needs(resend, "RESEND_API_KEY not set") ??
+      cancelReminders(resend!, email!, startTime!),
+    callCanceled: async () =>
+      needs(email && startTime, "missing email or start_time") ??
+      needs(resend, "RESEND_API_KEY not set") ??
+      sendCallCanceled(resend!, email!, {
+        scheduledAt: new Date(startTime!).toISOString(),
+        rescheduled: !!p.rescheduled,
+      }).then(() => "done"),
+  });
+  const cr = out.cancelReminders;
+  return NextResponse.json({ ok: true, ...(cr && typeof cr === "object" ? cr : {}), outcomes: out });
 }
