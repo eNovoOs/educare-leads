@@ -36,13 +36,17 @@ export async function sendBookingEmails(
   const result: ScheduleResult = { confirmation: false, scheduled: [], skipped: [] };
 
   const c = confirmationEmail(booking);
+  if (start <= now) console.log("[calendly] confirmation skipped: call start is in the past");
   if (start > now) {
     const { error } = await resend.emails.send(
       { ...base, subject: c.subject, html: c.html, text: c.text },
       { idempotencyKey: key("confirm") },
     );
     if (error) console.error("[calendly] confirmation send failed:", error);
-    else result.confirmation = true;
+    else {
+      result.confirmation = true;
+      console.log("[calendly] confirmation email sent");
+    }
   }
 
   // Reminders are OFF by default: Calendly Workflows sends the 24h/3h/1h emails.
